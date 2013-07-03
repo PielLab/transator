@@ -1,0 +1,22 @@
+{"featuresArray":
+[{"nonOverlappingStyle":
+    {"heightOrRadius":10,"y":56},
+    "type":"rect",
+    "featureEnd":56,
+    "fillOpacity":0.5,
+    "evidenceText":"manual assertion",
+    "stroke":"#F5B800",
+    "height":10,
+    "path":"",
+    "typeLabel":
+    "Transit",
+    "featureLabel":"Mitochondrion",
+    "featureStart":1,
+    "strokeWidth":1,
+    "centeredStyle":{"heightOrRadius":52,"y":69},
+    "text":"",
+    "fill":"#F5B800",
+    "width":64,
+    "typeCategory":"Molecule processing",
+    "typeCode":"SO:0000725",
+    "cy":56,"cx":21,"evidenceCode":"","r":10,"featureId":"UNIPROTKB_Q94AX4_TRANSIT_1_56","rowsStyle":{"heightOrRadius":10,"y":193},"featureTypeLabel":"transit_peptide","y":56,"x":21},{"nonOverlappingStyle":{"heightOrRadius":10,"y":56},"type":"rect","featureEnd":319,"fillOpacity":0.5,"evidenceText":"manual assertion","stroke":"#033158","height":10,"path":"","typeLabel":"Domain","featureLabel":"FAD-binding PCMH-type","featureStart":142,"strokeWidth":1,"centeredStyle":{"heightOrRadius":8,"y":91},"text":"","fill":"#033158","width":206,"typeCategory":"Region","typeCode":"SO:0000417","cy":56,"cx":185,"evidenceCode":"","r":10,"featureId":"UNIPROTKB_Q94AX4_DOMAIN_142_319","rowsStyle":{"heightOrRadius":10,"y":145},"featureTypeLabel":"polypeptide_domain","y":56,"x":185}],"segment":"Q94AX4","legend":{"segment":{"yPosCentered":190,"text":"Q94AX4","yPos":106,"xPos":15,"yPosNonOverlapping":106,"yPosRows":290},"key":[{"label":{"total":"1","yPosCentered":210,"text":"Domain","yPos":126,"xPos":50,"yPosNonOverlapping":126,"yPosRows":310},"shape":{"centeredStyle":{"heightOrRadius":5,"y":208},"text":"","nonOverlappingStyle":{"heightOrRadius":5,"y":121},"width":30,"fill":"#033158","cy":121,"cx":15,"type":"rect","fillOpacity":0.5,"stroke":"#033158","height":5,"r":10,"path":"","rowsStyle":{"heightOrRadius":5,"y":305},"typeLabel":"Domain","y":121,"strokeWidth":1,"x":15}},{"label":{"total":"1","yPosCentered":210,"text":"Transit","yPos":126,"xPos":205,"yPosNonOverlapping":126,"yPosRows":310},"shape":{"centeredStyle":{"heightOrRadius":5,"y":208},"text":"","nonOverlappingStyle":{"heightOrRadius":5,"y":121},"width":30,"fill":"#F5B800","cy":121,"cx":170,"type":"rect","fillOpacity":0.5,"stroke":"#F5B800","height":5,"r":10,"path":"","rowsStyle":{"heightOrRadius":5,"y":305},"typeLabel":"Transit","y":121,"strokeWidth":1,"x":170}}]},"configuration":{"requestedStop":567,"horizontalGridNumLines":2,"sequenceLineYCentered":95,"requestedStart":1,"gridLineHeight":12,"rightMargin":20,"belowRuler":30,"sequenceLength":567,"horizontalGridNumLinesNonOverlapping":2,"horizontalGridNumLinesCentered":6,"verticalGridLineLengthRows":284,"unitSize":1.164021164021164,"sizeYNonOverlapping":76,"style":"nonOverlapping","sequenceLineYRows":155,"sequenceLineY":54,"verticalGrid":false,"rulerY":20,"dasSources":"http://www.ebi.ac.uk/das-srv/uniprot/das/uniprot","horizontalGrid":false,"pixelsDivision":50,"sizeY":76,"sizeX":700,"dasReference":"http://www.ebi.ac.uk/das-srv/uniprot/das/uniprot","sizeYRows":260,"aboveRuler":10,"rulerLength":660,"verticalGridLineLengthNonOverlapping":66,"sizeYKey":210,"sizeYCentered":160,"sequenceLineYNonOverlapping":54,"verticalGridLineLength":66,"horizontalGridNumLinesRows":8,"leftMargin":20,"nonOverlapping":true,"verticalGridLineLengthCentered":172}}
