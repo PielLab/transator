@@ -86,19 +86,21 @@ public class PredictionResultParser {
 
     private FeaturesArray getFeatureFromLine(String line) {
         Iterator<String> tokens = Splitter.on("\t").split(line).iterator();
-        FeaturesArray feature = new FeaturesArray();
         Integer start = Integer.parseInt(tokens.next());
-        feature.setFeatureStart(start);
         Integer stop = Integer.parseInt(tokens.next());
-        feature.setFeatureEnd(stop);
         String evalue = tokens.next();
         String score = tokens.next();
         String ranking = tokens.next();
         String stackNumber = tokens.next();
         String type = tokens.next();
-        feature.setTypeCategory(type);
         String name = tokens.next();
         String label = tokens.next();
+
+        FeaturesArray feature = new FeaturesArray();
+
+        feature.setFeatureStart(start);
+        feature.setTypeCategory(type);
+        feature.setFeatureEnd(stop);
 
         if(type.equalsIgnoreCase("domain")) {
             Integer rankingInt = Integer.parseInt(ranking);
