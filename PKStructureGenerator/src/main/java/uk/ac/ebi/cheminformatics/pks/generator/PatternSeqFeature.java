@@ -8,5 +8,12 @@ package uk.ac.ebi.cheminformatics.pks.generator;
  * To change this template use File | Settings | File Templates.
  */
 public interface PatternSeqFeature extends SequenceFeature {
+
+    /**
+     * Sets the monomer that the implementing PatternSeqFeature will modify according to its rules. This will be the same
+     * monomer later retrieved from this feature.
+     *
+     * @param monomer
+     */
     void setPKMonomer(PKMonomer monomer);
 }

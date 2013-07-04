@@ -7,12 +7,11 @@ package uk.ac.ebi.cheminformatics.pks.generator;
  * Time: 11:09
  * To change this template use File | Settings | File Templates.
  */
-public class DomainSeqFeature implements SequenceFeature {
+public class DomainSeqFeature extends AbstractSeqFeature implements SequenceFeature {
+
     public DomainSeqFeature(Integer start, Integer stop, String name, String evalue) {
+        super(start,stop,name);
+        this.monomer = new PKMonomer(name);
     }
 
-    @Override
-    public PKMonomer getMonomer() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

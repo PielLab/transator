@@ -11,20 +11,19 @@ package uk.ac.ebi.cheminformatics.pks.generator;
  * Time: 12:35
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractPatternSeqFeature implements PatternSeqFeature {
+public abstract class AbstractSeqFeature implements SequenceFeature {
 
     PKMonomer monomer;
     Integer start;
     Integer stop;
     String name;
 
-    public AbstractPatternSeqFeature(Integer start, Integer stop, String name) {
+    public AbstractSeqFeature(Integer start, Integer stop, String name) {
         this.start = start;
         this.stop = stop;
         this.name = name;
     }
 
-    @Override
     public PKMonomer getMonomer() {
         return monomer;
     }
