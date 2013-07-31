@@ -22,12 +22,14 @@ public class PKSAssemblerTest {
         FeatureFileLineParser parser2 = new FeatureFileLineParser(getCladeLine(200,1E-20,100,1,1,"Clade_11",""));
         SequenceFeature clade11 = SequenceFeatureFactory.makeSequenceFeature(parser2);
         FeatureFileLineParser parser3 = new FeatureFileLineParser(getCladeLine(300,1E-20,100,1,1,"Clade_13",""));
-        SequenceFeature clade13 = SequenceFeatureFactory.makeSequenceFeature(parser2);
+        SequenceFeature clade13 = SequenceFeatureFactory.makeSequenceFeature(parser3);
+        SequenceFeature clade6_2 = SequenceFeatureFactory.makeSequenceFeature(parser);
 
         PKSAssembler assembler = new PKSAssembler();
         assembler.addMonomer(clade6);
         assembler.addMonomer(clade11);
         assembler.addMonomer(clade13);
+        assembler.addMonomer(clade6_2);
 
         PKStructure struc = assembler.getStructure();
 
