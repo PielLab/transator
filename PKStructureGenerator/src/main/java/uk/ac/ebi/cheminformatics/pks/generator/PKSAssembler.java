@@ -15,29 +15,47 @@ import org.openscience.cdk.interfaces.IPseudoAtom;
 public class PKSAssembler {
     private PKStructure structure;
 
+    public PKSAssembler() {
+        this.structure = new PKStructure();
+    }
+
+    /**
+     * Given a sequenceFeature, it adds the next monomer to the PKS structure. The monomer is obtained from the sequence
+     * feature.
+     *
+     * @param sequenceFeature
+     */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        IAtom connectionAtomInChain = structure.getConnectionAtom();
-        IBond connectioBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
+        if(structure.getMonomerCount()==0) {
+            structure.add(sequenceFeature.getMonomer());
+        }
+        else
+        {
+            IAtom connectionAtomInChain = structure.getConnectionAtom();
+            IBond connectioBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
 
-        IAtomContainer structureMol = structure.getMolecule();
+            IAtomContainer structureMol = structure.getMolecule();
 
-        int order = removeGenericConnection(connectionAtomInChain, structureMol);
-        int orderNew = connectioBondInMonomer.getOrder().ordinal();
+            int order = removeGenericConnection(connectionAtomInChain, structureMol);
+            int orderNew = connectioBondInMonomer.getOrder().ordinal();
 
-        int hydrogensToAdd = order - orderNew;
+            int hydrogensToAdd = order - orderNew;
 
-        IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
-        int indexToRemove = connectioBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
+            IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
+            if(monomer.getAtomCount()>0) {
+                int indexToRemove = connectioBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
-        monomer.removeAtom(connectioBondInMonomer.getAtom(indexToRemove));
-        connectioBondInMonomer.setAtom(connectionAtomInChain,indexToRemove);
+                monomer.removeAtom(connectioBondInMonomer.getAtom(indexToRemove));
+                connectioBondInMonomer.setAtom(connectionAtomInChain,indexToRemove);
 
-        structure.add(sequenceFeature.getMonomer());
+                structure.add(sequenceFeature.getMonomer());
 
-        // adjust implicit hydrogens
-        for (int i=0;i<Math.abs(hydrogensToAdd);i++) {
-            int current = connectionAtomInChain.getImplicitHydrogenCount();
-            connectionAtomInChain.setImplicitHydrogenCount(current+1*Integer.signum(hydrogensToAdd));
+                // adjust implicit hydrogens
+                for (int i=0;i<Math.abs(hydrogensToAdd);i++) {
+                    int current = connectionAtomInChain.getImplicitHydrogenCount();
+                    connectionAtomInChain.setImplicitHydrogenCount(current+1*Integer.signum(hydrogensToAdd));
+                }
+            }
         }
     }
 

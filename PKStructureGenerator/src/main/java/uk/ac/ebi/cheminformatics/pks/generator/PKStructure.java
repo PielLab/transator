@@ -2,6 +2,7 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class PKStructure {
 
     public PKStructure() {
         this.monomers = new ArrayList<PKMonomer>();
+        this.chain = SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
     }
 
     /**
@@ -54,5 +56,9 @@ public class PKStructure {
      */
     public IAtomContainer getMolecule() {
         return chain;
+    }
+
+    public int getMonomerCount() {
+        return monomers.size();
     }
 }
