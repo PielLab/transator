@@ -95,7 +95,11 @@ textarea {
 
 
 
-
+.seqResult { width:700px; height:400px; float:left; vertical-align:middle;
+    margin-left:auto;
+    margin-right:auto;
+    /*width:70%;*/    }
+/*.waitingImage {float:inherit; vertical-align:middle; }*/
 
 
 

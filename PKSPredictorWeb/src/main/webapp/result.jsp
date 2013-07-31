@@ -60,7 +60,7 @@
 %>
 <div class="seqResult" id="featureView<%= viewerNumber%>"
      path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>" >
-
+    <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
 </div>
 <%
         viewerNumber++;
@@ -76,7 +76,7 @@
             $j.getJSON("/rest/pkspredictor/query?path="+$j(this).attr("path")+"&seqId="+$j(this).attr("seqId"),
                     function(data) {
                         var json = data;
-                        alert("Got data "+data)
+                        $j("#"+idDiv).find("#waitingImg").hide()
                         var myPainter = new Biojs.FeatureViewer({
                             target: idDiv,
                             json: json
