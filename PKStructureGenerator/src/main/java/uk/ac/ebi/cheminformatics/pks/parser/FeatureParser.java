@@ -3,9 +3,7 @@ package uk.ac.ebi.cheminformatics.pks.parser;
 import uk.ac.ebi.cheminformatics.pks.generator.SequenceFeature;
 import uk.ac.ebi.cheminformatics.pks.generator.SequenceFeatureFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 /**
@@ -21,6 +19,11 @@ public class FeatureParser implements Iterator<SequenceFeature>{
 
     private SequenceFeature nextSf;
     private BufferedReader reader;
+
+    public FeatureParser(InputStream input) {
+       reader = new BufferedReader(new InputStreamReader(input));
+       nextSf = getNext();
+    }
 
     public FeatureParser(String path) {
         try {

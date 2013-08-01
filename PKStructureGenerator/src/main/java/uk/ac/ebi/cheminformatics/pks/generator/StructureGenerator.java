@@ -2,6 +2,8 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
 
+import java.io.InputStream;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pmoreno
@@ -12,10 +14,18 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
 public class StructureGenerator {
 
     private PKStructure structure;
-    private String path;
+    private FeatureParser parser;
+
+    public StructureGenerator(InputStream inputFeatures) {
+        parser = new FeatureParser(inputFeatures);
+    }
+
+    public StructureGenerator(String path) {
+        parser = new FeatureParser(path);
+    }
 
     public void run() {
-        FeatureParser parser = new FeatureParser(this.path);
+
 
         PKSAssembler assembler = new PKSAssembler();
         while(parser.hasNext()) {
