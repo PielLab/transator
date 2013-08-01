@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import org.apache.log4j.Logger;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -9,6 +10,7 @@ import org.openscience.cdk.io.MDLV2000Reader;
 import org.openscience.cdk.silent.Molecule;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
+
 /**
  * Created with IntelliJ IDEA.
  * User: pmoreno
@@ -17,6 +19,8 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
  * To change this template use File | Settings | File Templates.
  */
 public class PKMonomer {
+
+    private static final Logger LOGGER = Logger.getLogger(PKMonomer.class);
 
     private IAtom preConnectionAtom;
     private IBond preConnectionBond;
@@ -39,6 +43,9 @@ public class PKMonomer {
             return reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
         } catch (CDKException e) {
             throw new RuntimeException("Could not read molecule for "+cladeName,e);
+        } catch (NullPointerException e) {
+            LOGGER.info("Could not read molecule for "+cladeName,e);
+            return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
         }
     }
 
