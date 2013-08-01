@@ -29,6 +29,10 @@ public class PKSAssembler {
         if(structure.getMonomerCount()==0) {
             structure.add(sequenceFeature.getMonomer());
         }
+        else if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
+            // empty molecule for advancing only
+            return;
+        }
         else
         {
             IAtom connectionAtomInChain = structure.getConnectionAtom();

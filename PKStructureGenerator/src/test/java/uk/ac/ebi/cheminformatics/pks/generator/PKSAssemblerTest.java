@@ -17,11 +17,11 @@ import java.io.FileWriter;
 public class PKSAssemblerTest {
     @Test
     public void testAddMonomer() throws Exception {
-        FeatureFileLineParser parser = new FeatureFileLineParser(getCladeLine(100,1E-20,100,1,1,"Clade_6",""));
+        FeatureFileLineParser parser = new FeatureFileLineParser(getCladeLine(100,1E-20,100.0f,1,1,"Clade_6",""));
         SequenceFeature clade6 = SequenceFeatureFactory.makeSequenceFeature(parser);
-        FeatureFileLineParser parser2 = new FeatureFileLineParser(getCladeLine(200,1E-20,100,1,1,"Clade_11",""));
+        FeatureFileLineParser parser2 = new FeatureFileLineParser(getCladeLine(200,1E-20,100.0f,1,1,"Clade_11",""));
         SequenceFeature clade11 = SequenceFeatureFactory.makeSequenceFeature(parser2);
-        FeatureFileLineParser parser3 = new FeatureFileLineParser(getCladeLine(300,1E-20,100,1,1,"Clade_13",""));
+        FeatureFileLineParser parser3 = new FeatureFileLineParser(getCladeLine(300,1E-20,100.0f,1,1,"Clade_13",""));
         SequenceFeature clade13 = SequenceFeatureFactory.makeSequenceFeature(parser3);
         SequenceFeature clade6_2 = SequenceFeatureFactory.makeSequenceFeature(parser);
 
@@ -43,7 +43,7 @@ public class PKSAssemblerTest {
 
     }
 
-    private String getCladeLine(Integer start, Double evalue, Integer score, Integer ranking,
+    private String getCladeLine(Integer start, Double evalue, Float score, Integer ranking,
                                 Integer stackNumber, String name, String label) {
         return Joiner.on("\t").join(start,start+100,evalue,score,ranking,stackNumber,"domain",name,label);
     }
