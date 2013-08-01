@@ -3,6 +3,8 @@ package uk.ac.ebi.cheminformatics.pks.parser;
 import com.google.common.base.Splitter;
 
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -75,6 +77,8 @@ public class FeatureFileLineParser {
     private final String name;
     private final String label;
 
+    private Pattern cladeNamePat = Pattern.compile("(Clade_\\d+)([A-Za-z])");
+
     /**
      * Parses a line of the .feature file provided by the python executable.
      *
@@ -89,10 +93,18 @@ public class FeatureFileLineParser {
         ranking = tokens.next();
         stackNumber = tokens.next();
         type = tokens.next();
-        name = tokens.next();
+        name = processName(tokens.next());
         label = tokens.next();
     }
 
+    private String processName(String name) {
+        // if name ends in character instead of a number, remove everything after the number.
+        Matcher cladeNameMatcher = cladeNamePat.matcher(name);
+        if(cladeNameMatcher.find()) {
+            return cladeNameMatcher.group(1);
+        }
+        return name;
+    }
 
 
 }
