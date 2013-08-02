@@ -54,6 +54,9 @@
 </head>
 <body>
 
+<img class="resultingMol" id="pkMol" path="<%= request.getSession().getAttribute("tmp") %>">
+
+
 <%
     int viewerNumber=0;
     for (String identifier : (List<String>)request.getSession().getAttribute("identifers")) {
@@ -84,6 +87,16 @@
                     }
             )}
             );
+
+        $j('#pkMol').attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
+//        var img = $j("<img />").attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"))
+//                .load(function() {
+//                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+//                        alert('broken image!');
+//                    } else {
+//                        $j("#pkMol").append(img);
+//                    }
+//                });
         };
 
 //    $(".seqResult").on({

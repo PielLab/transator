@@ -53,6 +53,8 @@ public class ValidateInput extends HttpServlet {
         PKSPredictor predictor = new PKSPredictor(validator.getFastaPath(),validator.getOutputPath());
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(predictor);
+        // TODO fire the execution of the image structure generator, which should wait for the results of the previous
+        // execution thread.
         /**
          * Redirect to the result page, leaving in the session the identifiers of each sequence provided.
          */

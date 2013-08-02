@@ -5,8 +5,7 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +43,22 @@ public class SequenceValidator {
             sequenceIdentifiers.addAll(data.keySet());
             cleanIdentifiers(sequenceIdentifiers);
             FastaWriterHelper.writeProteinSequence(new File(fastaPath),data.values());
+            writeIdentifiersFile(sequenceIdentifiers);
         } catch (Exception e) {
             this.e = e;
+        }
+    }
+
+    private void writeIdentifiersFile(List<String> sequenceIdentifiers) {
+        String pathIdents = outputPath + File.separator + "query.identifiers";
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathIdents));
+            for (String ident : sequenceIdentifiers) {
+                writer.write(ident+"\n");
+            }
+            writer.close();
+        } catch (IOException e1) {
+            throw new RuntimeException("problems when writing identifiers",e1);
         }
     }
 
