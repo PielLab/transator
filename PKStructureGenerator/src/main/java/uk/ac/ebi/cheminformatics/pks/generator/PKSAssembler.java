@@ -26,12 +26,12 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        if(structure.getMonomerCount()==0) {
-            structure.add(sequenceFeature.getMonomer());
-        }
-        else if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
+        if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
             // empty molecule for advancing only
             return;
+        }
+        else if(structure.getMonomerCount()==0) {
+            structure.add(sequenceFeature.getMonomer());
         }
         else
         {
