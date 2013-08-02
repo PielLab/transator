@@ -11,6 +11,10 @@
 
     <artifactId>PKStructureGenerator</artifactId>
 
+    <properties>
+        <cdk.version>1.4.16</cdk.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.cheminformatics</groupId>
@@ -20,17 +24,17 @@
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-core</artifactId>
-            <version>1.4.15</version>
+            <version>${cdk.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-io</artifactId>
-            <version>1.4.15</version>
+            <version>${cdk.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-silent</artifactId>
-            <version>1.4.15</version>
+            <version>${cdk.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -46,6 +50,21 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-sdg</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-renderbasic</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-renderawt</artifactId>
+            <version>${cdk.version}</version>
         </dependency>
     </dependencies>
 
