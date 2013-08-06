@@ -15,4 +15,14 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature implements Sequ
         this.monomer = new PKMonomer("");
         // this protein pattern should include flags that tell the following KS what to do regarding its sequence.
     }
+
+    @Override
+    public boolean hasPostProcessor() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PostProcessor getPostProcessor() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

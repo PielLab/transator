@@ -10,4 +10,10 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 public interface SequenceFeature {
 
     public PKMonomer getMonomer();
+
+    public String getName();
+
+    boolean hasPostProcessor();
+
+    PostProcessor getPostProcessor();
 }

@@ -32,6 +32,9 @@ public class StructureGenerator {
             assembler.addMonomer(parser.next());
         }
 
+        SequenceFeature finalizer = new DomainSeqFeature(0,0,"finalExtension","0");
+        assembler.addMonomer(finalizer);
+
         this.structure = assembler.getStructure();
     }
 
