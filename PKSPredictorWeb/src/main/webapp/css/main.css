@@ -95,11 +95,48 @@ textarea {
 
 
 
-.seqResult { width:700px; height:400px; float:left; vertical-align:middle;
+.seqResult { width:700px;
+    height:300px;
+    vertical-align:middle;
+    /*float:left;*/
     margin-left:auto;
     margin-right:auto;
     /*width:70%;*/    }
 /*.waitingImage {float:inherit; vertical-align:middle; }*/
+
+#accordionSequences {
+    width:779px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.textCentering {
+    width:779px;
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center;
+}
+
+.newHeaderForAccordion {
+    padding-left:30px;
+}
+
+.resultingMol {
+    width:779px;
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.submitButton {
+    width: 90px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    display: block;
+}
+
+
 
 
 

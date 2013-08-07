@@ -27,4 +27,8 @@ public abstract class AbstractSeqFeature implements SequenceFeature {
     public PKMonomer getMonomer() {
         return monomer;
     }
+
+    public String getName() {
+        return name;
+    }
 }

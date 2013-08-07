@@ -7,7 +7,6 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.io.MDLV2000Reader;
-import org.openscience.cdk.silent.Molecule;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
 
@@ -44,7 +43,7 @@ public class PKMonomer {
         } catch (CDKException e) {
             throw new RuntimeException("Could not read molecule for "+cladeName,e);
         } catch (NullPointerException e) {
-            LOGGER.info("Could not read molecule for "+cladeName,e);
+            LOGGER.info("Could not read molecule for "+cladeName);
             return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
         }
     }
@@ -72,8 +71,21 @@ public class PKMonomer {
         }
     }
 
+    /**
+     * Returns Atom connected to R2 originally.
+     * @return
+     */
     public IAtom getPosConnectionAtom() {
         return posConnectionAtom;
+    }
+
+    /**
+     * Returns Atom connected to R1 originally.
+     *
+     * @return
+     */
+    public IAtom getPreConnectionAtom() {
+        return preConnectionAtom;
     }
 
     public IAtomContainer getMolecule() {
@@ -82,5 +94,32 @@ public class PKMonomer {
 
     public IBond getConnectionBond() {
         return preConnectionBond;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PKMonomer pkMonomer = (PKMonomer) o;
+
+        if (cladeName != null ? !cladeName.equals(pkMonomer.cladeName) : pkMonomer.cladeName != null) return false;
+        if (posConnectionAtom != null ? !posConnectionAtom.equals(pkMonomer.posConnectionAtom) : pkMonomer.posConnectionAtom != null)
+            return false;
+        if (preConnectionAtom != null ? !preConnectionAtom.equals(pkMonomer.preConnectionAtom) : pkMonomer.preConnectionAtom != null)
+            return false;
+        if (preConnectionBond != null ? !preConnectionBond.equals(pkMonomer.preConnectionBond) : pkMonomer.preConnectionBond != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = preConnectionAtom != null ? preConnectionAtom.hashCode() : 0;
+        result = 31 * result + (preConnectionBond != null ? preConnectionBond.hashCode() : 0);
+        result = 31 * result + (posConnectionAtom != null ? posConnectionAtom.hashCode() : 0);
+        result = 31 * result + (cladeName != null ? cladeName.hashCode() : 0);
+        return result;
     }
 }

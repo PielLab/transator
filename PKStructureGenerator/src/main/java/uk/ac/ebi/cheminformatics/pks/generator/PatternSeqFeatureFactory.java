@@ -11,6 +11,6 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
  */
 public class PatternSeqFeatureFactory {
     public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return new ProteinPatternSeqFeature(parser.getStart(),parser.getStop(),parser.getName(),parser.getEvalue());
     }
 }

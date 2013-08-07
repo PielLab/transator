@@ -1,0 +1,69 @@
+420	845	4.5e-122	399.3	1	1	domain	Clade_1	GNAT
+420	845	2.4e-85	278.3	2	1	domain	Clade_2	A various unusual starters
+420	845	2.4e-85	278.3	3	1	domain	Clade_23	W unusual starters
+420	845	1.1e-79	259.6	4	1	domain	Clade_29	betaOH
+420	845	4.5e-69	224.9	5	1	domain	Clade_35	II not assignable so far
+1975	2410	1.1e-107	352.0	1	2	domain	Clade_14b	N b) double bonds
+1977	2410	6.8e-105	342.6	2	2	domain	Clade_20	S E-double bonds
+1977	2410	1.6e-98	321.8	3	2	domain	Clade_21	T double bonds
+1977	2410	3.6e-98	320.5	4	2	domain	Clade_14a	M A) double bonds
+1976	2410	5.9e-97	316.4	5	2	domain	Clade_22	zDM
+3599	4018	1.6e-136	446.7	1	3	domain	Clade_11	K exomethB
+3600	4018	3e-98	320.9	2	3	domain	Clade_26	Z alpha methyl
+3600	4018	1.4e-84	275.6	3	3	domain	Clade_13	M beta hydroxy
+3600	4018	1.5e-83	272.4	4	3	domain	Clade_13a	M a) beta hydroxy
+3599	4018	2.2e-73	238.8	5	3	domain	Clade_24	X E-DB
+2783	2786	N/A	4	N/A	N/A	pattern	crotonase_p_1	N/A
+3043	3046	N/A	4	N/A	N/A	pattern	crotonase_p_1	N/A
+3083	3086	N/A	4	N/A	N/A	pattern	crotonase_p_2	N/A
+1221	1227	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A
+76	502	6.2e-144	471.0	1	1	domain	Clade_8	G non elongating
+76	502	6.2e-144	471.0	2	1	domain	Clade_8b	G b) non elongating Copy
+76	487	2.6e-45	146.4	3	1	domain	Clade_29	betaOH
+79	501	1.6e-41	134.0	4	1	domain	Clade_2	A various unusual starters
+79	501	1.6e-41	134.0	5	1	domain	Clade_23	W unusual starters
+1922	2344	5.7e-153	500.9	1	2	domain	Clade_4b	C b) Amino Acids
+1922	2344	4.3e-140	458.6	2	2	domain	Clade_4	C Amino Acids
+1925	2344	6.6e-53	171.3	3	2	domain	Clade_4a	C a) Amino Acids
+1924	2344	5.8e-30	96.0	4	2	domain	Clade_26	Z alpha methyl
+2032	2343	5.9e-29	92.5	5	2	domain	Clade_5	D Amino acids
+3118	3551	1.1e-109	358.4	1	3	domain	Clade_20	S E-double bonds
+3118	3551	5.9e-105	342.8	2	3	domain	Clade_14a	M A) double bonds
+3116	3551	1.1e-104	342.0	3	3	domain	Clade_14b	N b) double bonds
+3117	3551	4.1e-101	330.1	4	3	domain	Clade_22	zDM
+3117	3551	3.1e-98	320.8	5	3	domain	Clade_19	R E-double bonds
+4836	5244	6.3e-151	494.1	1	4	domain	Clade_12	L alpha methyl alpha dimethyl
+4837	5244	1.2e-80	263.0	2	4	domain	Clade_26	Z alpha methyl
+4837	5244	5.3e-78	254.0	3	4	domain	Clade_13	M beta hydroxy
+4837	5244	7.1e-77	250.3	4	4	domain	Clade_13a	M a) beta hydroxy
+4836	5244	2e-73	238.9	5	4	domain	Clade_11	K exomethB
+6580	7015	2.3e-158	518.6	1	5	domain	Clade_3	B Pyrane rings
+6582	7015	1.6e-103	338.2	2	5	domain	Clade_29	betaOH
+6581	7014	3e-94	307.9	3	5	domain	Clade_35	II not assignable so far
+6581	7015	5e-92	300.4	4	5	domain	Clade_6	E completely reduced
+6582	7015	1.3e-77	252.7	5	5	domain	Clade_1	GNAT
+7842	8258	2.6e-142	465.9	1	6	domain	Clade_13a	M a) beta hydroxy
+7842	8258	3.4e-138	452.2	2	6	domain	Clade_13	M beta hydroxy
+7842	8258	1.5e-88	288.6	3	6	domain	Clade_13b	M b)  beta hydroxy extraction
+7842	8258	1.1e-78	256.5	4	6	domain	Clade_26	Z alpha methyl
+7845	8258	5.6e-72	234.1	5	6	domain	Clade_11	K exomethB
+9340	9771	4.2e-128	419.3	1	7	domain	Clade_27	AA non-elongating double bond recognition
+9340	9771	3.6e-69	225.0	2	7	domain	Clade_14b	N b) double bonds
+9341	9771	2.7e-67	218.7	3	7	domain	Clade_20	S E-double bonds
+9341	9771	6.9e-67	217.6	4	7	domain	Clade_18	Q double bonds mostly Z configuration
+9341	9771	8.1e-67	217.1	5	7	domain	Clade_22	zDM
+2719	2725	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A
+3964	3970	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A
+6186	6192	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A
+8941	8947	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A
+473	893	1.1e-73	239.8	1	1	domain	Clade_29	betaOH
+474	893	6.7e-66	214.2	2	1	domain	Clade_2	A various unusual starters
+474	893	6.7e-66	214.2	3	1	domain	Clade_23	W unusual starters
+473	893	7.1e-59	191.0	4	1	domain	Clade_5	D Amino acids
+474	893	1.2e-58	190.1	5	1	domain	Clade_7	F Acetyl Starters
+1584	2015	3.6e-130	425.9	1	2	domain	Clade_20	S E-double bonds
+1584	2015	1.3e-115	377.9	2	2	domain	Clade_14a	M A) double bonds
+1584	2015	1.2e-104	342.0	3	2	domain	Clade_21	T double bonds
+1584	2015	1.9e-101	331.2	4	2	domain	Clade_22	zDM
+1586	2015	2.8e-101	331.0	5	2	domain	Clade_31	EE e-DB
+2402	2408	N/A	7	N/A	N/A	pattern	KR motif stereospecificty S	N/A

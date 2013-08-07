@@ -24,7 +24,6 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
     <!-- BioJS -->
@@ -51,14 +50,33 @@
     <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
     <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-icons_222222_256x240.png">
     <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-icons_454545_256x240.png">
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <script>
+        $(function() {
+            $( "#accordionSequences" ).accordion();
+        });
+    </script>
 </head>
 <body>
 
+<h1 class="textCentering">trans-AT Polyketide prediction results</h1>
+
+<p class="textCentering">The annotation of the different <i>trans</i>-AT KS clades on the submitted sequences produces
+the following structure:</p>
+<img class="resultingMol" id="pkMol" path="<%= request.getSession().getAttribute("tmp") %>">
+
+<p class="textCentering">
+    The annotation for each sequence submitted can be seen in the sections below.
+</p>
+<div id="accordionSequences">
 <%
     int viewerNumber=0;
     for (String identifier : (List<String>)request.getSession().getAttribute("identifers")) {
 %>
-<div class="seqResult" id="featureView<%= viewerNumber%>"
+<h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier,"UTF-8")%> - processing..</h3>
+<div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
      path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>" >
     <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
 </div>
@@ -66,24 +84,40 @@
         viewerNumber++;
     } %>
 
+</div>
+
 <script>
 
     window.onload = function() {
 
         var $j = jQuery.noConflict();
         $j(".seqResult").each(function() {
-            var idDiv = $j(this).attr("id");
+            //var idDiv = $j(this).attr("id");
+            var divObj = $j(this);
             $j.getJSON("/rest/pkspredictor/query?path="+$j(this).attr("path")+"&seqId="+$j(this).attr("seqId"),
                     function(data) {
                         var json = data;
-                        $j("#"+idDiv).find("#waitingImg").hide()
+                        //$j("#"+idDiv).find("#waitingImg").hide()
+                        divObj.find("#waitingImg").hide()
                         var myPainter = new Biojs.FeatureViewer({
-                            target: idDiv,
+                            target: divObj.attr("id"),
                             json: json
                         });
+                        var viewNum = divObj.attr("viewerNumber");
+                        $j("#headerView"+viewNum).html(divObj.attr("seqid"));
                     }
             )}
             );
+
+        $j('#pkMol').attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
+//        var img = $j("<img />").attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"))
+//                .load(function() {
+//                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+//                        alert('broken image!');
+//                    } else {
+//                        $j("#pkMol").append(img);
+//                    }
+//                });
         };
 
 //    $(".seqResult").on({

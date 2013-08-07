@@ -5,8 +5,7 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,16 +35,37 @@ public class SequenceValidator {
         processInput(fastaFileInputStream);
     }
 
+    public SequenceValidator(InputStream fastaFileInputStream, String outputPath) {
+        this.sequenceIdentifiers = new ArrayList<String>();
+        this.outputPath = outputPath;
+        processInput(fastaFileInputStream);
+    }
+
     private void processInput(InputStream input) {
         try {
             Map<String,ProteinSequence> data = FastaReaderHelper.readFastaProteinSequence(input);
-            outputPath = Files.createTempDir().getCanonicalPath();
+            if(outputPath==null)
+                outputPath = Files.createTempDir().getCanonicalPath();
             fastaPath = outputPath + File.separator + "query.faa";
             sequenceIdentifiers.addAll(data.keySet());
             cleanIdentifiers(sequenceIdentifiers);
             FastaWriterHelper.writeProteinSequence(new File(fastaPath),data.values());
+            writeIdentifiersFile(sequenceIdentifiers);
         } catch (Exception e) {
             this.e = e;
+        }
+    }
+
+    private void writeIdentifiersFile(List<String> sequenceIdentifiers) {
+        String pathIdents = outputPath + File.separator + "query.identifiers";
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathIdents));
+            for (String ident : sequenceIdentifiers) {
+                writer.write(ident+"\n");
+            }
+            writer.close();
+        } catch (IOException e1) {
+            throw new RuntimeException("problems when writing identifiers",e1);
         }
     }
 

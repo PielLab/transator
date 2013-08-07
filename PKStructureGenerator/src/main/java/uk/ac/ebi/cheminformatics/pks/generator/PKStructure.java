@@ -61,4 +61,12 @@ public class PKStructure {
     public int getMonomerCount() {
         return monomers.size();
     }
+
+    public Integer getMonomerIndex(PKMonomer monomer) {
+        return this.monomers.indexOf(monomer);
+    }
+
+    public PKMonomer getMonomer(int i) {
+        return monomers.get(i);
+    }
 }

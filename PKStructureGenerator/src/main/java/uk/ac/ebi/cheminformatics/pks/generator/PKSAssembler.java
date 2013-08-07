@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import org.apache.log4j.Logger;
+import org.openscience.cdk.graph.ConnectivityChecker;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
@@ -13,6 +15,9 @@ import org.openscience.cdk.interfaces.IPseudoAtom;
  * To change this template use File | Settings | File Templates.
  */
 public class PKSAssembler {
+
+    private static final Logger LOGGER = Logger.getLogger(PKSAssembler.class);
+
     private PKStructure structure;
 
     public PKSAssembler() {
@@ -26,12 +31,13 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        if(structure.getMonomerCount()==0) {
-            structure.add(sequenceFeature.getMonomer());
-        }
-        else if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
+        if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
             // empty molecule for advancing only
             return;
+        }
+        else if(structure.getMonomerCount()==0) {
+            structure.add(sequenceFeature.getMonomer());
+            checkNumberOfConnectedComponents(sequenceFeature);
         }
         else
         {
@@ -60,6 +66,20 @@ public class PKSAssembler {
                     connectionAtomInChain.setImplicitHydrogenCount(current+1*Integer.signum(hydrogensToAdd));
                 }
             }
+            checkNumberOfConnectedComponents(sequenceFeature);
+
+            // here we do post processing specific to the particular clade just added
+            if(sequenceFeature.hasPostProcessor()) {
+                PostProcessor proc = sequenceFeature.getPostProcessor();
+                proc.process(structure,sequenceFeature.getMonomer());
+            }
+        }
+    }
+
+    private void checkNumberOfConnectedComponents(SequenceFeature feature) {
+        IAtomContainer mol = structure.getMolecule();
+        if(!ConnectivityChecker.isConnected(mol)) {
+            LOGGER.error("Newest feature "+feature.getName()+" produced disconnection");
         }
     }
 
