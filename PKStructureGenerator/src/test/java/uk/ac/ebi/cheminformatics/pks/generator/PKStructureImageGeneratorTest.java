@@ -23,9 +23,23 @@ public class PKStructureImageGeneratorTest {
         PKStructure struct = generator.getStructure();
 
         PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
-        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 300));
+        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 900));
 
-        File outputFile = new File("/tmp/pksImage.png");
+        File outputFile = new File("/tmp/pksCosmidImage.png");
+        ImageIO.write(image,"png",outputFile);
+
+    }
+
+    @Test
+    public void testGenerateStructureImageOnnamide() throws Exception {
+        StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream("onnamid.features"));
+        generator.run();
+        PKStructure struct = generator.getStructure();
+
+        PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
+        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 900));
+
+        File outputFile = new File("/tmp/pksOnnamideImage.png");
         ImageIO.write(image,"png",outputFile);
 
     }

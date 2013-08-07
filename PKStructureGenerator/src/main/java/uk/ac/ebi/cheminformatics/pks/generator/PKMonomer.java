@@ -7,7 +7,6 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.io.MDLV2000Reader;
-import org.openscience.cdk.silent.Molecule;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 
 

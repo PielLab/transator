@@ -12,7 +12,7 @@
     <artifactId>PKStructureGenerator</artifactId>
 
     <properties>
-        <cdk.version>1.4.16</cdk.version>
+        <cdk.version>1.5.3</cdk.version>
     </properties>
 
     <dependencies>
@@ -69,6 +69,11 @@
         <dependency>
             <groupId>org.openscience.cdk</groupId>
             <artifactId>cdk-renderawt</artifactId>
+            <version>${cdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openscience.cdk</groupId>
+            <artifactId>cdk-valencycheck</artifactId>
             <version>${cdk.version}</version>
         </dependency>
     </dependencies>

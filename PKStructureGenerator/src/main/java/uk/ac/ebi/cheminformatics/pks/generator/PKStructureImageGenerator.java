@@ -1,8 +1,8 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
-import org.openscience.cdk.Molecule;
 import org.openscience.cdk.aromaticity.CDKHueckelAromaticityDetector;
 import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.geometry.GeometryTools;
 import org.openscience.cdk.interfaces.*;
 import org.openscience.cdk.layout.StructureDiagramGenerator;
 import org.openscience.cdk.renderer.AtomContainerRenderer;
@@ -12,8 +12,9 @@ import org.openscience.cdk.renderer.font.AWTFontManager;
 import org.openscience.cdk.renderer.generators.*;
 import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
-import org.openscience.cdk.tools.CDKHydrogenAdder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
+import org.openscience.cdk.tools.CDKHydrogenAdder;
+import javax.vecmath.Point2d;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -44,7 +45,7 @@ public class PKStructureImageGenerator {
         generators.add(new BasicSceneGenerator());
         generators.add(new RingGenerator());
         generators.add(new ExtendedAtomGenerator()); // I assume that’s doing the –OH thingy you want!
-        generators.add(new AtomNumberGenerator());
+        //generators.add(new AtomNumberGenerator());
         this.chemicalMoleculeRenderer = new AtomContainerRenderer(generators, new AWTFontManager());
 
         // options
@@ -61,6 +62,12 @@ public class PKStructureImageGenerator {
 
         calculateProperties(pkMolecule.getMolecule());
         IAtomContainer moleculeWithCoordinates = generateCoordinatesForMolecule(pkMolecule.getMolecule());
+        Rectangle2D rect = GeometryTools.getRectangle2D(moleculeWithCoordinates);
+        if(rect.getHeight() > rect.getWidth()) {
+            // we rotate 90 degrees counter clockwise.
+            Point2d center2D = GeometryTools.get2DCenter(moleculeWithCoordinates);
+            GeometryTools.rotate(moleculeWithCoordinates,center2D,Math.PI/2);
+        }
         assignColors(pkMolecule);
 
         BufferedImage image = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
@@ -77,7 +84,7 @@ public class PKStructureImageGenerator {
     }
 
     private IAtomContainer generateCoordinatesForMolecule(IAtomContainer molecule) throws CDKException {
-        structureGenerator.setMolecule(new Molecule(molecule));
+        structureGenerator.setMolecule(molecule);
         structureGenerator.generateCoordinates();
         return structureGenerator.getMolecule();
     }
