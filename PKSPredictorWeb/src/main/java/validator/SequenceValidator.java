@@ -35,10 +35,17 @@ public class SequenceValidator {
         processInput(fastaFileInputStream);
     }
 
+    public SequenceValidator(InputStream fastaFileInputStream, String outputPath) {
+        this.sequenceIdentifiers = new ArrayList<String>();
+        this.outputPath = outputPath;
+        processInput(fastaFileInputStream);
+    }
+
     private void processInput(InputStream input) {
         try {
             Map<String,ProteinSequence> data = FastaReaderHelper.readFastaProteinSequence(input);
-            outputPath = Files.createTempDir().getCanonicalPath();
+            if(outputPath==null)
+                outputPath = Files.createTempDir().getCanonicalPath();
             fastaPath = outputPath + File.separator + "query.faa";
             sequenceIdentifiers.addAll(data.keySet());
             cleanIdentifiers(sequenceIdentifiers);

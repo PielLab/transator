@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>transAT-PKS Prediction Tool</title>
+    <title>trans-AT Polyketide Prediction Tool</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -22,25 +22,32 @@
 <![endif]-->
 
 <!-- Add your site or application content here -->
+<h1 class="textCentering"><i>trans</i>-AT Polyketide Structure Predictor</h1>
+
+<p class="textCentering">
+    This tool predicts the structure of a polyketide based on the sequence of the <i>trans</i>-AT Polyketide Synthase
+    enzyme that synthesizes that small molecule. Currently, only protein sequences in proper fasta format can be used as input.
+</p>
 <form action="${ pageContext.request.contextPath }/ValidateInput" method="post" enctype="multipart/form-data">
-<b>Paste you protein sequences in fasta format:</b>
-<div class="content" style="vertical-align: middle; width: 500px">
-<div class="textarea">
-    <textarea rows="10" cols="50" name="input" id="input" style="color: #9b9b9b; text-align: left"
+<p class="textCentering">Paste you protein sequences in fasta format:</p>
+<div class="content" style="vertical-align: middle;">
+<div class="textarea textCentering">
+    <textarea rows="10" cols="50" name="sequenceInput" id="sequenceInput" style="color: #9b9b9b; text-align: left"
               onfocus="clearText(this)" onblur="if(this.value=='') refillText(this);">
      </textarea>
 </div>
-<div class="textarea-instruction">
-            <span>Add proteins in Fasta format.
-            </span>
+    <p class="textCentering">Or alternatively:</p>
+<div class="textarea-instruction textCentering">
+            <p class="textCentering">Add proteins in Fasta format.
+            </p>
 </div> <br>
 
 
 </div>
-<div>
+<div class="textCentering">
     <input type="file" name="fastaFile" value="Choose fasta" />
 </div>
-    <input type="submit" value="Submit" onclick="document.getElementById('loading').style.display = 'block';" style="margin-top: 2em" />
+    <input class="submitButton" type="submit" value="Submit" onclick="document.getElementById('loading').style.display = 'block';" style="margin-top: 2em" />
 </form>
 
 
