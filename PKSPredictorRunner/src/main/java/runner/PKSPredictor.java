@@ -41,9 +41,21 @@ public class PKSPredictor implements Runnable {
     public void run() {
         Process pksPredProc;
         try {
-            pksPredProc = Runtime.getRuntime().exec(command);
-            writeToFile(pksPredProc.getInputStream(), outPath+"run.out");
-            writeToFile(pksPredProc.getErrorStream(), outPath+"run.err");
+
+            if(getPref(RunnerPreferenceField.UseCluster).length()>0) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outPath+"runJob.sh"));
+                writer.write(command);
+                writer.close();
+
+                StringBuilder builder = new StringBuilder();
+                builder.append("bsub -q research-rh6 -cwd ")
+                        .append(outPath).append(" -o ").append("runJob.o")
+                        .append(" -e ").append("runJob.err").append(outPath).append("runJob.sh");
+            } else {
+                pksPredProc = Runtime.getRuntime().exec(command);
+                writeToFile(pksPredProc.getInputStream(), outPath+"run.out");
+                writeToFile(pksPredProc.getErrorStream(), outPath+"run.err");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
