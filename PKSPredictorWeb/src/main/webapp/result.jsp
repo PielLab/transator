@@ -94,7 +94,7 @@ the following structure:</p>
         $j(".seqResult").each(function() {
             //var idDiv = $j(this).attr("id");
             var divObj = $j(this);
-            $j.getJSON("/rest/pkspredictor/query?path="+$j(this).attr("path")+"&seqId="+$j(this).attr("seqId"),
+            $j.getJSON("rest/pkspredictor/query?path="+$j(this).attr("path")+"&seqId="+$j(this).attr("seqId"),
                     function(data) {
                         var json = data;
                         //$j("#"+idDiv).find("#waitingImg").hide()
@@ -109,7 +109,7 @@ the following structure:</p>
             )}
             );
 
-        $j('#pkMol').attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
+        $j('#pkMol').attr('src', 'rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
 //        var img = $j("<img />").attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"))
 //                .load(function() {
 //                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
