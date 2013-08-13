@@ -2,6 +2,7 @@ package servlets;
 
 import com.google.common.io.Files;
 import encrypt.Encrypter;
+import io.TempDirMaker;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -53,7 +54,7 @@ public class ValidateInput extends HttpServlet {
 
             // Set factory constraints
             //factory.setSizeThreshold(yourMaxMemorySize);
-            File outputRepPath = Files.createTempDir();
+            File outputRepPath = TempDirMaker.createTempDir();
             factory.setRepository(outputRepPath);
 
             // Create a new file upload handler
