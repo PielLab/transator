@@ -1,5 +1,7 @@
 package runner;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.util.prefs.Preferences;
 
@@ -12,6 +14,8 @@ import java.util.prefs.Preferences;
  * To change this template use File | Settings | File Templates.
  */
 public class PKSPredictor implements Runnable {
+
+    private static final Logger LOGGER = Logger.getLogger(PKSPredictor.class);
 
     private Preferences prefs;
     private String command;
@@ -43,14 +47,16 @@ public class PKSPredictor implements Runnable {
         try {
 
             if(getPref(RunnerPreferenceField.UseCluster).length()>0) {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outPath+"runJob.sh"));
+                File runJob = new File(outPath+"runJob.sh");
+                BufferedWriter writer = new BufferedWriter(new FileWriter(runJob));
                 writer.write(command);
                 writer.close();
+                runJob.setExecutable(true);
 
                 StringBuilder builder = new StringBuilder();
                 builder.append("bsub -q research-rh6 -cwd ")
-                        .append(outPath).append(" -o ").append("runJob.o")
-                        .append(" -e ").append("runJob.err").append(outPath).append("runJob.sh");
+                        .append(outPath).append(" -o ").append("run.out")
+                        .append(" -e ").append("run.err ").append(outPath).append("runJob.sh");
             } else {
                 pksPredProc = Runtime.getRuntime().exec(command);
                 writeToFile(pksPredProc.getInputStream(), outPath+"run.out");
@@ -58,7 +64,8 @@ public class PKSPredictor implements Runnable {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            LOGGER.error("Could produce the execution files",e);
+            throw new RuntimeException("Could produce the execution files",e);
         }
     }
 
