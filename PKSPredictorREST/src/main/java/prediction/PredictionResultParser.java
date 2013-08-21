@@ -111,11 +111,13 @@ public class PredictionResultParser {
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
             feature.setTypeLabel(label);
             feature.setHeight(featureHeight);
-            feature.setFeatureTypeLabel(label+" 2");
+            feature.setFeatureTypeLabel(label);
             feature.setWidth(calculateXPixel(stop) - calculateXPixel(start));
             feature.setStroke(getHexaColorFromRank(rankingInt));
             feature.setStrokeWidth(1);
             feature.setFill(getHexaColorFromRank(rankingInt));
+            feature.setEvidenceCode(name);
+            feature.setEvidenceText("HMMER");
         } else if(type.equalsIgnoreCase("pattern")) {
             // for pattern
             feature.setCx(calculateXPixel(start));
@@ -127,6 +129,8 @@ public class PredictionResultParser {
             feature.setFill("#AA8CF0");
             feature.setStroke("#AA8CF0");
             feature.setStrokeWidth(1);
+            feature.setEvidenceCode("");
+            feature.setEvidenceText("EMBOSS fuzzpro");
         }
         feature.setFillOpacity(0.7);
 
