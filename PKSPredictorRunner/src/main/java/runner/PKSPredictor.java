@@ -28,7 +28,7 @@ public class PKSPredictor implements Runnable {
         if(!outPath.endsWith(File.separator))
             outPath = outPath+File.separator;
         builder.append(getPref(RunnerPreferenceField.PythonPath)).
-                append(File.separator).
+                append(getPref(RunnerPreferenceField.PythonPath).length()>0 ? File.separator : "").
                 append("python ").
                 append(getPref(RunnerPreferenceField.ScriptPath)).append("runQueryAgainstHMMModels.py ");
         builder.append(fastaPath+" ").append(getPref(RunnerPreferenceField.HMMERModelPath)+" ").append(outPath+" ")
@@ -54,9 +54,14 @@ public class PKSPredictor implements Runnable {
                 runJob.setExecutable(true);
 
                 StringBuilder builder = new StringBuilder();
-                builder.append("bsub -q research-rh6 -cwd ")
+                builder.append("bsub -q normal -cwd ")
                         .append(outPath).append(" -o ").append("run.out")
                         .append(" -e ").append("run.err ").append(outPath).append("runJob.sh");
+
+                String clusterExecCommand = builder.toString();
+                pksPredProc = Runtime.getRuntime().exec(clusterExecCommand);
+                writeToFile(pksPredProc.getInputStream(), outPath+"runCluster.out");
+                writeToFile(pksPredProc.getErrorStream(), outPath+"runCluster.err");
             } else {
                 pksPredProc = Runtime.getRuntime().exec(command);
                 writeToFile(pksPredProc.getInputStream(), outPath+"run.out");
