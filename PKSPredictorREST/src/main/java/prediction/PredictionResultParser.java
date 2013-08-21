@@ -109,9 +109,10 @@ public class PredictionResultParser {
             feature.setType("rect");
             feature.setFeatureId((name+"_"+stackNumber).replaceAll(" ","_"));
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
-            feature.setTypeLabel(label);
-            feature.setHeight(featureHeight);
             feature.setFeatureTypeLabel(label);
+            feature.setTypeLabel(label);
+            feature.setTypeCode(name);
+            feature.setHeight(featureHeight);
             feature.setWidth(calculateXPixel(stop) - calculateXPixel(start));
             feature.setStroke(getHexaColorFromRank(rankingInt));
             feature.setStrokeWidth(1);
@@ -124,7 +125,10 @@ public class PredictionResultParser {
             feature.setCy(initialPatternY);
             feature.setFeatureId((name+"_"+start).replaceAll(" ","_"));
             feature.setFeatureLabel(name);
+            feature.setFeatureTypeLabel("");
             feature.setType("diamond");
+            feature.setTypeLabel("");
+            feature.setTypeCode("");
             feature.setR(patternRadius);
             feature.setFill("#AA8CF0");
             feature.setStroke("#AA8CF0");
