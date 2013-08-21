@@ -6,6 +6,7 @@ import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,12 @@ public class SequenceValidator {
         this.sequenceIdentifiers = new ArrayList<String>();
         this.outputPath = outputPath;
         processInput(fastaFileInputStream);
+    }
+
+    public SequenceValidator(String sequenceLines, String outputPath) {
+        this.sequenceIdentifiers = new ArrayList<String>();
+        this.outputPath = outputPath;
+        processInput(new ByteArrayInputStream(sequenceLines.getBytes(Charset.forName("UTF-8"))));
     }
 
     private void processInput(InputStream input) {
@@ -76,9 +83,7 @@ public class SequenceValidator {
         }
     }
 
-    public SequenceValidator(String[] sequenceLines) {
 
-    }
 
     public String getFastaPath() {
         return fastaPath;

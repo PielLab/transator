@@ -78,7 +78,6 @@ public class ValidateInput extends HttpServlet {
                 }
 
                 if(seqInput==null || seqInput.trim().length()==0) {
-                    seqInput = null;
                     //validator = new SequenceValidator(request.getPart("fastaFile").getInputStream());
                     for (FileItem item : items) {
                         if(!item.isFormField() && item.getFieldName().equalsIgnoreCase("fastaFile")) {
@@ -86,7 +85,7 @@ public class ValidateInput extends HttpServlet {
                         }
                     }
                 } else {
-                    validator = new SequenceValidator(seqInput.split("\n"));
+                    validator = new SequenceValidator(seqInput,outputRepPath.getCanonicalPath());
                 }
 
             } catch (FileUploadException e) {
