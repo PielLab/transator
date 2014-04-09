@@ -1,6 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import org.apache.log4j.Logger;
+import org.openscience.cdk.atomtype.CDKAtomTypeMatcher;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -8,6 +9,8 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.io.MDLV2000Reader;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import org.openscience.cdk.tools.CDKHydrogenAdder;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 
 
 /**
@@ -39,11 +42,13 @@ public class PKMonomer {
         try {
             MDLV2000Reader reader =
                     new MDLV2000Reader(PKMonomer.class.getResourceAsStream("/uk/ac/ebi/cheminformatics/structures/"+name+".mol"));
-            return reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
+            IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
+            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
+            CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(mol);
+            return mol;
         } catch (CDKException e) {
             throw new RuntimeException("Could not read molecule for "+cladeName,e);
         } catch (NullPointerException e) {
-            LOGGER.info("Could not read molecule for "+cladeName);
             return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
         }
     }
