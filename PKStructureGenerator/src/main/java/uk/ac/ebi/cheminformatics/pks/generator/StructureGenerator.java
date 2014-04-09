@@ -34,6 +34,7 @@ public class StructureGenerator {
 
         SequenceFeature finalizer = new DomainSeqFeature(0,0,"finalExtension","0");
         assembler.addMonomer(finalizer);
+        assembler.postProcess();
 
         this.structure = assembler.getStructure();
     }
