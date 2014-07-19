@@ -3,6 +3,9 @@ package runner;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.prefs.Preferences;
 
 
@@ -44,12 +47,17 @@ public class PKSPredictor implements Runnable {
     @Override
     public void run() {
         Process pksPredProc;
+        Process cronJob;
         try {
+
+            File cronFile = createCronJobFile();
+            String cronCommand = "cron "+cronFile.getAbsolutePath();
 
             if(getPref(RunnerPreferenceField.UseCluster).length()>0) {
                 File runJob = new File(outPath+"runJob.sh");
                 BufferedWriter writer = new BufferedWriter(new FileWriter(runJob));
-                writer.write(command);
+                writer.write(command+"\n");
+                //writer.write(cronCommand+"\n");
                 writer.close();
                 runJob.setExecutable(true);
 
@@ -68,9 +76,28 @@ public class PKSPredictor implements Runnable {
                 writeToFile(pksPredProc.getErrorStream(), outPath+"run.err");
             }
 
+            cronJob = Runtime.getRuntime().exec(cronCommand);
+            writeToFile(cronJob.getInputStream(), outPath+"cronJob.out");
+            writeToFile(cronJob.getErrorStream(), outPath+"cronJob.err");
+
         } catch (IOException e) {
             LOGGER.error("Could produce the execution files",e);
             throw new RuntimeException("Could produce the execution files",e);
+        }
+    }
+
+    private File createCronJobFile() {
+        try {
+            File cronJobFile = new File(outPath+"cronJob.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(cronJobFile));
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.HOUR,2);
+            SimpleDateFormat format = new SimpleDateFormat("m h d M ");
+            writer.write(format.format(now.getTime())+"* rm -rf "+outPath+"\n");
+            writer.close();
+            return cronJobFile;
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create cron job file",e);
         }
     }
 

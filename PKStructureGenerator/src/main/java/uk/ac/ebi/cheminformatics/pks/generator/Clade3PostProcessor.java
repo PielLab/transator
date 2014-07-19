@@ -1,12 +1,13 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import org.openscience.cdk.config.IsotopeFactory;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
-import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 
-import java.util.List;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,84 +22,104 @@ public class Clade3PostProcessor implements PostProcessor {
         //Connect C atom connected to R6 to C atom connected to R1 two modules upstream. R6 goes away.
         Integer currentIndex = structure.getMonomerIndex(monomer);
         PKMonomer upstream2 = structure.getMonomer(currentIndex - 2);
-        IBond r6toCbond = getR6toCBond(monomer);
-        IAtom cR1upstream2 = upstream2.getPreConnectionAtom();
-        if(r6toCbond!=null) {
-            Integer r6Index = r6toCbond.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
-            IAtom r6 =  r6toCbond.getAtom(r6Index);
-            //IAtom cBoundR6 = r6toCbond.getConnectedAtom(r6);
-
-            r6toCbond.setAtom(cR1upstream2,r6Index);
-            structure.getMolecule().removeAtom(r6);
-            monomer.getMolecule().removeAtom(r6);
+        // We need to check whether upstream2 monomer has a C=O that can attack
+        // the current clade 3 C=C bond.
+        IBond upstream2C_bond_O = getCBondToOxygen(upstream2,structure);
+        if(upstream2C_bond_O == null) {
+            attemptToAddCOBondOnUpstream2C(upstream2,structure);
+            upstream2C_bond_O = getCBondToOxygen(upstream2,structure);
         }
-
-        //Connect C atom connected to R5 to C atom connected to R2 two modules upstream. R5 goes away.
-        IBond r5toCbond = getR5toCBond(monomer);
-        IAtom cR2upstream2 = upstream2.getPosConnectionAtom();
-        if(r5toCbond!=null) {
-            Integer r5Index = r5toCbond.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
-            IAtom r5 = r5toCbond.getAtom(r5Index);
-            structure.getMolecule().removeBond(r5toCbond);
-            monomer.getMolecule().removeBond(r5toCbond);
-            structure.getMolecule().removeAtom(r5);
-            monomer.getMolecule().removeAtom(r5);
-            //IAtom cBoundR5 = r5toCbond.getConnectedAtom(r5);
-
-            r5toCbond.setAtom(cR2upstream2,r5Index);
-            structure.getMolecule().addBond(r5toCbond);
-            monomer.getMolecule().addBond(r5toCbond);
+        IBond currentC_dbond_C = getCDoubleBondC(monomer,structure);
+        IAtom cInCurrentMonomerToAttack = monomer.getPosConnectionAtom();
+        for(IAtom atomConToCinCurrentMonomer : structure.getMolecule().getConnectedAtomsList(cInCurrentMonomerToAttack)) {
+            if(upstream2C_bond_O!=null && currentC_dbond_C!=null
+                    && currentC_dbond_C.contains(atomConToCinCurrentMonomer)) {
+                IAtom oxygenInDoubleBond2Upstream =
+                        upstream2C_bond_O.getAtom(0).getSymbol().equals("O")
+                                ? upstream2C_bond_O.getAtom(0) : upstream2C_bond_O.getAtom(1);
+                upstream2C_bond_O.setOrder(IBond.Order.SINGLE);
+                currentC_dbond_C.setOrder(IBond.Order.SINGLE);
+                IBond upstreamOattackCurrentCbond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
+                upstreamOattackCurrentCbond.setOrder(IBond.Order.SINGLE);
+                upstreamOattackCurrentCbond.setAtoms(new IAtom[]{oxygenInDoubleBond2Upstream,atomConToCinCurrentMonomer});
+                structure.getMolecule().addBond(upstreamOattackCurrentCbond);
+            }
         }
-        //Connect C atom connected to R2 two modules upstream to C atom connected to R1 one module upstream.
-        PKMonomer upstream1 = structure.getMonomer(currentIndex - 1);
-        IAtom cR1upstream1 = upstream1.getPreConnectionAtom();
-        IBond bond_CR2ups2_CR1ups1 = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
-        bond_CR2ups2_CR1ups1.setAtoms(new IAtom[]{cR2upstream2,cR1upstream1});
-        bond_CR2ups2_CR1ups1.setOrder(IBond.Order.SINGLE);
-        structure.getMolecule().addBond(bond_CR2ups2_CR1ups1);
-
-        //Connect C atom connected to R1 of upstream module to C atom connected to R2 of upstream module.
-        // R4 and R3 go away.
-        IBond bond_CR1ups1_CR2ups1 = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
-        IAtom cR2upstream1 = upstream1.getPosConnectionAtom();
-        bond_CR1ups1_CR2ups1.setAtoms(new IAtom[]{cR1upstream1,cR2upstream1});
-        bond_CR1ups1_CR2ups1.setOrder(IBond.Order.SINGLE);
-        structure.getMolecule().addBond(bond_CR1ups1_CR2ups1);
     }
 
-    private IBond getR6toCBond(PKMonomer monomer) {
-        IAtomContainer struct = monomer.getMolecule();
-        for (IAtom atom : struct.atoms()) {
-            if(atom instanceof IPseudoAtom && ((IPseudoAtom)atom).getLabel().equalsIgnoreCase("R6") ) {
-                List<IBond> bonds = struct.getConnectedBondsList(atom);
-                if(bonds.size()==1) {
-                    return bonds.get(0);
+    private void attemptToAddCOBondOnUpstream2C(PKMonomer upstream2, PKStructure structure) {
+        IAtom cPosConnection = upstream2.getPosConnectionAtom();
+        for(IAtom cConnectedToCposConnection : upstream2.getMolecule().getConnectedAtomsList(cPosConnection)) {
+            if(!cConnectedToCposConnection.getSymbol().equals("C") || !upstream2.getMolecule().contains(cConnectedToCposConnection))
+                continue;
+            int hs = AtomContainerManipulator.countHydrogens(structure.getMolecule(),cConnectedToCposConnection);
+            if(3 > hs && hs>=1) {
+                IBond coBond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
+                IAtom oxygen = SilentChemObjectBuilder.getInstance().newInstance(IAtom.class);
+                oxygen.setSymbol("O");
+                try {
+                    oxygen = IsotopeFactory.getInstance(SilentChemObjectBuilder.getInstance()).configure(oxygen);
+                } catch (IOException e) {
+                    System.out.println("Could set oxygen atom");
+                }
+                coBond.setAtom(cConnectedToCposConnection,0);
+                coBond.setAtom(oxygen, 1);
+                coBond.setOrder(IBond.Order.SINGLE);
+                structure.getMolecule().addBond(coBond);
+                upstream2.getMolecule().addBond(coBond);
+                structure.getMolecule().addAtom(oxygen);
+                upstream2.getMolecule().addAtom(oxygen);
+                break;
+            }
+        }
+    }
+
+    private IBond getCBondToOxygen(PKMonomer monomer, PKStructure structure) {
+        IBond bond = getS1BondToS2(monomer, "C", "O", IBond.Order.SINGLE);
+        if(bond==null)
+            bond = getS1BondToS2(monomer, "C", "O", IBond.Order.DOUBLE);
+        return bond;
+    }
+
+    private IBond getCDoubleBondC(PKMonomer monomer, PKStructure structure) {
+        IAtom cInMonomer = monomer.getPosConnectionAtom();
+        for (IAtom cConToCInMonomer : structure.getMolecule().getConnectedAtomsList(cInMonomer)) {
+            if(cConToCInMonomer.getSymbol().equals("C")) {
+                for(IBond bond : structure.getMolecule().getConnectedBondsList(cConToCInMonomer)) {
+                    for(IAtom atom : bond.atoms()) {
+                        if(atom.equals(cConToCInMonomer))
+                            continue;
+                        if(atom.getSymbol().equals("C") && !atom.equals(cInMonomer))//bond.getOrder().equals(IBond.Order.DOUBLE))
+                            return bond;
+                    }
                 }
             }
         }
         return null;
     }
 
-    private IBond getR5toCBond(PKMonomer monomer) {
-        IAtomContainer struct = monomer.getMolecule();
-        for (IAtom atom : struct.atoms()) {
-            if(atom instanceof IPseudoAtom && ((IPseudoAtom)atom).getLabel().equalsIgnoreCase("R5") ) {
-                List<IBond> bonds = struct.getConnectedBondsList(atom);
-                if(bonds.size()==1) {
-                    return bonds.get(0);
-//                    for (IBond bond : bonds) {
-//                        int pseudoAtoms = 0;
-//                        for (IAtom atomInBond : bond.atoms()) {
-//                            if(atomInBond instanceof IPseudoAtom)
-//                                pseudoAtoms++;
-//                        }
-//                        if(pseudoAtoms==1) {
-//                            return bond;
-//                        }
-//                    }
+    /**
+     * Returns a S1=S2 bond within a monomer.
+     *
+     * @param monomer
+     * @return
+     */
+    private IBond getS1BondToS2(PKMonomer monomer, String symbol1, String symbol2, IBond.Order order) {
+        IAtomContainer mon = monomer.getMolecule();
+        for(IBond bond : mon.bonds()) {
+            if(bond.getAtomCount()==2 && bond.getOrder().equals(order)) {
+
+                if((bond.getAtom(0).getSymbol().equals(symbol1)
+                        && bond.getAtom(1).getSymbol().equals(symbol2))
+                    ||
+                        (bond.getAtom(1).getSymbol().equals(symbol1)
+                                && bond.getAtom(0).getSymbol().equals(symbol2)) ) {
+                    return bond;
                 }
             }
         }
         return null;
     }
+
+
 }

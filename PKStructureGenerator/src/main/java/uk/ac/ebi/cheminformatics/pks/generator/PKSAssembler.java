@@ -7,6 +7,9 @@ import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pmoreno
@@ -20,8 +23,11 @@ public class PKSAssembler {
 
     private PKStructure structure;
 
+    private List<SequenceFeature> toBePostProcessed;
+
     public PKSAssembler() {
         this.structure = new PKStructure();
+        this.toBePostProcessed = new LinkedList<SequenceFeature>();
     }
 
     /**
@@ -70,8 +76,7 @@ public class PKSAssembler {
 
             // here we do post processing specific to the particular clade just added
             if(sequenceFeature.hasPostProcessor()) {
-                PostProcessor proc = sequenceFeature.getPostProcessor();
-                proc.process(structure,sequenceFeature.getMonomer());
+                toBePostProcessed.add(sequenceFeature);
             }
         }
     }
@@ -80,6 +85,13 @@ public class PKSAssembler {
         IAtomContainer mol = structure.getMolecule();
         if(!ConnectivityChecker.isConnected(mol)) {
             LOGGER.error("Newest feature "+feature.getName()+" produced disconnection");
+        }
+    }
+
+    public void postProcess() {
+        for (SequenceFeature toPP : this.toBePostProcessed) {
+            PostProcessor proc = toPP.getPostProcessor();
+            proc.process(structure,toPP.getMonomer());
         }
     }
 
@@ -116,4 +128,5 @@ public class PKSAssembler {
     public PKStructure getStructure() {
         return structure;
     }
+
 }

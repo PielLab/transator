@@ -12,7 +12,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <restlet.version>2.1.2</restlet.version>
+        <restlet.version>2.1.7</restlet.version>
     </properties>
 
     <dependencies>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
+            <version>7.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

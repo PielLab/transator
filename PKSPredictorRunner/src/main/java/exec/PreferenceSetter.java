@@ -6,6 +6,7 @@ import runner.RunnerPreferenceField;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -37,18 +38,28 @@ public class PreferenceSetter {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        PreferenceSetter setter = new PreferenceSetter();
-        for (RunnerPreferenceField field : RunnerPreferenceField.values()) {
-            System.out.println("Set value for "+field.toString()+" [Y/n] :");
-            String line = reader.readLine();
-            if(line.toLowerCase().equals("y")) {
-                System.out.print(field.toString() + " : ");
-                line = reader.readLine();
-                setter.set(field,line);
+        if(args.length>0) {
+            PreferenceParser pparser = new PreferenceParser();
+            PreferenceSetter setter = new PreferenceSetter();
+            Map<Enum,String> tuples = pparser.parse(args[0]);
+            for(Enum key : tuples.keySet()) {
+                setter.set(key,tuples.get(key));
             }
+            setter.flush();
+        } else {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            PreferenceSetter setter = new PreferenceSetter();
+            for (RunnerPreferenceField field : RunnerPreferenceField.values()) {
+                System.out.println("Set value for "+field.toString()+" [Y/n] :");
+                String line = reader.readLine();
+                if(line.toLowerCase().equals("y")) {
+                    System.out.print(field.toString() + " : ");
+                    line = reader.readLine();
+                    setter.set(field,line);
+                }
+            }
+            setter.flush();
         }
-        setter.flush();
     }
 
 
