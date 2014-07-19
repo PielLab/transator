@@ -19,7 +19,7 @@ public class PreferenceParser {
         Map<Enum,String> map = new HashMap<Enum, String>();
         for (String pair : pairs) {
             String[] token = pair.split(":");
-            map.put(RunnerPreferenceField.valueOf(token[0]),token[1]);
+            map.put(RunnerPreferenceField.valueOf(token[0]),token.length==2 ? token[1] : "");
         }
         return map;
     }

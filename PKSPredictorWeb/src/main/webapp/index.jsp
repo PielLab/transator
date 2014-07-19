@@ -28,7 +28,7 @@
     This tool predicts the structure of a polyketide based on the sequence of the <i>trans</i>-AT Polyketide Synthase
     enzyme that synthesizes that small molecule. Currently, only protein sequences in proper fasta format can be used as input.
 </p>
-<form action="${ pageContext.request.contextPath }/ValidateInput" method="post" enctype="multipart/form-data">
+<form action="ValidateInput" method="post" enctype="multipart/form-data">
 <p class="textCentering">Paste you protein sequences in fasta format:</p>
 <div class="content" style="vertical-align: middle;">
 <div class="textarea textCentering">

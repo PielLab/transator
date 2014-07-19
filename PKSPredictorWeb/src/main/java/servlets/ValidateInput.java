@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServlet;
  * Time: 13:41
  * To change this template use File | Settings | File Templates.
  */
-@WebServlet("/ValidateInput")
+//@WebServlet("/ValidateInput")
 @MultipartConfig
 public class ValidateInput extends HttpServlet {
 
