@@ -44,7 +44,7 @@ public class PKStructureImageGenerator {
         List<IGenerator<IAtomContainer>> generators = new ArrayList<IGenerator<IAtomContainer>>();
         generators.add(new BasicSceneGenerator());
         generators.add(new RingGenerator());
-        generators.add(new ExtendedAtomGenerator()); // I assume that’s doing the –OH thingy you want!
+        generators.add(new ExtendedAtomGenerator()); // I assume that is doing the OH thingy you want!
         //generators.add(new AtomNumberGenerator());
         this.chemicalMoleculeRenderer = new AtomContainerRenderer(generators, new AWTFontManager());
 
