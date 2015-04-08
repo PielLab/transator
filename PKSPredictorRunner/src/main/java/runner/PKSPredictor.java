@@ -34,9 +34,17 @@ public class PKSPredictor implements Runnable {
                 append(getPref(RunnerPreferenceField.PythonPath).length()>0 ? File.separator : "").
                 append("python ").
                 append(getPref(RunnerPreferenceField.ScriptPath)).append("runQueryAgainstHMMModels.py ");
-        builder.append(fastaPath+" ").append(getPref(RunnerPreferenceField.HMMERModelPath)+" ").append(outPath+" ")
-                .append(getPref(RunnerPreferenceField.HMMERPath)+" ").append(getPref(RunnerPreferenceField.FuzzProPath))
-                .append(" allDomains").append(" > ").append(outPath+"run.log"+" 2>&1");
+        builder.append("-q ").append(fastaPath+" ")
+                .append("-c ").append(getPref(RunnerPreferenceField.HMMERModelPath)+" ")
+                .append("-o ").append(outPath+" ")
+                .append("--HMMERPath=").append(getPref(RunnerPreferenceField.HMMERPath)+" ")
+                .append("--FuzzProPath=").append(getPref(RunnerPreferenceField.FuzzProPath)+" ")
+                .append("-a");
+        if(getPref(RunnerPreferenceField.HMMEROtherModelsPath).length()>0)
+            builder.append("-m ").append(getPref(RunnerPreferenceField.HMMEROtherModelsPath));
+        if(getPref(RunnerPreferenceField.NRPS2Path).length()>0)
+            builder.append("--NRPS2Path=").append(getPref(RunnerPreferenceField.NRPS2Path));
+        builder.append(" > ").append(outPath+"run.log"+" 2>&1");
         command = builder.toString();
     }
 
