@@ -8,5 +8,5 @@ package runner;
  * To change this template use File | Settings | File Templates.
  */
 public enum RunnerPreferenceField {
-    PythonPath, HMMERPath, FuzzProPath, ScriptPath, HMMERModelPath, UseCluster, TmpPath;
+    PythonPath, HMMERPath, FuzzProPath, ScriptPath, HMMERModelPath, UseCluster, TmpPath, HMMEROtherModelsPath, NRPS2Path;
 }
