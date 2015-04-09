@@ -47,6 +47,7 @@ public class PKSPredictor implements Runnable {
         builder.append(" > ").append(outPath+"run.log"+" 2>&1");
         command = builder.toString();
         LOGGER.info("Python Command : "+command);
+        System.out.println("Python Command : "+command);
     }
 
     private String getPref(RunnerPreferenceField field) {
