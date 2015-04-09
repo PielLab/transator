@@ -39,11 +39,11 @@ public class PKSPredictor implements Runnable {
                 .append("-o ").append(outPath+" ")
                 .append("--HMMERPath=").append(getPref(RunnerPreferenceField.HMMERPath)+" ")
                 .append("--FuzzProPath=").append(getPref(RunnerPreferenceField.FuzzProPath)+" ")
-                .append("-a");
+                .append("-a ");
         if(getPref(RunnerPreferenceField.HMMEROtherModelsPath).length()>0)
-            builder.append("-m ").append(getPref(RunnerPreferenceField.HMMEROtherModelsPath));
+            builder.append("-m ").append(getPref(RunnerPreferenceField.HMMEROtherModelsPath)+" ");
         if(getPref(RunnerPreferenceField.NRPS2Path).length()>0)
-            builder.append("--NRPS2Path=").append(getPref(RunnerPreferenceField.NRPS2Path));
+            builder.append("--NRPS2Path=").append(getPref(RunnerPreferenceField.NRPS2Path)+" ");
         builder.append(" > ").append(outPath+"run.log"+" 2>&1");
         command = builder.toString();
         LOGGER.info("Python Command : "+command);
