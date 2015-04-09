@@ -46,6 +46,7 @@ public class PKSPredictor implements Runnable {
             builder.append("--NRPS2Path=").append(getPref(RunnerPreferenceField.NRPS2Path));
         builder.append(" > ").append(outPath+"run.log"+" 2>&1");
         command = builder.toString();
+        LOGGER.info("Python Command : "+command);
     }
 
     private String getPref(RunnerPreferenceField field) {
