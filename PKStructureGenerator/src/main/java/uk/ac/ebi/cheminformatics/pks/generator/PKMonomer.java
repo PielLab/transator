@@ -1,7 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import org.apache.log4j.Logger;
-import org.openscience.cdk.atomtype.CDKAtomTypeMatcher;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
@@ -11,6 +10,10 @@ import org.openscience.cdk.io.MDLV2000Reader;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.CDKHydrogenAdder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -30,12 +33,25 @@ public class PKMonomer {
 
     private String cladeName;
 
+    public boolean isNonElongating() {
+        return isNonElongating;
+    }
+
+    private boolean isNonElongating =false;
+
     private IAtomContainer monomerMol;
 
     public PKMonomer(String name) {
         cladeName = name;
         this.monomerMol = loadStructure(name);
         setConnectionPoints();
+        //if(this.monomerMol.getProperty("EXTENDER")!=null) {
+        Set<String> nonElongatingClades = //new HashSet<>(Arrays.asList("Clade_27"));
+                new HashSet<>(Arrays.asList("Clade_27", "Clade_8a", "Clade_8b",
+                        "Clade_8", "Clade_10", "Clade_28"));
+        if(nonElongatingClades.contains(name)) {
+            this.isNonElongating =true;
+        }
     }
 
     private IAtomContainer loadStructure(String name) {

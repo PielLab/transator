@@ -37,16 +37,39 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
+        // Currently we are mixing "monomers" that are both clade domains (that add actual monomers)
+        // and patterns/other domains which characterize the previous KS clade, but don't really add monomers,
+        // so they shouldn't be called this way.
+        //LOGGER.info("Adding monomer " + sequenceFeature.getName());
         if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
             // empty molecule for advancing only
             return;
         }
         else if(structure.getMonomerCount()==0) {
+            // Starting nascent polyketide
+            structure.add(sequenceFeature.getMonomer());
+            checkNumberOfConnectedComponents(sequenceFeature);
+        }
+        else if(structure.getMonomerCount()==1 && sequenceFeature.getMonomer().isNonElongating()) {
+            /*
+               if the chain only has one monomer currently and the new sequence feature
+               represents a non-elongating clade, then we simply remove what it is there and
+               add the monomer of the non-elongating clade (which represents the transformation
+               done to the previously existing monomer).
+             */
+            structure.getMolecule().removeAllElements();
             structure.add(sequenceFeature.getMonomer());
             checkNumberOfConnectedComponents(sequenceFeature);
         }
         else
         {
+            // For extending clades (where no monomer should be added)
+            // we need to remove the previous monomer and enact the equivalent
+            // to the transformation provided.
+            if(sequenceFeature.getMonomer().isNonElongating()) {
+                structure.removeLastMonomer();
+            }
+
             IAtom connectionAtomInChain = structure.getConnectionAtom();
             IBond connectioBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
 
