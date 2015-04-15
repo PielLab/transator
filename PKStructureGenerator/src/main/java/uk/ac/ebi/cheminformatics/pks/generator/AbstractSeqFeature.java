@@ -1,5 +1,9 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Pattern sequence features stand for small patterns of amino acids in the PKS that signal particular
  * changes or modifications to the nascent PK chain. For this reason, they don't create a new PKMonomer,
@@ -17,11 +21,13 @@ public abstract class AbstractSeqFeature implements SequenceFeature {
     Integer start;
     Integer stop;
     String name;
+    List<SequenceFeature> subFeatures;
 
     public AbstractSeqFeature(Integer start, Integer stop, String name) {
         this.start = start;
         this.stop = stop;
         this.name = name;
+        this.subFeatures = new LinkedList<SequenceFeature>();
     }
 
     public PKMonomer getMonomer() {
@@ -30,5 +36,11 @@ public abstract class AbstractSeqFeature implements SequenceFeature {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void setSubFeatures(Collection<SequenceFeature> subfeatures) {
+        this.subFeatures.clear();
+        this.subFeatures.addAll(subfeatures);
     }
 }

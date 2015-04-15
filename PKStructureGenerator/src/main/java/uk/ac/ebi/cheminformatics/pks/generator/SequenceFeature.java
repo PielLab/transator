@@ -40,4 +40,12 @@ public interface SequenceFeature {
      * @return
      */
     PostProcessor getPostProcessor();
+
+    /**
+     * Sets the sub feature list with the provided collection. This is used to add
+     * as sub features the a domains/patterns found before the KS.
+     *
+     * @param subfeatures to set.
+     */
+    void setSubFeatures(Collection<SequenceFeature> subfeatures);
 }
