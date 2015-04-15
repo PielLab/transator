@@ -102,23 +102,44 @@ public class PredictionResultParser {
         feature.setTypeCategory(type);
         feature.setFeatureEnd(stop);
 
+        // Currently domain includes both Clades and NRPS2 results
+        // we should be able to tell the difference.
+        // TODO Currently we are doing this through the fact that
+        // NRPS domains don't have a ranking
+        boolean isClade = !ranking.equals("N/A");
         if(type.equalsIgnoreCase("domain")) {
-            Integer rankingInt = Integer.parseInt(ranking);
-            feature.setY(initialFeatureY + rankingInt * featureHeight);
+            if(isClade) {
+                Integer rankingInt = Integer.parseInt(ranking);
+                feature.setY(initialFeatureY + rankingInt * featureHeight);
+                feature.setStroke(getHexaColorFromRank(rankingInt));
+                feature.setFill(getHexaColorFromRank(rankingInt));
+            } else {
+                feature.setY(initialFeatureY + featureHeight);
+                feature.setStroke(getHexaColorFromRank(1));
+                feature.setFill(getHexaColorFromRank(1));
+            }
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
-            feature.setFeatureId((name+"_"+stackNumber).replaceAll(" ","_"));
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
-            feature.setFeatureTypeLabel(label);
-            feature.setTypeLabel(label);
+            if(isClade) {
+                feature.setFeatureId((name+"_"+stackNumber).replaceAll(" ","_"));
+                feature.setFeatureTypeLabel(label);
+                feature.setTypeLabel(label);
+            } else {
+                feature.setFeatureId(name+"_"+start);
+                feature.setFeatureTypeLabel("Amino acid");
+                feature.setTypeLabel("Amino acid");
+            }
             feature.setTypeCode(name);
             feature.setHeight(featureHeight);
             feature.setWidth(calculateXPixel(stop) - calculateXPixel(start));
-            feature.setStroke(getHexaColorFromRank(rankingInt));
             feature.setStrokeWidth(1);
-            feature.setFill(getHexaColorFromRank(rankingInt));
             feature.setEvidenceCode(name);
-            feature.setEvidenceText("HMMER");
+            if(isClade)
+                feature.setEvidenceText("HMMER");
+            else
+                feature.setEvidenceText("NRPS2");
+
         } else if(type.equalsIgnoreCase("pattern")) {
             // for pattern
             feature.setCx(calculateXPixel(start));
