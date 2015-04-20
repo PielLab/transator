@@ -1,4 +1,4 @@
-package uk.ac.ebi.cheminformatics.pks.generator;
+package uk.ac.ebi.cheminformatics.pks.monomer;
 
 import org.apache.log4j.Logger;
 import org.openscience.cdk.exception.CDKException;

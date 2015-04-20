@@ -6,6 +6,9 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessorFactory;
+import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
@@ -26,28 +29,35 @@ public class PKSAssembler {
     private PKStructure structure;
 
     private List<SequenceFeature> toBePostProcessed;
+    private List<SequenceFeature> subFeaturesForNextKS;
 
     public PKSAssembler() {
         this.structure = new PKStructure();
         this.toBePostProcessed = new LinkedList<SequenceFeature>();
+        this.subFeaturesForNextKS = new LinkedList<>();
     }
 
     /**
      * Given a sequenceFeature, it adds the next monomer to the PKS structure. The monomer is obtained from the sequence
-     * feature.
+     * feature. According to the sub-features found upstream, modifications can be exerted on the monomer.
      *
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        // Currently we are mixing "monomers" that are both clade domains (that add actual monomers)
-        // and patterns/other domains which characterize the previous KS clade, but don't really add monomers,
-        // so they shouldn't be called this way.
+        if(!sequenceFeature.getClass().isInstance(KSDomainSeqFeature.class)) {
+            this.subFeaturesForNextKS.add(sequenceFeature);
+            return;
+        }
+        // From here, we are only looking at KS domains seq features.
         //LOGGER.info("Adding monomer " + sequenceFeature.getName());
         if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
             // empty molecule for advancing only
             return;
         }
-        else if(structure.getMonomerCount()==0) {
+
+        processSubFeatures(sequenceFeature.getMonomer());
+
+        if(structure.getMonomerCount()==0) {
             // Starting nascent polyketide
             structure.add(sequenceFeature.getMonomer());
             checkNumberOfConnectedComponents(sequenceFeature);
@@ -104,6 +114,18 @@ public class PKSAssembler {
                 toBePostProcessed.add(sequenceFeature);
             }
         }
+    }
+
+    /**
+     * Deals with all the modifications that different domains upstream of the current KS
+     * exert to the monomer added by this current KS.
+     */
+    private void processSubFeatures(PKMonomer monomer) {
+        for(SequenceFeature feat : subFeaturesForNextKS) {
+            MonomerProcessor processor = MonomerProcessorFactory.getMonomerProcessor(feat);
+            processor.modify(monomer);
+        }
+        subFeaturesForNextKS.clear();
     }
 
     private void checkNumberOfConnectedComponents(SequenceFeature feature) {

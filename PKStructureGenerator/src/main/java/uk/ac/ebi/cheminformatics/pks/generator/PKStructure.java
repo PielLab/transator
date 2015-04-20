@@ -1,10 +1,10 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
-import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
+import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 
 import java.util.ArrayList;
 import java.util.List;
