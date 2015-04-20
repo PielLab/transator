@@ -1,6 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.monomer;
 
-import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,13 +11,13 @@ import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
  */
 public class MonomerProcessorFactory {
     public static MonomerProcessor getMonomerProcessor(SequenceFeature feat) {
-        if(feat.getClass().isInstance(ERDomainSeqFeature)) {
+        if(feat.getClass().isInstance(ERDomainSeqFeature.class)) {
             return new ERMonomerProcessor();
-        } else if(feat.getClass().isInstance(MTDomainSeqFeature)) {
+        } else if(feat.getClass().isInstance(MTDomainSeqFeature.class)) {
             return new MTMonomerProcessor();
-        } else if(feat.getClass().isInstance(OMTDomainSeqFeature)) {
+        } else if(feat.getClass().isInstance(OMTDomainSeqFeature.class)) {
             return new OMTMonomerProcessor();
-        } else if(feat.getClass().isInstance(KRDomainSeqFeature)) {
+        } else if(feat.getClass().isInstance(KRDomainSeqFeature.class)) {
             return new KRMonomerProcessor();
         }
         return new NoActionMonomerProcessor();
