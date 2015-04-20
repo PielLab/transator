@@ -59,6 +59,17 @@ public class FeatureFileLineParser {
         return type;
     }
 
+    /**
+     * Obtains the subtype qualifier, which is used in particular by the
+     * KS clade domain annotator to signal that this sequence feature is a
+     * KS.
+     *
+     * @return the subtype string
+     */
+    public String getSubtype() {
+        return subtype;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,6 +85,7 @@ public class FeatureFileLineParser {
     private final String ranking;
     private final String stackNumber;
     private final String type;
+    private final String subtype;
     private final String name;
     private final String label;
 
@@ -93,6 +105,7 @@ public class FeatureFileLineParser {
         ranking = tokens.next();
         stackNumber = tokens.next();
         type = tokens.next();
+        subtype = tokens.next();
         name = processName(tokens.next());
         label = tokens.next();
     }
