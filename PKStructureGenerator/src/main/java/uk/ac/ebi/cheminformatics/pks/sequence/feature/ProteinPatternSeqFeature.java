@@ -1,6 +1,7 @@
-package uk.ac.ebi.cheminformatics.pks.generator;
+package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,4 +1,9 @@
-package uk.ac.ebi.cheminformatics.pks.generator;
+package uk.ac.ebi.cheminformatics.pks.sequence.feature;
+
+import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
+import uk.ac.ebi.cheminformatics.pks.generator.PostProcessorFactory;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,6 +15,12 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 public class DomainSeqFeature extends AbstractSeqFeature implements SequenceFeature {
 
     PostProcessor postProcessor;
+
+    public DomainSeqFeature(FeatureFileLineParser parser) {
+        super(parser.getStart(),parser.getStop(),parser.getName());
+        this.monomer = new PKMonomer(parser.getName());
+        this.postProcessor = PostProcessorFactory.getPostProcessor(parser.getName());
+    }
 
     public DomainSeqFeature(Integer start, Integer stop, String name, String evalue) {
         super(start,stop,name);

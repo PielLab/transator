@@ -1,7 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.parser;
 
-import uk.ac.ebi.cheminformatics.pks.generator.SequenceFeature;
-import uk.ac.ebi.cheminformatics.pks.generator.SequenceFeatureFactory;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory;
 
 import java.io.*;
 import java.util.Iterator;

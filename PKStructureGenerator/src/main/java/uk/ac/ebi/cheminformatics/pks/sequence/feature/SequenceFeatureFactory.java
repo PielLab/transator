@@ -1,4 +1,4 @@
-package uk.ac.ebi.cheminformatics.pks.generator;
+package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
@@ -13,8 +13,12 @@ public class SequenceFeatureFactory {
 
 
     public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        if(parser.getType().equalsIgnoreCase("domain")) {
-            return new DomainSeqFeature(parser.getStart(),parser.getStop(),parser.getName(),parser.getEvalue());
+        if(parser.getType().equalsIgnoreCase("domain")
+                && parser.getSubtype().equalsIgnoreCase("KS")) {
+            return new KSDomainSeqFeature(parser);
+        }
+        else if(parser.getType().equalsIgnoreCase("domain")) {
+            return new DomainSeqFeature(parser);
         } else if(parser.getType().equalsIgnoreCase("pattern")) {
             return PatternSeqFeatureFactory.makeSequenceFeature(parser);
         }

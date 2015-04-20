@@ -6,6 +6,8 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.util.LinkedList;
 import java.util.List;

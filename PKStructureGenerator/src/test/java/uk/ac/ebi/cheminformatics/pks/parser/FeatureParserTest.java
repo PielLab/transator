@@ -1,7 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.parser;
 
 import org.junit.Test;
-import uk.ac.ebi.cheminformatics.pks.generator.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 /**
  * Created with IntelliJ IDEA.

@@ -4,6 +4,8 @@ import com.google.common.base.Joiner;
 import org.junit.Test;
 import org.openscience.cdk.io.MDLV2000Writer;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory;
 
 import java.io.FileWriter;
 
