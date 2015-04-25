@@ -1,8 +1,8 @@
-420	845	4.5e-122	399.3	1	1	domain	Clade_14	GNAT
-4836	5244	6.3e-151	494.1	1	4	domain	Clade_12	L alpha methyl alpha dimethyl
-4836	5244	6.3e-151	494.1	1	4	domain	Clade_12	L alpha methyl alpha dimethyl
-4836	5244	6.3e-151	494.1	1	4	domain	Clade_27	L alpha methyl alpha dimethyl
-6582	7015	1.6e-103	338.2	1	5	domain	Clade_29	betaOH
-7842	8258	2.6e-142	465.9	1	6	domain	Clade_13	M a) beta hydroxy
-9340	9771	4.2e-128	419.3	1	7	domain	Clade_27	AA non-elongating double bond recognition
-473	893	1.1e-73	239.8	1	1	domain	Clade_29	betaOH
+420	845	4.5e-122	399.3	1	1	domain	KS  Clade_14	GNAT
+4836	5244	6.3e-151	494.1	1	4	domain	KS  Clade_12	L alpha methyl alpha dimethyl
+4836	5244	6.3e-151	494.1	1	4	domain	KS  Clade_12	L alpha methyl alpha dimethyl
+4836	5244	6.3e-151	494.1	1	4	domain	KS  Clade_27	L alpha methyl alpha dimethyl
+6582	7015	1.6e-103	338.2	1	5	domain	KS  Clade_29	betaOH
+7842	8258	2.6e-142	465.9	1	6	domain	KS  Clade_13	M a) beta hydroxy
+9340	9771	4.2e-128	419.3	1	7	domain	KS  Clade_27	AA non-elongating double bond recognition
+473	893	1.1e-73	239.8	1	1	domain	KS  Clade_29	betaOH
