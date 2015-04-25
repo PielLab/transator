@@ -44,7 +44,7 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        if(!sequenceFeature.getClass().isInstance(KSDomainSeqFeature.class)) {
+        if(!(sequenceFeature instanceof KSDomainSeqFeature)) {
             this.subFeaturesForNextKS.add(sequenceFeature);
             return;
         }
