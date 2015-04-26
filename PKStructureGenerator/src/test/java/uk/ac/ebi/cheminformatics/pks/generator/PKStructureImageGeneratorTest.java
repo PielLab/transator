@@ -69,4 +69,17 @@ public class PKStructureImageGeneratorTest {
         File outputFile = new File("/tmp/pksOnnamideWithOMTImage.png");
         ImageIO.write(image,"png",outputFile);
     }
+
+    @Test
+    public void testGenerateStructureImageOnnamideMTTest() throws Exception {
+        StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream("onnamide_MTsubFeatureTest.features"));
+        generator.run();
+        PKStructure struct = generator.getStructure();
+
+        PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
+        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 900));
+
+        File outputFile = new File("/tmp/pksOnnamideWithMTImage.png");
+        ImageIO.write(image,"png",outputFile);
+    }
 }
