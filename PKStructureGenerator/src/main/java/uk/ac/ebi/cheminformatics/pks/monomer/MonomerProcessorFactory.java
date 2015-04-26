@@ -11,13 +11,13 @@ import uk.ac.ebi.cheminformatics.pks.sequence.feature.*;
  */
 public class MonomerProcessorFactory {
     public static MonomerProcessor getMonomerProcessor(SequenceFeature feat) {
-        if(feat.getClass().isInstance(ERDomainSeqFeature.class)) {
+        if(feat instanceof ERDomainSeqFeature) {
             return new ERMonomerProcessor();
-        } else if(feat.getClass().isInstance(MTDomainSeqFeature.class)) {
+        } else if(feat instanceof MTDomainSeqFeature) {
             return new MTMonomerProcessor();
-        } else if(feat.getClass().isInstance(OMTDomainSeqFeature.class)) {
+        } else if(feat instanceof OMTDomainSeqFeature) {
             return new OMTMonomerProcessor();
-        } else if(feat.getClass().isInstance(KRDomainSeqFeature.class)) {
+        } else if(feat instanceof KRDomainSeqFeature) {
             return new KRMonomerProcessor();
         }
         return new NoActionMonomerProcessor();
