@@ -43,4 +43,17 @@ public class PKStructureImageGeneratorTest {
         ImageIO.write(image,"png",outputFile);
 
     }
+
+    @Test
+    public void testGenerateStructureImageOnnamideERTest() throws Exception {
+        StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream("onnamide_ERsubFeatureTest.features"));
+        generator.run();
+        PKStructure struct = generator.getStructure();
+
+        PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
+        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 900));
+
+        File outputFile = new File("/tmp/pksOnnamideWithERImage.png");
+        ImageIO.write(image,"png",outputFile);
+    }
 }
