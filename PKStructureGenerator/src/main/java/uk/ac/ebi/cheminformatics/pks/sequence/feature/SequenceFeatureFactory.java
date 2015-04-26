@@ -13,12 +13,29 @@ public class SequenceFeatureFactory {
 
 
     public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        if(parser.getType().equalsIgnoreCase("domain")
-                && parser.getSubtype().equalsIgnoreCase("KS")) {
-            return new KSDomainSeqFeature(parser);
-        }
-        else if(parser.getType().equalsIgnoreCase("domain")) {
-            return new DomainSeqFeature(parser);
+        if(parser.getType().equalsIgnoreCase("domain")) {
+            DomainSeqFeature nseqFeat;
+            switch (parser.getSubtype()) {
+                case "ER":
+                    nseqFeat = new ERDomainSeqFeature(parser);
+                    break;
+                case "MT":
+                    nseqFeat = new MTDomainSeqFeature(parser);
+                    break;
+                case "KR":
+                    nseqFeat = new KRDomainSeqFeature(parser);
+                    break;
+                case "KS":
+                    nseqFeat = new KSDomainSeqFeature(parser);
+                    break;
+                case "OMT":
+                    nseqFeat = new OMTDomainSeqFeature(parser);
+                    break;
+                default:
+                    nseqFeat = new DomainSeqFeature(parser);
+                    break;
+            }
+            return nseqFeat;
         } else if(parser.getType().equalsIgnoreCase("pattern")) {
             return PatternSeqFeatureFactory.makeSequenceFeature(parser);
         }
