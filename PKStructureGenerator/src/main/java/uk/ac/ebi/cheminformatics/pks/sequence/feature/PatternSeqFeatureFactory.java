@@ -1,4 +1,4 @@
-package uk.ac.ebi.cheminformatics.pks.generator;
+package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 

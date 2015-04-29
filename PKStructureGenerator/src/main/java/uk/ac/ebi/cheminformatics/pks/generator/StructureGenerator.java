@@ -1,6 +1,8 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.io.InputStream;
 

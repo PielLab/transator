@@ -93,6 +93,7 @@ public class PredictionResultParser {
         String ranking = tokens.next();
         String stackNumber = tokens.next();
         String type = tokens.next();
+        String subtype = tokens.next();
         String name = tokens.next();
         String label = tokens.next();
 
@@ -106,7 +107,12 @@ public class PredictionResultParser {
         // we should be able to tell the difference.
         // TODO Currently we are doing this through the fact that
         // NRPS domains don't have a ranking
-        boolean isClade = !ranking.equals("N/A");
+        boolean isClade = subtype.equals("KS");
+        String evidence = "HMMER";
+        if(subtype.equals("NRPS2")) {
+            label = "Amino acid";
+            evidence = "NRPS2 Predictor";
+        }
         if(type.equalsIgnoreCase("domain")) {
             if(isClade) {
                 Integer rankingInt = Integer.parseInt(ranking);
@@ -115,8 +121,8 @@ public class PredictionResultParser {
                 feature.setFill(getHexaColorFromRank(rankingInt));
             } else {
                 feature.setY(initialFeatureY + featureHeight);
-                feature.setStroke(getHexaColorFromRank(1));
-                feature.setFill(getHexaColorFromRank(1));
+                feature.setStroke(getHexaColorFromSubtype(subtype));
+                feature.setFill(getHexaColorFromSubtype(subtype));
             }
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
@@ -127,18 +133,15 @@ public class PredictionResultParser {
                 feature.setTypeLabel(label);
             } else {
                 feature.setFeatureId(name+"_"+start);
-                feature.setFeatureTypeLabel("Amino acid");
-                feature.setTypeLabel("Amino acid");
+                feature.setFeatureTypeLabel(label);
+                feature.setTypeLabel(label);
             }
             feature.setTypeCode(name);
             feature.setHeight(featureHeight);
             feature.setWidth(calculateXPixel(stop) - calculateXPixel(start));
             feature.setStrokeWidth(1);
             feature.setEvidenceCode(name);
-            if(isClade)
-                feature.setEvidenceText("HMMER");
-            else
-                feature.setEvidenceText("NRPS2");
+            feature.setEvidenceText(evidence);
 
         } else if(type.equalsIgnoreCase("pattern")) {
             // for pattern
@@ -168,6 +171,47 @@ public class PredictionResultParser {
         Integer black = 188;
         String hex = String.format("#%02x%02x%02x", red, green, black);
         return hex;
+    }
+
+    /**
+     * Produces a hexadecimal colour based on the subtype string, for defined subtypes. Subtypes
+     * should be defined by an enumeration probably. Colours could be as well defined in the domain
+     * definition file externally.
+     *
+     * @param subtype
+     * @return
+     */
+    private String getHexaColorFromSubtype(String subtype) {
+        //http://colorbrewer2.org/?type=qualitative&scheme=Dark2&n=8
+        String hexColour;
+        switch (subtype) {
+            case "PS":
+                hexColour="#1b9e77";
+                break;
+            case "DH":
+                hexColour="#d95f02";
+                break;
+            case "ACP":
+                hexColour="#7570b3";
+                break;
+            case "AH":
+                hexColour="#e7298a";
+                break;
+            case "AT_AH":
+                hexColour="#66a61e";
+                break;
+            case "AT":
+                hexColour="#e6ab02";
+                break;
+            case "KR":
+                hexColour="#a6761d";
+                break;
+            default:
+                hexColour="#666666";
+                break;
+        }
+
+        return(hexColour);
     }
 
     private Integer calculateXPixel(Integer startInAA) {

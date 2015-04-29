@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pmoreno
