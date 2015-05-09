@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
+import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 
@@ -25,5 +27,10 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature implements Sequ
     @Override
     public PostProcessor getPostProcessor() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public MonomerProcessor getMonomerProcessor() {
+        return new NoActionMonomerProcessor();
     }
 }

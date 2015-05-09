@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
+import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessorFactory;
@@ -36,5 +38,10 @@ public class DomainSeqFeature extends AbstractSeqFeature implements SequenceFeat
     @Override
     public PostProcessor getPostProcessor() {
         return postProcessor;
+    }
+
+    @Override
+    public MonomerProcessor getMonomerProcessor() {
+        return new NoActionMonomerProcessor();
     }
 }
