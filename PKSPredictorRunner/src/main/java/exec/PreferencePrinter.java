@@ -2,6 +2,7 @@ package exec;
 
 import runner.PKSPredictor;
 import runner.RunnerPreferenceField;
+import uk.ac.ebi.cheminformatics.pks.PKSPreferences;
 
 import java.util.prefs.Preferences;
 
@@ -14,7 +15,7 @@ import java.util.prefs.Preferences;
  */
 public class PreferencePrinter {
     public static void main(String[] args) {
-        Preferences pref = Preferences.userNodeForPackage(PKSPredictor.class);
+        Preferences pref = Preferences.userNodeForPackage(PKSPreferences.class);
         StringBuilder builder = new StringBuilder();
         for (RunnerPreferenceField field : RunnerPreferenceField.values()) {
             String label = field.toString();

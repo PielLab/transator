@@ -1,6 +1,7 @@
 package runner;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.cheminformatics.pks.PKSPreferences;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -26,7 +27,7 @@ public class PKSPredictor implements Runnable {
 
     public PKSPredictor(String fastaPath, String outputPath) {
         StringBuilder builder = new StringBuilder();
-        prefs = Preferences.userNodeForPackage(PKSPredictor.class);
+        prefs = Preferences.userNodeForPackage(PKSPreferences.class);
         outPath = outputPath;
         if(!outPath.endsWith(File.separator))
             outPath = outPath+File.separator;

@@ -2,6 +2,7 @@ package exec;
 
 import runner.PKSPredictor;
 import runner.RunnerPreferenceField;
+import uk.ac.ebi.cheminformatics.pks.PKSPreferences;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class PreferenceSetter {
     private Preferences pref;
 
     public PreferenceSetter() {
-        pref = Preferences.userNodeForPackage(PKSPredictor.class);
+        pref = Preferences.userNodeForPackage(PKSPreferences.class);
     }
 
     public void set(Enum prefField, String value) {
