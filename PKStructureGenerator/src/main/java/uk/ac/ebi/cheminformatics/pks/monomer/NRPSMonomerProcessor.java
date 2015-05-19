@@ -3,6 +3,7 @@ package uk.ac.ebi.cheminformatics.pks.monomer;
 import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
+import org.openscience.cdk.interfaces.IPseudoAtom;
 import uk.ac.ebi.cheminformatics.pks.io.AminoAcidStructLoader;
 import uk.ac.ebi.cheminformatics.pks.io.StructureLoader;
 
@@ -51,7 +52,7 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
             if(atom_aa.getSymbol().equals("K")) {
                 K_aa = atom_aa;
                 atom_conn_K_aa = aaMol.getConnectedAtomsList(atom_aa).get(0);
-            } else if(atom_aa.getSymbol().equals("L")) {
+            } else if(atom_aa instanceof IPseudoAtom && ((IPseudoAtom) atom_aa).getLabel().equals("L")) {
                 L_aa = atom_aa;
             }
         }
@@ -76,6 +77,7 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
                 IAtom atom_conn_L = monomer.getMolecule().getConnectedAtomsList(L_aa).get(0);
                 L_bond.setAtom(N_monomer,0);
                 L_bond.setAtom(atom_conn_L,1);
+                monomer.getMolecule().removeAtom(L_aa);
             }
         }
 

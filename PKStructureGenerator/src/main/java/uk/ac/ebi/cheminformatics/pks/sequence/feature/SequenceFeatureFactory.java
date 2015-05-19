@@ -31,6 +31,9 @@ public class SequenceFeatureFactory {
                 case "OMT":
                     nseqFeat = new OMTDomainSeqFeature(parser);
                     break;
+                case "NRPS2":
+                    nseqFeat = new NRPSDomSeqFeature(parser);
+                    break;
                 default:
                     nseqFeat = new DomainSeqFeature(parser);
                     break;
