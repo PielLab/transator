@@ -23,18 +23,12 @@ public abstract class AbstractFileStructLoader {
     String cladeName;
     String errorLabel = "Could not read molecule for PKS Clade monomer: ";
 
-    public IAtomContainer loadStructure() {
-        try {
-            MDLV2000Reader reader =
-                    new MDLV2000Reader(new FileReader(this.path));
-            IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
-            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
-            CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(mol);
-            return mol;
-        } catch (CDKException |IOException e) {
-            throw new RuntimeException(errorLabel+cladeName,e);
-        } catch (NullPointerException e) {
-            return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
-        }
+    public IAtomContainer loadStructure() throws Exception{
+        MDLV2000Reader reader =
+                new MDLV2000Reader(new FileReader(this.path));
+        IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
+        AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
+        CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(mol);
+        return mol;
     }
 }
