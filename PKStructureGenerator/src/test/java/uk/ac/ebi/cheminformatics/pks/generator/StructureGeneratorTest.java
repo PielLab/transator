@@ -47,6 +47,12 @@ public class StructureGeneratorTest {
         runGenerator("onnamidShortExtender27Test.features","/tmp/onnamideExtenderShort.mol");
     }
 
+    @Test
+    public void testGlyNRPS2OnnamideSorted() throws Exception {
+        LOGGER.info("Starting NRPS2 Gly test onnamide test");
+        runGenerator("onnamid_sorted.features","/tmp/nrps2Gly_onnamideTest.mol");
+    }
+
     private void runGenerator(String features, String molFileOut) throws IOException, CDKException {
         StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream(features));
 

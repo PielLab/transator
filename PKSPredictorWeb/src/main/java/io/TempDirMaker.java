@@ -3,6 +3,7 @@ package io;
 import com.google.common.io.Files;
 import runner.PKSPredictor;
 import runner.RunnerPreferenceField;
+import uk.ac.ebi.cheminformatics.pks.PKSPreferences;
 
 import java.io.File;
 import java.util.prefs.Preferences;
@@ -16,7 +17,7 @@ import java.util.prefs.Preferences;
  */
 public class TempDirMaker {
 
-    private static Preferences prefs = Preferences.userNodeForPackage(PKSPredictor.class);
+    private static Preferences prefs = Preferences.userNodeForPackage(PKSPreferences.class);
     private static final int TEMP_DIR_ATTEMPTS = 10000;
 
     /**

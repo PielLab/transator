@@ -122,7 +122,7 @@ public class PKSAssembler {
      */
     private void processSubFeatures(PKMonomer monomer) {
         for(SequenceFeature feat : subFeaturesForNextKS) {
-            MonomerProcessor processor = MonomerProcessorFactory.getMonomerProcessor(feat);
+            MonomerProcessor processor = feat.getMonomerProcessor();
             processor.modify(monomer);
         }
         subFeaturesForNextKS.clear();

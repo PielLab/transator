@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 
@@ -51,4 +52,12 @@ public interface SequenceFeature {
      * @param subfeatures to set.
      */
     void setSubFeatures(Collection<SequenceFeature> subfeatures);
+
+    /**
+     * Returns the monomer processor for this sequence feature. Sequence features that do not
+     * require any monomer processing should return {@link uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor}.
+     *
+     * @return the monomer processor for this sequence feature.
+     */
+    public MonomerProcessor getMonomerProcessor();
 }

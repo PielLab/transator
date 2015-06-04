@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.monomer.MTMonomerProcessor;
+import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
@@ -14,5 +16,10 @@ import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 public class MTDomainSeqFeature extends DomainSeqFeature implements SequenceFeature{
     public MTDomainSeqFeature(FeatureFileLineParser parser) {
         super(parser);
+    }
+
+    @Override
+    public MonomerProcessor getMonomerProcessor() {
+        return new MTMonomerProcessor();
     }
 }
