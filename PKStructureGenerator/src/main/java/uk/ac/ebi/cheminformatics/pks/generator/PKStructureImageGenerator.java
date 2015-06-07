@@ -8,12 +8,15 @@ import org.openscience.cdk.layout.StructureDiagramGenerator;
 import org.openscience.cdk.renderer.AtomContainerRenderer;
 import org.openscience.cdk.renderer.IRenderer;
 import org.openscience.cdk.renderer.RendererModel;
+import org.openscience.cdk.renderer.SymbolVisibility;
 import org.openscience.cdk.renderer.font.AWTFontManager;
 import org.openscience.cdk.renderer.generators.*;
+import org.openscience.cdk.renderer.generators.standard.StandardGenerator;
 import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import org.openscience.cdk.tools.CDKHydrogenAdder;
+
 import javax.vecmath.Point2d;
 
 import java.awt.*;
@@ -41,25 +44,21 @@ public class PKStructureImageGenerator {
         //this.chemicalMoleculeRenderer = new AtomContainerRenderer(Arrays.asList(new BasicSceneGenerator(),
         //        new BasicBondGenerator(), new BasicAtomGenerator()), new AWTFontManager());
 
+        Font font = new Font("Verdana", Font.PLAIN, 14);
+
         List<IGenerator<IAtomContainer>> generators = new ArrayList<IGenerator<IAtomContainer>>();
         generators.add(new BasicSceneGenerator());
-        generators.add(new RingGenerator());
-        generators.add(new ExtendedAtomGenerator()); // I assume that is doing the OH thingy you want!
-        //generators.add(new AtomNumberGenerator());
+        generators.add(new StandardGenerator(font));
         this.chemicalMoleculeRenderer = new AtomContainerRenderer(generators, new AWTFontManager());
 
         // options
         RendererModel renderer2dModel = chemicalMoleculeRenderer.getRenderer2DModel();
-        renderer2dModel.set(RingGenerator.ShowAromaticity.class, false);
-        //renderer2dModel.set(RingGenerator.MaxDrawableAromaticRing.class, 9);
-        renderer2dModel.set(BasicSceneGenerator.UseAntiAliasing.class, true);
-        renderer2dModel.set(BasicAtomGenerator.ShowExplicitHydrogens.class, true);
-        renderer2dModel.set(BasicAtomGenerator.ShowEndCarbons.class, true);
-        renderer2dModel.set(ExtendedAtomGenerator.ShowImplicitHydrogens.class, true);
+
+        renderer2dModel.set(StandardGenerator.Visibility.class,
+                SymbolVisibility.iupacRecommendationsWithoutTerminalCarbon());
     }
 
     public BufferedImage generateStructureImage(PKStructure pkMolecule, Dimension dimension) throws CDKException {
-
         calculateProperties(pkMolecule.getMolecule());
         IAtomContainer moleculeWithCoordinates = generateCoordinatesForMolecule(pkMolecule.getMolecule());
         Rectangle2D rect = GeometryTools.getRectangle2D(moleculeWithCoordinates);
@@ -84,7 +83,8 @@ public class PKStructureImageGenerator {
     }
 
     private IAtomContainer generateCoordinatesForMolecule(IAtomContainer molecule) throws CDKException {
-        structureGenerator.setMolecule(molecule);
+        structureGenerator.setMolecule(molecule,false);
+        // use false to avoid cloning, this modifies the original molecule.
         structureGenerator.generateCoordinates();
         return structureGenerator.getMolecule();
     }
