@@ -56,13 +56,7 @@ public class Clade3PostProcessor implements PostProcessor {
             int hs = AtomContainerManipulator.countHydrogens(structure.getMolecule(),cConnectedToCposConnection);
             if(3 > hs && hs>=1) {
                 IBond coBond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
-                IAtom oxygen = SilentChemObjectBuilder.getInstance().newInstance(IAtom.class);
-                oxygen.setSymbol("O");
-                try {
-                    oxygen = IsotopeFactory.getInstance(SilentChemObjectBuilder.getInstance()).configure(oxygen);
-                } catch (IOException e) {
-                    System.out.println("Could set oxygen atom");
-                }
+                IAtom oxygen = SilentChemObjectBuilder.getInstance().newInstance(IAtom.class, "O");
                 coBond.setAtom(cConnectedToCposConnection,0);
                 coBond.setAtom(oxygen, 1);
                 coBond.setOrder(IBond.Order.SINGLE);
