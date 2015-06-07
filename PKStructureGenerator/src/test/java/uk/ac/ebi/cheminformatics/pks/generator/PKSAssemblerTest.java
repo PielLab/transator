@@ -47,6 +47,6 @@ public class PKSAssemblerTest {
 
     private String getCladeLine(Integer start, Double evalue, Float score, Integer ranking,
                                 Integer stackNumber, String name, String label) {
-        return Joiner.on("\t").join(start,start+100,evalue,score,ranking,stackNumber,"domain",name,label);
+        return Joiner.on("\t").join(start,start+100,evalue,score,ranking,stackNumber,"domain","KS",name,label);
     }
 }
