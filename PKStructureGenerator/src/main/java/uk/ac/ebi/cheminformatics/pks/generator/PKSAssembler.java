@@ -10,16 +10,17 @@ import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessorFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.verifier.MissingBondOrderVerifier;
+import uk.ac.ebi.cheminformatics.pks.verifier.SingleConnectedComponentVerifier;
+import uk.ac.ebi.cheminformatics.pks.verifier.StereoElementsVerifier;
+import uk.ac.ebi.cheminformatics.pks.verifier.Verifier;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:37
- * To change this template use File | Settings | File Templates.
+ * Handles the assembly of the polyketide molecule, through the subsequent processing of the sequence features read.
  */
 public class PKSAssembler {
 
@@ -29,11 +30,17 @@ public class PKSAssembler {
 
     private List<SequenceFeature> toBePostProcessed;
     private List<SequenceFeature> subFeaturesForNextKS;
+    private List<Verifier> verifiers;
 
     public PKSAssembler() {
         this.structure = new PKStructure();
         this.toBePostProcessed = new LinkedList<SequenceFeature>();
         this.subFeaturesForNextKS = new LinkedList<>();
+        this.verifiers = new LinkedList<>();
+        this.verifiers.addAll(
+                Arrays.asList(
+                        new MissingBondOrderVerifier(), new SingleConnectedComponentVerifier(),
+                        new StereoElementsVerifier()));
     }
 
     /**
@@ -59,7 +66,7 @@ public class PKSAssembler {
         if(structure.getMonomerCount()==0) {
             // Starting nascent polyketide
             structure.add(sequenceFeature.getMonomer());
-            checkNumberOfConnectedComponents(sequenceFeature);
+            runVerifiersForFeature(sequenceFeature);
         }
         else if(structure.getMonomerCount()==1 && sequenceFeature.getMonomer().isNonElongating()) {
             /*
@@ -70,7 +77,7 @@ public class PKSAssembler {
              */
             structure.getMolecule().removeAllElements();
             structure.add(sequenceFeature.getMonomer());
-            checkNumberOfConnectedComponents(sequenceFeature);
+            runVerifiersForFeature(sequenceFeature);
         }
         else
         {
@@ -87,10 +94,6 @@ public class PKSAssembler {
             IAtomContainer structureMol = structure.getMolecule();
 
             IBond bondRemovedFromChain = removeGenericConnection(connectionAtomInChain, structureMol);
-            int order = bondRemovedFromChain.getOrder().ordinal();
-            int orderNew = connectioBondInMonomer.getOrder().ordinal();
-
-            int hydrogensToAdd = order - orderNew;
 
             IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
             if(monomer.getAtomCount()>0) {
@@ -129,12 +132,11 @@ public class PKSAssembler {
                 }
 
                 // adjust implicit hydrogens
-                for (int i=0;i<Math.abs(hydrogensToAdd);i++) {
-                    int current = connectionAtomInChain.getImplicitHydrogenCount();
-                    connectionAtomInChain.setImplicitHydrogenCount(current+1*Integer.signum(hydrogensToAdd));
+                double bondOrderSum = structure.getMolecule().getBondOrderSum(connectionAtomInChain);
+                if(Math.round(bondOrderSum)==(long)bondOrderSum) {
+                    connectionAtomInChain.setImplicitHydrogenCount(4-(int)bondOrderSum);
                 }
             }
-            checkNumberOfConnectedComponents(sequenceFeature);
 
             // here we do post processing specific to the particular clade just added
             if(sequenceFeature.hasPostProcessor()) {
@@ -142,8 +144,23 @@ public class PKSAssembler {
             }
 
             checkForBadlyFormattedStereo(sequenceFeature);
+
+            runVerifiersForFeature(sequenceFeature);
         }
     }
+
+    private void runVerifiersForFeature(SequenceFeature feature) {
+        runVerifiersForFeature(feature,"");
+    }
+
+    private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
+        for (Verifier verifier : verifiers) {
+            if(verifier.verify(structure)) {
+                LOGGER.error(verifier.descriptionMessage()+" after "+feature.getName()+" "+additionalMessage);
+            }
+        }
+    }
+
 
     /**
      * Deals with all the modifications that different domains upstream of the current KS
@@ -153,15 +170,9 @@ public class PKSAssembler {
         for(SequenceFeature feat : subFeaturesForNextKS) {
             MonomerProcessor processor = feat.getMonomerProcessor();
             processor.modify(monomer);
+            runVerifiersForFeature(feat,"after processing sub-features.");
         }
         subFeaturesForNextKS.clear();
-    }
-
-    private void checkNumberOfConnectedComponents(SequenceFeature feature) {
-        IAtomContainer mol = structure.getMolecule();
-        if(!ConnectivityChecker.isConnected(mol)) {
-            LOGGER.error("Newest feature "+feature.getName()+" produced disconnection");
-        }
     }
 
     private void checkForBadlyFormattedStereo(SequenceFeature feature) {
@@ -188,6 +199,7 @@ public class PKSAssembler {
         for (SequenceFeature toPP : this.toBePostProcessed) {
             PostProcessor proc = toPP.getPostProcessor();
             proc.process(structure,toPP.getMonomer());
+            runVerifiersForFeature(toPP,"after post-processing");
         }
     }
 
