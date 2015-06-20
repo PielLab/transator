@@ -1,8 +1,10 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
-import org.openscience.cdk.aromaticity.CDKHueckelAromaticityDetector;
+import org.openscience.cdk.aromaticity.Aromaticity;
+import org.openscience.cdk.aromaticity.ElectronDonation;
 import org.openscience.cdk.exception.CDKException;
-import org.openscience.cdk.geometry.GeometryTools;
+import org.openscience.cdk.geometry.GeometryUtil;
+import org.openscience.cdk.graph.Cycles;
 import org.openscience.cdk.interfaces.*;
 import org.openscience.cdk.layout.StructureDiagramGenerator;
 import org.openscience.cdk.renderer.AtomContainerRenderer;
@@ -17,8 +19,8 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import org.openscience.cdk.tools.CDKHydrogenAdder;
 
-import javax.vecmath.Point2d;
 
+import javax.vecmath.Point2d;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -38,11 +40,11 @@ public class PKStructureImageGenerator {
 
     private IRenderer chemicalMoleculeRenderer;
     private StructureDiagramGenerator structureGenerator;
+    private final Aromaticity daylight =
+            new Aromaticity(ElectronDonation.daylight(), Cycles.or(Cycles.all(),Cycles.all(6)));
 
     public PKStructureImageGenerator() {
         this.structureGenerator = new StructureDiagramGenerator();
-        //this.chemicalMoleculeRenderer = new AtomContainerRenderer(Arrays.asList(new BasicSceneGenerator(),
-        //        new BasicBondGenerator(), new BasicAtomGenerator()), new AWTFontManager());
 
         Font font = new Font("Verdana", Font.PLAIN, 14);
 
@@ -76,7 +78,7 @@ public class PKStructureImageGenerator {
         Graphics2D g2 = image.createGraphics();
         g2.setBackground(Color.WHITE);
         g2.clearRect(0, 0, dimension.width, dimension.height);
-        AWTDrawVisitor awtDrawVisitor = new AWTDrawVisitor(g2);
+        AWTDrawVisitor awtDrawVisitor = AWTDrawVisitor.forVectorGraphics(g2);
         chemicalMoleculeRenderer.paint(moleculeWithCoordinates, awtDrawVisitor, bounds, true);
         g2.dispose();
         return image;
@@ -110,14 +112,16 @@ public class PKStructureImageGenerator {
     }
 
     private void calculateProperties(IAtomContainer molecule) throws CDKException {
-            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(molecule);
-            for (IAtom atom : molecule.atoms()) {
-                if(!(atom.getSymbol().equalsIgnoreCase("C") || atom instanceof IPseudoAtom))
-                    CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(molecule,atom);
-            }
+        AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(molecule);
+        /*
+        for (IAtom atom : molecule.atoms()) {
+            if(!(atom.getSymbol().equalsIgnoreCase("C") || atom instanceof IPseudoAtom))
+                CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(molecule,atom);
+        }
+        */
 
-            //AtomContainerManipulator.convertImplicitToExplicitHydrogens(molecule);
-            CDKHueckelAromaticityDetector.detectAromaticity(molecule);
+        //AtomContainerManipulator.convertImplicitToExplicitHydrogens(molecule);
+        daylight.apply(molecule);
     }
 
 }
