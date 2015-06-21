@@ -44,6 +44,8 @@ public class Clade3PostProcessor implements PostProcessor {
                 upstreamOattackCurrentCbond.setOrder(IBond.Order.SINGLE);
                 upstreamOattackCurrentCbond.setAtoms(new IAtom[]{oxygenInDoubleBond2Upstream,atomConToCinCurrentMonomer});
                 structure.getMolecule().addBond(upstreamOattackCurrentCbond);
+                if(atomConToCinCurrentMonomer.getSymbol().equals("C"))
+                    atomConToCinCurrentMonomer.setImplicitHydrogenCount(4-atomConToCinCurrentMonomer.getBondOrderSum().intValue());
             }
         }
     }
@@ -64,6 +66,7 @@ public class Clade3PostProcessor implements PostProcessor {
                 upstream2.getMolecule().addBond(coBond);
                 structure.getMolecule().addAtom(oxygen);
                 upstream2.getMolecule().addAtom(oxygen);
+                cConnectedToCposConnection.setImplicitHydrogenCount(4-cConnectedToCposConnection.getBondOrderSum().intValue());
                 break;
             }
         }
