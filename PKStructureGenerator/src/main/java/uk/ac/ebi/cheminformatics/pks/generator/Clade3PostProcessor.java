@@ -7,6 +7,7 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.verifier.CarbonHydrogenCountBalancer;
 
 import java.io.IOException;
 
@@ -18,6 +19,9 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class Clade3PostProcessor implements PostProcessor {
+
+    CarbonHydrogenCountBalancer balancer = new CarbonHydrogenCountBalancer();
+
     @Override
     public void process(PKStructure structure, PKMonomer monomer) {
         //Connect C atom connected to R6 to C atom connected to R1 two modules upstream. R6 goes away.
@@ -40,12 +44,12 @@ public class Clade3PostProcessor implements PostProcessor {
                                 ? upstream2C_bond_O.getAtom(0) : upstream2C_bond_O.getAtom(1);
                 upstream2C_bond_O.setOrder(IBond.Order.SINGLE);
                 currentC_dbond_C.setOrder(IBond.Order.SINGLE);
+                balancer.balanceImplicitHydrogens(structure.getMolecule(),cInCurrentMonomerToAttack);
                 IBond upstreamOattackCurrentCbond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
                 upstreamOattackCurrentCbond.setOrder(IBond.Order.SINGLE);
                 upstreamOattackCurrentCbond.setAtoms(new IAtom[]{oxygenInDoubleBond2Upstream,atomConToCinCurrentMonomer});
                 structure.getMolecule().addBond(upstreamOattackCurrentCbond);
-                if(atomConToCinCurrentMonomer.getSymbol().equals("C"))
-                    atomConToCinCurrentMonomer.setImplicitHydrogenCount(4-atomConToCinCurrentMonomer.getBondOrderSum().intValue());
+                balancer.balanceImplicitHydrogens(structure.getMolecule(),atomConToCinCurrentMonomer);
             }
         }
     }

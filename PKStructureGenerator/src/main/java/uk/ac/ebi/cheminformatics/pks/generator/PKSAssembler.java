@@ -10,10 +10,7 @@ import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessorFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
-import uk.ac.ebi.cheminformatics.pks.verifier.MissingBondOrderVerifier;
-import uk.ac.ebi.cheminformatics.pks.verifier.SingleConnectedComponentVerifier;
-import uk.ac.ebi.cheminformatics.pks.verifier.StereoElementsVerifier;
-import uk.ac.ebi.cheminformatics.pks.verifier.Verifier;
+import uk.ac.ebi.cheminformatics.pks.verifier.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -31,6 +28,7 @@ public class PKSAssembler {
     private List<SequenceFeature> toBePostProcessed;
     private List<SequenceFeature> subFeaturesForNextKS;
     private List<Verifier> verifiers;
+    private CarbonHydrogenCountBalancer hydrogenCountBalancer;
 
     public PKSAssembler() {
         this.structure = new PKStructure();
@@ -41,6 +39,7 @@ public class PKSAssembler {
                 Arrays.asList(
                         new MissingBondOrderVerifier(), new SingleConnectedComponentVerifier(),
                         new StereoElementsVerifier()));
+        this.hydrogenCountBalancer = new CarbonHydrogenCountBalancer();
     }
 
     /**
@@ -66,7 +65,12 @@ public class PKSAssembler {
         if(structure.getMonomerCount()==0) {
             // Starting nascent polyketide
             structure.add(sequenceFeature.getMonomer());
-            runVerifiersForFeature(sequenceFeature);
+            IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
+            IAtom preConnectionAtomMonomer = sequenceFeature.getMonomer().getPreConnectionAtom();
+            for(IAtom atomToCorrect : Arrays.asList(posConnectionAtomMonomer,preConnectionAtomMonomer)) {
+                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(),atomToCorrect);
+            }
+            runVerifiersForFeature(sequenceFeature,"initial part");
         }
         else if(structure.getMonomerCount()==1 && sequenceFeature.getMonomer().isNonElongating()) {
             /*
@@ -77,7 +81,7 @@ public class PKSAssembler {
              */
             structure.getMolecule().removeAllElements();
             structure.add(sequenceFeature.getMonomer());
-            runVerifiersForFeature(sequenceFeature);
+            runVerifiersForFeature(sequenceFeature,"extender on pos 2 case.");
         }
         else
         {
@@ -132,10 +136,8 @@ public class PKSAssembler {
                 }
 
                 // adjust implicit hydrogens
-                double bondOrderSum = structure.getMolecule().getBondOrderSum(connectionAtomInChain);
-                if(Math.round(bondOrderSum)==(long)bondOrderSum) {
-                    connectionAtomInChain.setImplicitHydrogenCount(4-(int)bondOrderSum);
-                }
+                IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
+                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(),posConnectionAtomMonomer);
             }
 
             // here we do post processing specific to the particular clade just added
@@ -145,7 +147,7 @@ public class PKSAssembler {
 
             checkForBadlyFormattedStereo(sequenceFeature);
 
-            runVerifiersForFeature(sequenceFeature);
+            runVerifiersForFeature(sequenceFeature,"after normal insertion");
         }
     }
 
