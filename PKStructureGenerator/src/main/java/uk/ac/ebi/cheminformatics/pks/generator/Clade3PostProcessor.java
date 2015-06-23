@@ -51,9 +51,11 @@ public class Clade3PostProcessor implements PostProcessor {
                 structure.getMolecule().addBond(upstreamOattackCurrentCbond);
                 // update implicit hydrogens for C and O than now form new bond C-O
                 balancer.balanceImplicitHydrogens(structure.getMolecule(),atomConToCinCurrentMonomer);
-                oxygenInDoubleBond2Upstream.
-                        setImplicitHydrogenCount(
-                                Math.max(oxygenInDoubleBond2Upstream.getImplicitHydrogenCount()-1,0));
+                if(oxygenInDoubleBond2Upstream.getImplicitHydrogenCount()!=null) {
+                    oxygenInDoubleBond2Upstream.
+                            setImplicitHydrogenCount(
+                                    Math.max(oxygenInDoubleBond2Upstream.getImplicitHydrogenCount()-1,0));
+                }
             }
         }
     }
