@@ -4,9 +4,14 @@ import com.google.common.base.Joiner;
 import org.junit.Test;
 import org.openscience.cdk.io.MDLV2000Writer;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileWriter;
 
 /**
@@ -33,11 +38,21 @@ public class PKSAssemblerTest {
         assembler.addMonomer(clade13);
         assembler.addMonomer(clade6_2);
 
+        SequenceFeature finalizer = new DomainSeqFeature(0,0,"finalExtension","0");
+        assembler.addMonomer(finalizer);
+        assembler.postProcess();
+
         PKStructure struc = assembler.getStructure();
 
         MDLV2000Writer writer = new MDLV2000Writer(new FileWriter("/tmp/pks.mol"));
         writer.write(struc.getMolecule());
         writer.close();
+
+        PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
+        BufferedImage image = imageGenerator.generateStructureImage(struc, new Dimension(900, 900));
+
+        File outputFile = new File("/tmp/pks.png");
+        ImageIO.write(image, "png", outputFile);
     }
 
     @Test
@@ -47,6 +62,6 @@ public class PKSAssemblerTest {
 
     private String getCladeLine(Integer start, Double evalue, Float score, Integer ranking,
                                 Integer stackNumber, String name, String label) {
-        return Joiner.on("\t").join(start,start+100,evalue,score,ranking,stackNumber,"domain",name,label);
+        return Joiner.on("\t").join(start,start+100,evalue,score,ranking,stackNumber,"domain","KS",name,label);
     }
 }

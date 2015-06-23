@@ -7,6 +7,7 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.verifier.CarbonHydrogenCountBalancer;
 
 import java.io.IOException;
 
@@ -18,6 +19,9 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class Clade3PostProcessor implements PostProcessor {
+
+    CarbonHydrogenCountBalancer balancer = new CarbonHydrogenCountBalancer();
+
     @Override
     public void process(PKStructure structure, PKMonomer monomer) {
         //Connect C atom connected to R6 to C atom connected to R1 two modules upstream. R6 goes away.
@@ -40,10 +44,16 @@ public class Clade3PostProcessor implements PostProcessor {
                                 ? upstream2C_bond_O.getAtom(0) : upstream2C_bond_O.getAtom(1);
                 upstream2C_bond_O.setOrder(IBond.Order.SINGLE);
                 currentC_dbond_C.setOrder(IBond.Order.SINGLE);
+                balancer.balanceImplicitHydrogens(structure.getMolecule(),cInCurrentMonomerToAttack);
                 IBond upstreamOattackCurrentCbond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
                 upstreamOattackCurrentCbond.setOrder(IBond.Order.SINGLE);
                 upstreamOattackCurrentCbond.setAtoms(new IAtom[]{oxygenInDoubleBond2Upstream,atomConToCinCurrentMonomer});
                 structure.getMolecule().addBond(upstreamOattackCurrentCbond);
+                // update implicit hydrogens for C and O than now form new bond C-O
+                balancer.balanceImplicitHydrogens(structure.getMolecule(),atomConToCinCurrentMonomer);
+                oxygenInDoubleBond2Upstream.
+                        setImplicitHydrogenCount(
+                                Math.max(oxygenInDoubleBond2Upstream.getImplicitHydrogenCount()-1,0));
             }
         }
     }
@@ -56,13 +66,7 @@ public class Clade3PostProcessor implements PostProcessor {
             int hs = AtomContainerManipulator.countHydrogens(structure.getMolecule(),cConnectedToCposConnection);
             if(3 > hs && hs>=1) {
                 IBond coBond = SilentChemObjectBuilder.getInstance().newInstance(IBond.class);
-                IAtom oxygen = SilentChemObjectBuilder.getInstance().newInstance(IAtom.class);
-                oxygen.setSymbol("O");
-                try {
-                    oxygen = IsotopeFactory.getInstance(SilentChemObjectBuilder.getInstance()).configure(oxygen);
-                } catch (IOException e) {
-                    System.out.println("Could set oxygen atom");
-                }
+                IAtom oxygen = SilentChemObjectBuilder.getInstance().newInstance(IAtom.class, "O");
                 coBond.setAtom(cConnectedToCposConnection,0);
                 coBond.setAtom(oxygen, 1);
                 coBond.setOrder(IBond.Order.SINGLE);
@@ -70,6 +74,7 @@ public class Clade3PostProcessor implements PostProcessor {
                 upstream2.getMolecule().addBond(coBond);
                 structure.getMolecule().addAtom(oxygen);
                 upstream2.getMolecule().addAtom(oxygen);
+                cConnectedToCposConnection.setImplicitHydrogenCount(4-cConnectedToCposConnection.getBondOrderSum().intValue());
                 break;
             }
         }

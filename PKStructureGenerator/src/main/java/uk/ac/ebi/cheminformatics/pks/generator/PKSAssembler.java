@@ -1,26 +1,25 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.openscience.cdk.graph.ConnectivityChecker;
-import org.openscience.cdk.interfaces.IAtom;
-import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.interfaces.IBond;
-import org.openscience.cdk.interfaces.IPseudoAtom;
+import org.openscience.cdk.interfaces.*;
+import org.openscience.cdk.stereo.DoubleBondStereochemistry;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessorFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.verifier.*;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:37
- * To change this template use File | Settings | File Templates.
+ * Handles the assembly of the polyketide molecule, through the subsequent processing of the sequence features read.
+ *
+ * TODO Deal gracefully with clades placed in the middle that can only be placed at the start because they lack an R1.
  */
 public class PKSAssembler {
 
@@ -30,11 +29,19 @@ public class PKSAssembler {
 
     private List<SequenceFeature> toBePostProcessed;
     private List<SequenceFeature> subFeaturesForNextKS;
+    private List<Verifier> verifiers;
+    private CarbonHydrogenCountBalancer hydrogenCountBalancer;
 
     public PKSAssembler() {
         this.structure = new PKStructure();
         this.toBePostProcessed = new LinkedList<SequenceFeature>();
         this.subFeaturesForNextKS = new LinkedList<>();
+        this.verifiers = new LinkedList<>();
+        this.verifiers.addAll(
+                Arrays.asList(
+                        new MissingBondOrderVerifier(), new SingleConnectedComponentVerifier(),
+                        new StereoElementsVerifier()));
+        this.hydrogenCountBalancer = new CarbonHydrogenCountBalancer();
     }
 
     /**
@@ -60,7 +67,15 @@ public class PKSAssembler {
         if(structure.getMonomerCount()==0) {
             // Starting nascent polyketide
             structure.add(sequenceFeature.getMonomer());
-            checkNumberOfConnectedComponents(sequenceFeature);
+            IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
+            IAtom preConnectionAtomMonomer = sequenceFeature.getMonomer().getPreConnectionAtom();
+            for(IAtom atomToCorrect : Arrays.asList(posConnectionAtomMonomer,preConnectionAtomMonomer)) {
+                // on the starter, some monomers might not have the pre connection atom
+                if(atomToCorrect==null)
+                    continue;
+                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(),atomToCorrect);
+            }
+            runVerifiersForFeature(sequenceFeature,"initial part");
         }
         else if(structure.getMonomerCount()==1 && sequenceFeature.getMonomer().isNonElongating()) {
             /*
@@ -71,7 +86,7 @@ public class PKSAssembler {
              */
             structure.getMolecule().removeAllElements();
             structure.add(sequenceFeature.getMonomer());
-            checkNumberOfConnectedComponents(sequenceFeature);
+            runVerifiersForFeature(sequenceFeature,"extender on pos 2 case.");
         }
         else
         {
@@ -87,10 +102,7 @@ public class PKSAssembler {
 
             IAtomContainer structureMol = structure.getMolecule();
 
-            int order = removeGenericConnection(connectionAtomInChain, structureMol);
-            int orderNew = connectioBondInMonomer.getOrder().ordinal();
-
-            int hydrogensToAdd = order - orderNew;
+            IBond bondRemovedFromChain = removeGenericConnection(connectionAtomInChain, structureMol);
 
             IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
             if(monomer.getAtomCount()>0) {
@@ -101,20 +113,61 @@ public class PKSAssembler {
 
                 structure.add(sequenceFeature.getMonomer());
 
-                // adjust implicit hydrogens
-                for (int i=0;i<Math.abs(hydrogensToAdd);i++) {
-                    int current = connectionAtomInChain.getImplicitHydrogenCount();
-                    connectionAtomInChain.setImplicitHydrogenCount(current+1*Integer.signum(hydrogensToAdd));
+                List<IStereoElement> replacementList = new LinkedList<>();
+                boolean anyChange = false;
+                for(IStereoElement element : structure.getMolecule().stereoElements()) {
+                    if(element instanceof IDoubleBondStereochemistry) {
+                        IBond[] bonds = ((IDoubleBondStereochemistry) element).getBonds();
+                        boolean changed=false;
+                        for(int i=0;i<bonds.length;i++) {
+                            if(bonds[i].equals(bondRemovedFromChain)) {
+                                bonds[i] = connectioBondInMonomer;
+                                changed=true;
+                            }
+                        }
+                        if(changed) {
+                            anyChange=true;
+                            IDoubleBondStereochemistry replacement = new DoubleBondStereochemistry(((IDoubleBondStereochemistry) element).getStereoBond(),
+                                    bonds,((IDoubleBondStereochemistry) element).getStereo());
+                            replacementList.add(replacement);
+                        } else {
+                            replacementList.add(element);
+                        }
+                    }
                 }
+                if(anyChange) {
+                    // if there are changes in the stereo bonds, then we replace the stereo elements with the replacement set
+                    structure.getMolecule().setStereoElements(replacementList);
+                }
+
+                // adjust implicit hydrogens
+                IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
+                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(),posConnectionAtomMonomer);
             }
-            checkNumberOfConnectedComponents(sequenceFeature);
 
             // here we do post processing specific to the particular clade just added
             if(sequenceFeature.hasPostProcessor()) {
                 toBePostProcessed.add(sequenceFeature);
             }
+
+            checkForBadlyFormattedStereo(sequenceFeature);
+
+            runVerifiersForFeature(sequenceFeature,"after normal insertion");
         }
     }
+
+    private void runVerifiersForFeature(SequenceFeature feature) {
+        runVerifiersForFeature(feature,"");
+    }
+
+    private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
+        for (Verifier verifier : verifiers) {
+            if(verifier.verify(structure)) {
+                LOGGER.error(verifier.descriptionMessage()+" after "+feature.getName()+" "+additionalMessage);
+            }
+        }
+    }
+
 
     /**
      * Deals with all the modifications that different domains upstream of the current KS
@@ -124,14 +177,28 @@ public class PKSAssembler {
         for(SequenceFeature feat : subFeaturesForNextKS) {
             MonomerProcessor processor = feat.getMonomerProcessor();
             processor.modify(monomer);
+            runVerifiersForFeature(feat,"after processing sub-features.");
         }
         subFeaturesForNextKS.clear();
     }
 
-    private void checkNumberOfConnectedComponents(SequenceFeature feature) {
+    private void checkForBadlyFormattedStereo(SequenceFeature feature) {
         IAtomContainer mol = structure.getMolecule();
-        if(!ConnectivityChecker.isConnected(mol)) {
-            LOGGER.error("Newest feature "+feature.getName()+" produced disconnection");
+        List<IStereoElement> stereoElementsToDel = new LinkedList<>();
+        for(IStereoElement element : mol.stereoElements()) {
+            if (element instanceof IDoubleBondStereochemistry) {
+                for(IBond bondInStereo : ((IDoubleBondStereochemistry)element).getBonds() ) {
+                   if(!structure.getMolecule().contains(bondInStereo)) {
+                       LOGGER.info("Bond in stereo definition is not part of the molecule, after: " + feature.getName());
+                       stereoElementsToDel.add(element);
+                   }
+                }
+            }
+        }
+        if(!stereoElementsToDel.isEmpty()) {
+            List<IStereoElement> existingElements = Lists.newArrayList(mol.stereoElements());
+            existingElements.removeAll(stereoElementsToDel);
+            mol.setStereoElements(existingElements);
         }
     }
 
@@ -139,6 +206,7 @@ public class PKSAssembler {
         for (SequenceFeature toPP : this.toBePostProcessed) {
             PostProcessor proc = toPP.getPostProcessor();
             proc.process(structure,toPP.getMonomer());
+            runVerifiersForFeature(toPP,"after post-processing");
         }
     }
 
@@ -151,7 +219,7 @@ public class PKSAssembler {
      * @param structureMol
      * @return order of the bond removed.
      */
-    private int removeGenericConnection(IAtom connectionAtomInChain, IAtomContainer structureMol) {
+    private IBond removeGenericConnection(IAtom connectionAtomInChain, IAtomContainer structureMol) {
         IAtom toRemoveA=null;
         for (IBond connected : structureMol.getConnectedBondsList(connectionAtomInChain)) {
             for(IAtom atomCon : connected.atoms()) {
@@ -163,13 +231,14 @@ public class PKSAssembler {
                }
             }
         }
-        int order = 0;
+        IBond bondToRemove=null;
         if(toRemoveA!=null) {
-            order = structureMol.getBond(connectionAtomInChain,toRemoveA).getOrder().ordinal();
-            structureMol.removeBond(connectionAtomInChain,toRemoveA);
+            //order = structureMol.getBond(connectionAtomInChain,toRemoveA).getOrder().ordinal();
+            bondToRemove = structureMol.getBond(connectionAtomInChain,toRemoveA);
+            structureMol.removeBond(bondToRemove);
             structureMol.removeAtom(toRemoveA);
         }
-        return order;
+        return bondToRemove;
     }
 
     public PKStructure getStructure() {

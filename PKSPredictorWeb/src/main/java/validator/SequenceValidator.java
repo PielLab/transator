@@ -2,8 +2,10 @@ package validator;
 
 import com.google.common.io.Files;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
+import org.biojava3.core.sequence.io.GenericFastaHeaderFormat;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -54,8 +56,15 @@ public class SequenceValidator {
             if(outputPath==null)
                 outputPath = Files.createTempDir().getCanonicalPath();
             fastaPath = outputPath + File.separator + "query.faa";
-            sequenceIdentifiers.addAll(data.keySet());
-            cleanIdentifiers(sequenceIdentifiers);
+            GenericFastaHeaderFormat<ProteinSequence,AminoAcidCompound> headerFormat
+                    = new GenericFastaHeaderFormat<>();
+            for(String protSeqIdent : data.keySet()) {
+                String header = headerFormat.getHeader(data.get(protSeqIdent));
+                sequenceIdentifiers.add(
+                        header.indexOf(' ')>=0 ?
+                                header.substring(0,header.indexOf(' ')) :
+                                header);
+            }
             FastaWriterHelper.writeProteinSequence(new File(fastaPath),data.values());
             writeIdentifiersFile(sequenceIdentifiers);
         } catch (Exception e) {

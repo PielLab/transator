@@ -60,7 +60,6 @@ public class PKMonomer {
                     new MDLV2000Reader(PKMonomer.class.getResourceAsStream("/uk/ac/ebi/cheminformatics/structures/"+name+".mol"));
             IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
             AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
-            CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(mol);
             return mol;
         } catch (CDKException e) {
             throw new RuntimeException("Could not read molecule for "+cladeName,e);

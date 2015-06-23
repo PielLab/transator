@@ -29,6 +29,8 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
     @Override
     public void modify(PKMonomer monomer) {
         // Read mol file according for the amino acid,
+        if(this.aminoAcid.equals("N/A"))
+            return;
         StructureLoader loader = new AminoAcidStructLoader(this.aminoAcid);
         try {
             IAtomContainer aaMol = loader.loadStructure();
