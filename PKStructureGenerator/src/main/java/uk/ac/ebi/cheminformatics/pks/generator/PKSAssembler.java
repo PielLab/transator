@@ -18,6 +18,8 @@ import java.util.List;
 
 /**
  * Handles the assembly of the polyketide molecule, through the subsequent processing of the sequence features read.
+ *
+ * TODO Deal gracefully with clades placed in the middle that can only be placed at the start because they lack an R1.
  */
 public class PKSAssembler {
 
