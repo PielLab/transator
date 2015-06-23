@@ -68,6 +68,9 @@ public class PKSAssembler {
             IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
             IAtom preConnectionAtomMonomer = sequenceFeature.getMonomer().getPreConnectionAtom();
             for(IAtom atomToCorrect : Arrays.asList(posConnectionAtomMonomer,preConnectionAtomMonomer)) {
+                // on the starter, some monomers might not have the pre connection atom
+                if(atomToCorrect==null)
+                    continue;
                 hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(),atomToCorrect);
             }
             runVerifiersForFeature(sequenceFeature,"initial part");
