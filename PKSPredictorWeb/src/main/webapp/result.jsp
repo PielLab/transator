@@ -27,7 +27,7 @@
     <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
     <!-- BioJS -->
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/registry/src/Biojs.js"></script>
+    <script language="JavaScript" type="text/javascript" src="js/Biojs.js"></script>
     <%--<script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/registry/src/Biojs.FeatureViewer.js"></script>--%>
     <script language="JavaScript" type="text/javascript" src="js/Biojs.FeatureViewer.js"></script>
 
