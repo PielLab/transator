@@ -22,14 +22,15 @@
 <![endif]-->
 
 <!-- Add your site or application content here -->
-<h1 class="textCentering"><i>trans</i>-AT Polyketide Structure Predictor</h1>
+<h1 class="textCentering"><i>trans</i>ATor web application</h1>
 
 <p class="textCentering">
-    This tool predicts the structure of a polyketide based on the sequence of the <i>trans</i>-AT Polyketide Synthase
-    enzyme that synthesizes that small molecule. Currently, only protein sequences in proper fasta format can be used as input.
+    The trans-AT polyketide synthase-derived structure predictor (transATor) is a genome mining tool that predicts the core structure of a trans-AT PKS derived polyketide polyketide based on the protein sequence of the corresponding biosynthetic gene cluster.
+    For more information on transATor see below.
+    Currently, only protein sequences in proper fasta format can be used as input.
 </p>
 <form action="ValidateInput" method="post" enctype="multipart/form-data">
-<p class="textCentering">Paste you protein sequences in fasta format:</p>
+<p class="textCentering">Paste your protein sequence(s) or individual KS domains in proper FASTA format:</p>
 <div class="content" style="vertical-align: middle;">
 <div class="textarea textCentering">
     <textarea rows="10" cols="50" name="sequenceInput" id="sequenceInput" style="color: #9b9b9b; text-align: left"
@@ -38,7 +39,7 @@
 </div>
     <p class="textCentering">Or alternatively:</p>
 <div class="textarea-instruction textCentering">
-            <p class="textCentering">Add proteins in Fasta format.
+            <p class="textCentering">Upload protein sequences in FASTA format.
             </p>
 </div> <br>
 
