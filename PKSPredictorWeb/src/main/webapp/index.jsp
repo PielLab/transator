@@ -51,6 +51,12 @@
     <input class="submitButton" type="submit" value="Submit" onclick="document.getElementById('loading').style.display = 'block';" style="margin-top: 2em" />
 </form>
 
+<p class="textCentering">
+    <a href="https://github.com/pcm32/PKSPredictor/wiki#about-transator">About transATor</a>
+    <a href="https://github.com/pcm32/PKSPredictor/wiki#tutorial">Tutorial</a>
+    <a href="https://github.com/pcm32/PKSPredictor/wiki#faqs">FAQs</a>
+</p>
+
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
