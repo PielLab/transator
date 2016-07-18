@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>trans-AT Polyketide Prediction Tool</title>
+    <title>trans-AT PKS-derived Polyketide Prediction Tool</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
