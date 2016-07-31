@@ -32,7 +32,7 @@
       </dependency>
       <dependency>
           <groupId>org.biojava</groupId>
-          <artifactId>biojava-core</artifactId>
+          <artifactId>biojava3-core</artifactId>
           <version>3.0.5</version>
       </dependency>
       <dependency>
