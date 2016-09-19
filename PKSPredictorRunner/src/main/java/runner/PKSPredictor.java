@@ -60,9 +60,7 @@ public class PKSPredictor implements Runnable {
         Process pksPredProc;
         Process cronJob;
         try {
-
-            File cronFile = createCronJobFile();
-            String cronCommand = "cron "+cronFile.getAbsolutePath();
+            String cronCommand = createCronCommand();
 
             if(getPref(RunnerPreferenceField.UseCluster).length()>0) {
                 File runJob = new File(outPath+"runJob.sh");
@@ -87,29 +85,22 @@ public class PKSPredictor implements Runnable {
                 writeToFile(pksPredProc.getErrorStream(), outPath+"run.err");
             }
 
-            cronJob = Runtime.getRuntime().exec(cronCommand);
+            cronJob = Runtime.getRuntime().exec(new String[] { "bash", "-c", cronCommand});
             writeToFile(cronJob.getInputStream(), outPath+"cronJob.out");
             writeToFile(cronJob.getErrorStream(), outPath+"cronJob.err");
 
         } catch (IOException e) {
-            LOGGER.error("Could produce the execution files",e);
+            LOGGER.error("Could not produce the execution files",e);
             throw new RuntimeException("Could produce the execution files",e);
         }
     }
 
-    private File createCronJobFile() {
-        try {
-            File cronJobFile = new File(outPath+"cronJob.txt");
-            BufferedWriter writer = new BufferedWriter(new FileWriter(cronJobFile));
+    private String createCronCommand() {
             Calendar now = Calendar.getInstance();
             now.add(Calendar.HOUR,2);
             SimpleDateFormat format = new SimpleDateFormat("m h d M ");
-            writer.write(format.format(now.getTime())+"* rm -rf "+outPath+"\n");
-            writer.close();
-            return cronJobFile;
-        } catch (IOException e) {
-            throw new RuntimeException("Could not create cron job file",e);
-        }
+            String command = format.format(now.getTime())+"* /bin/rm -rf "+outPath+"\n";
+            return "(crontab -l ; echo \""+command+"\")| crontab -";
     }
 
     private void writeToFile(InputStream stream, String fileName) throws IOException {
