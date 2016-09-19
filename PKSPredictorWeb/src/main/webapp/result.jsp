@@ -31,25 +31,26 @@
     <%--<script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/registry/src/Biojs.FeatureViewer.js"></script>--%>
     <script language="JavaScript" type="text/javascript" src="js/Biojs.FeatureViewer.js"></script>
 
-    <!-- External -->
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/jquery-1.7.2.min.js"></script>
-    <script src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/jquery-ui-1.8.2.custom.min.js" type="text/javascript"></script>
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/jquery.tooltip.js"></script>
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/graphics/raphael.js"></script>
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/graphics/canvg.js"></script>
-    <script language="JavaScript" type="text/javascript" src="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/graphics/rgbcolor.js"></script>
+    <!-- Local -->
+    <script src="js/dependencies/jquery/jquery-1.7.2.min.js"></script>
+    <script src="js/dependencies/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+    <script src="js/dependencies/jquery/jquery.tooltip.js"></script>
+    <script src="js/dependencies/graphics/raphael.js"></script>
+    <script src="js/dependencies/graphics/canvg.js"></script>
+    <script src="js/dependencies/graphics/rgbcolor.js"></script>
+
 
     <!-- CSS -->
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/jquery-ui-1.8.2.css" />
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/jquery.tooltip.css">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_flat_0_aaaaaa_40x100.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_flat_75_ffffff_40x100.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_glass_65_ffffff_1x400.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_glass_75_dadada_1x400.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_glass_75_e6e6e6_1x400.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-icons_222222_256x240.png">
-    <link rel="stylesheet" href="http://www.ebi.ac.uk/Tools/biojs/biojs/dependencies/jquery/images/ui-icons_454545_256x240.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/jquery-ui-1.8.2.css" />
+    <link rel="stylesheet" href="js/dependencies/jquery/jquery.tooltip.css">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_flat_0_aaaaaa_40x100.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_flat_75_ffffff_40x100.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_glass_65_ffffff_1x400.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_glass_75_dadada_1x400.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_glass_75_e6e6e6_1x400.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-icons_222222_256x240.png">
+    <link rel="stylesheet" href="js/dependencies/jquery/images/ui-icons_454545_256x240.png">
 
     <link rel="stylesheet" href="css/main.css">
 
