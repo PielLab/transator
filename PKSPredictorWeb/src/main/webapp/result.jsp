@@ -113,14 +113,6 @@ the following structure:</p>
             );
 
         $j('#pkMol').attr('src', 'rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
-//        var img = $j("<img />").attr('src', '/rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"))
-//                .load(function() {
-//                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-//                        alert('broken image!');
-//                    } else {
-//                        $j("#pkMol").append(img);
-//                    }
-//                });
 
         $j.get('rest/pkspredictor/smiles?path='+$j("#pkMol").attr("path"),
                 function(data, status, response) {
@@ -128,14 +120,6 @@ the following structure:</p>
                 });
         };
 
-//    $(".seqResult").on({
-//        ajaxStart: function() {
-//            $(this).addClass("loading");
-//        },
-//        ajaxStop: function() {
-//            $(this).removeClass("loading");
-//        }
-//    });
 
 </script>
 
