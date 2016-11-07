@@ -68,6 +68,8 @@
 the following structure:</p>
 <img class="resultingMol" id="pkMol" path="<%= request.getSession().getAttribute("tmp") %>">
 
+<p class="textCentering" id="pkSmiles"></p>
+
 <p class="textCentering">
     The annotation for each sequence submitted can be seen in the sections below.
 </p>
@@ -119,6 +121,11 @@ the following structure:</p>
 //                        $j("#pkMol").append(img);
 //                    }
 //                });
+
+        $j.get('rest/pkspredictor/smiles?path='+$j("#pkMol").attr("path"),
+                function(data, status, response) {
+                    $j('#pkSmiles').text("SMILES: "+response.responseText);
+                });
         };
 
 //    $(".seqResult").on({
@@ -129,6 +136,7 @@ the following structure:</p>
 //            $(this).removeClass("loading");
 //        }
 //    });
+
 </script>
 
 <%--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>--%>

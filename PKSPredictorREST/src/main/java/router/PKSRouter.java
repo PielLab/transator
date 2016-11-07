@@ -6,6 +6,7 @@ import org.restlet.Restlet;
 import org.restlet.routing.Router;
 import prediction.PKSPredictionDataResource;
 import prediction.PKSStructureImageDataRes;
+import prediction.PKSStructureSmilesDataRes;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +30,9 @@ public class PKSRouter extends Application {
         // Defines only one route
         router.attach("/pkspredictor/query", PKSPredictionDataResource.class); // {encPath}/{seqID}
         router.attach("/pkspredictor/structure", PKSStructureImageDataRes.class);
+
+        // Set up router for getting a smiles string
+        router.attach("/pkspredictor/smiles", PKSStructureSmilesDataRes.class);
 
         return router;
     }
