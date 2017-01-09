@@ -1,0 +1,105 @@
+420	845	2.4e-121	396.9	1	1	domain	KS	Clade_1	GNAT
+420	845	1.3e-84	275.9	2	1	domain	KS	Clade_2	A various unusual starters
+420	845	1.3e-84	275.9	3	1	domain	KS	Clade_23	W unusual starters
+420	845	6.1e-79	257.2	4	1	domain	KS	Clade_29	betaOH
+420	845	2.4e-68	222.5	5	1	domain	KS	Clade_35	II not assignable so far
+1975	2410	5.8e-107	349.6	1	2	domain	KS	Clade_14b	N b) double bonds
+1977	2410	3.7e-104	340.2	2	2	domain	KS	Clade_20	S E-double bonds
+1977	2410	8.7e-98	319.4	3	2	domain	KS	Clade_21	T double bonds
+1977	2410	1.9e-97	318.0	4	2	domain	KS	Clade_14a	M A) double bonds
+1976	2410	3.2e-96	314.0	5	2	domain	KS	Clade_22	zDM
+3599	4018	8.8e-136	444.3	1	3	domain	KS	Clade_11	K exomethB
+3600	4018	1.6e-97	318.5	2	3	domain	KS	Clade_26	Z alpha methyl
+3600	4018	7.5e-84	273.2	3	3	domain	KS	Clade_13	M beta hydroxy
+3600	4018	7.9e-83	270.0	4	3	domain	KS	Clade_13a	M a) beta hydroxy
+3599	4018	1.2e-72	236.4	5	3	domain	KS	Clade_24	X E-DB
+4452	4878	1.2e-143	470.1	1	4	domain	KS	Clade_8	G non elongating
+4452	4878	1.2e-143	470.1	2	4	domain	KS	Clade_8b	G b) non elongating Copy
+4452	4863	5.2e-45	145.4	3	4	domain	KS	Clade_29	betaOH
+4455	4877	3.1e-41	133.0	4	4	domain	KS	Clade_2	A various unusual starters
+4455	4877	3.1e-41	133.0	5	4	domain	KS	Clade_23	W unusual starters
+6298	6720	1.1e-152	499.9	1	5	domain	KS	Clade_4b	C b) Amino Acids
+6298	6720	8.6e-140	457.6	2	5	domain	KS	Clade_4	C Amino Acids
+6301	6720	1.3e-52	170.3	3	5	domain	KS	Clade_4a	C a) Amino Acids
+6300	6720	1.1e-29	95.0	4	5	domain	KS	Clade_26	Z alpha methyl
+6408	6719	1.2e-28	91.5	5	5	domain	KS	Clade_5	D Amino acids
+7494	7927	2.1e-109	357.4	1	6	domain	KS	Clade_20	S E-double bonds
+7494	7927	1.2e-104	341.8	2	6	domain	KS	Clade_14a	M A) double bonds
+7492	7927	2.3e-104	341.0	3	6	domain	KS	Clade_14b	N b) double bonds
+7493	7927	8.2e-101	329.1	4	6	domain	KS	Clade_22	zDM
+7493	7927	6.1e-98	319.8	5	6	domain	KS	Clade_19	R E-double bonds
+9212	9620	1.2e-150	493.2	1	7	domain	KS	Clade_12	L alpha methyl alpha dimethyl
+9213	9620	2.3e-80	262.0	2	7	domain	KS	Clade_26	Z alpha methyl
+9213	9620	1e-77	253.0	3	7	domain	KS	Clade_13	M beta hydroxy
+9213	9620	1.4e-76	249.4	4	7	domain	KS	Clade_13a	M a) beta hydroxy
+9212	9620	4e-73	237.9	5	7	domain	KS	Clade_11	K exomethB
+10956	11391	4.5e-158	517.7	1	8	domain	KS	Clade_3	B Pyrane rings
+10958	11391	3.2e-103	337.2	2	8	domain	KS	Clade_29	betaOH
+10957	11390	5.9e-94	306.9	3	8	domain	KS	Clade_35	II not assignable so far
+10957	11391	9.9e-92	299.4	4	8	domain	KS	Clade_6	E completely reduced
+10958	11391	2.7e-77	251.7	5	8	domain	KS	Clade_1	GNAT
+12218	12634	5.1e-142	464.9	1	9	domain	KS	Clade_13a	M a) beta hydroxy
+12218	12634	6.8e-138	451.3	2	9	domain	KS	Clade_13	M beta hydroxy
+12218	12634	2.9e-88	287.6	3	9	domain	KS	Clade_13b	M b)  beta hydroxy extraction
+12218	12634	2.1e-78	255.6	4	9	domain	KS	Clade_26	Z alpha methyl
+12221	12634	1.1e-71	233.1	5	9	domain	KS	Clade_11	K exomethB
+13716	14147	8.2e-128	418.3	1	10	domain	KS	Clade_27	AA non-elongating double bond recognition
+13716	14147	7.2e-69	224.0	2	10	domain	KS	Clade_14b	N b) double bonds
+13717	14147	5.3e-67	217.7	3	10	domain	KS	Clade_20	S E-double bonds
+13717	14147	1.4e-66	216.6	4	10	domain	KS	Clade_18	Q double bonds mostly Z configuration
+13717	14147	1.6e-66	216.1	5	10	domain	KS	Clade_22	zDM
+14839	15259	6.6e-73	237.3	1	11	domain	KS	Clade_29	betaOH
+14840	15259	3.8e-65	211.8	2	11	domain	KS	Clade_2	A various unusual starters
+14840	15259	3.8e-65	211.8	3	11	domain	KS	Clade_23	W unusual starters
+14839	15259	4.1e-58	188.5	4	11	domain	KS	Clade_5	D Amino acids
+14840	15259	7e-58	187.6	5	11	domain	KS	Clade_7	F Acetyl Starters
+14900	15000	7.5e-12	33.7	N/A	N/A	domain	ER	ER	N/A
+15950	16381	2.1e-129	423.4	1	12	domain	KS	Clade_20	S E-double bonds
+15950	16381	7.6e-115	375.4	2	12	domain	KS	Clade_14a	M A) double bonds
+15950	16381	6.9e-104	339.5	3	12	domain	KS	Clade_21	T double bonds
+15950	16381	1.1e-100	328.7	4	12	domain	KS	Clade_22	zDM
+15952	16381	1.6e-100	328.5	5	12	domain	KS	Clade_31	EE e-DB
+5845	5984	N/A	1.356990e+02	N/A	N/A	domain	NRPS2	gly	N/A
+17770	17916	N/A	1.135800e+02	N/A	N/A	domain	NRPS2	N/A	N/A
+317	386	7.5e-12	33.7	N/A	N/A	domain	ACP	ACP	N/A
+1865	1932	9.6e-20	59.0	N/A	N/A	domain	ACP	ACP	N/A
+3229	3297	3.7e-19	57.1	N/A	N/A	domain	ACP	ACP	N/A
+3377	3442	1.3e-22	68.2	N/A	N/A	domain	ACP	ACP	N/A
+3475	3542	2.5e-19	57.7	N/A	N/A	domain	ACP	ACP	N/A
+4304	4369	2.7e-14	41.5	N/A	N/A	domain	ACP	ACP	N/A
+5121	5189	6e-18	53.3	N/A	N/A	domain	ACP	ACP	N/A
+6197	6262	2.6e-15	44.8	N/A	N/A	domain	ACP	ACP	N/A
+7366	7432	1e-20	62.2	N/A	N/A	domain	ACP	ACP	N/A
+8999	9066	2.4e-21	64.2	N/A	N/A	domain	ACP	ACP	N/A
+9092	9158	1.3e-20	61.8	N/A	N/A	domain	ACP	ACP	N/A
+10826	10898	9.2e-22	65.5	N/A	N/A	domain	ACP	ACP	N/A
+12106	12174	1e-19	59.0	N/A	N/A	domain	ACP	ACP	N/A
+13582	13649	4e-18	53.8	N/A	N/A	domain	ACP	ACP	N/A
+14700	14772	2.3e-19	57.8	N/A	N/A	domain	ACP	ACP	N/A
+15798	15867	1.4e-25	77.7	N/A	N/A	domain	ACP	ACP	N/A
+17043	17112	1.8e-21	64.6	N/A	N/A	domain	ACP	ACP	N/A
+18132	18196	2.5e-07	19.2	N/A	N/A	domain	ACP	ACP	N/A
+9801	10080	4.4e-51	162.1	N/A	N/A	domain	PS	PS	N/A
+10092	10364	9.8e-105	338.0	N/A	N/A	domain	PS	PS	N/A
+12829	13116	1.9e-47	150.2	N/A	N/A	domain	PS	PS	N/A
+14414	14661	9.5e-11	29.8	N/A	N/A	domain	PS	PS	N/A
+15457	15738	4.8e-54	171.8	N/A	N/A	domain	PS	PS	N/A
+6856	6909	0.016	3.2	N/A	N/A	domain	DH	DH	N/A
+9767	9965	4.8e-50	158.9	N/A	N/A	domain	DH	DH	N/A
+10089	10238	4.1e-24	74.0	N/A	N/A	domain	DH	DH	N/A
+11531	11585	0.0005	8.2	N/A	N/A	domain	DH	DH	N/A
+12771	12996	3e-57	182.5	N/A	N/A	domain	DH	DH	N/A
+14407	14553	1e-19	59.6	N/A	N/A	domain	DH	DH	N/A
+15393	15628	2.2e-55	176.4	N/A	N/A	domain	DH	DH	N/A
+16512	16558	0.016	3.2	N/A	N/A	domain	DH	DH	N/A
+54	280	4.2e-102	328.6	N/A	N/A	domain	GNAT	GNAT	N/A
+18210	18500	5.6e-43	136.3	N/A	N/A	domain	TE	TE	N/A
+2783	2786	N/A	4	N/A	N/A	pattern	N/A	crotonase_p_1	N/A
+3043	3046	N/A	4	N/A	N/A	pattern	N/A	crotonase_p_1	N/A
+3083	3086	N/A	4	N/A	N/A	pattern	N/A	crotonase_p_2	N/A
+1221	1227	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
+7095	7101	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
+8340	8346	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
+10562	10568	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
+13317	13323	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
+16768	16774	N/A	7	N/A	N/A	pattern	N/A	KR motif stereospecificty S	N/A
