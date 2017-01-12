@@ -88,6 +88,7 @@ public class FeatureFileLineParser {
     private final String subtype;
     private final String name;
     private final String label;
+    private final String verification_pass;
 
     private Pattern cladeNamePat = Pattern.compile("(Clade_\\d+)([A-Za-z])");
 
@@ -108,10 +109,12 @@ public class FeatureFileLineParser {
         subtype = tokens.next();
         name = processName(tokens.next());
         label = tokens.next();
+        verification_pass = tokens.hasNext() ? tokens.next() : "N/A";
     }
 
     private String processName(String name) {
         // if name ends in character instead of a number, remove everything after the number.
+        // TODO we might not need this anymore. Check.
         Matcher cladeNameMatcher = cladeNamePat.matcher(name);
         if(cladeNameMatcher.find()) {
             return cladeNameMatcher.group(1);
