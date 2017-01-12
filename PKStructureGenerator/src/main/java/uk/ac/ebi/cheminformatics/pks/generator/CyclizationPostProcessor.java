@@ -18,7 +18,7 @@ import java.io.IOException;
  * Time: 17:20
  * To change this template use File | Settings | File Templates.
  */
-public class Clade3PostProcessor implements PostProcessor {
+public class CyclizationPostProcessor implements PostProcessor {
 
     CarbonHydrogenCountBalancer balancer = new CarbonHydrogenCountBalancer();
 
