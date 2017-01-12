@@ -2,6 +2,7 @@ package prediction;
 
 import com.google.common.base.Splitter;
 import prediction.json.*;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -85,17 +86,17 @@ public class PredictionResultParser {
     }
 
     private FeaturesArray getFeatureFromLine(String line) {
-        Iterator<String> tokens = Splitter.on("\t").split(line).iterator();
-        Integer start = Integer.parseInt(tokens.next());
-        Integer stop = Integer.parseInt(tokens.next());
-        String evalue = tokens.next();
-        String score = tokens.next();
-        String ranking = tokens.next();
-        String stackNumber = tokens.next();
-        String type = tokens.next();
-        String subtype = tokens.next();
-        String name = tokens.next();
-        String label = tokens.next();
+        FeatureFileLineParser lineParser = new FeatureFileLineParser(line);
+        Integer start = lineParser.getStart();
+        Integer stop = lineParser.getStop();
+        String evalue = lineParser.getEvalue();
+        String score = lineParser.getScore();
+        String ranking = lineParser.getRanking();
+        String stackNumber = lineParser.getStackNumber();
+        String type = lineParser.getType();
+        String subtype = lineParser.getSubtype();
+        String name = lineParser.getName();
+        String label = lineParser.getLabel();
 
         FeaturesArray feature = new FeaturesArray();
 
