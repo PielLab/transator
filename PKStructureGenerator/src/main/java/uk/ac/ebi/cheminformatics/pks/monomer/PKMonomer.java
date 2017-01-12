@@ -8,9 +8,11 @@ import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
 import org.openscience.cdk.io.MDLV2000Reader;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
-import org.openscience.cdk.tools.CDKHydrogenAdder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
+import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotation;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,11 +43,15 @@ public class PKMonomer {
 
     private IAtomContainer monomerMol;
 
+    /**
+     * @deprecated
+     * @param name
+     */
+    @Deprecated
     public PKMonomer(String name) {
         cladeName = name;
         this.monomerMol = loadStructure(name);
         setConnectionPoints();
-        //if(this.monomerMol.getProperty("EXTENDER")!=null) {
         Set<String> nonElongatingClades = //new HashSet<>(Arrays.asList("Clade_27"));
                 new HashSet<>(Arrays.asList("Clade_27", "Clade_8a", "Clade_8b",
                         "Clade_8", "Clade_10", "Clade_28"));
@@ -54,6 +60,39 @@ public class PKMonomer {
         }
     }
 
+    /**
+     * Initializes a monomer using the information stored on the CladeAnnotation object, based on the clade_id/Clade id.
+     *
+     * @param clade_id
+     * @param annot the CladeAnnotation object which holds the annotation data.
+     */
+    public PKMonomer(String clade_id, CladeAnnotation annot) {
+        cladeName = clade_id;
+        this.monomerMol = loadExternalStructure(annot.getMolFileName(cladeName));
+        if(verifyMolIntegrity()) {
+            setConnectionPoints();
+            this.isNonElongating = annot.isNonElongating(cladeName);
+        }
+    }
+
+    /**
+     * Checks that the loaded molecule has only one R1 and only one R2.
+     * @return true if only 1 R1 and 1 R2 pseudo atoms are present.
+     */
+    private Boolean verifyMolIntegrity() {
+        int r1Counts = 0, r2Counts = 0;
+        String label;
+        for(IAtom atom : monomerMol.atoms()) {
+            if (atom instanceof IPseudoAtom) {
+                label = ((IPseudoAtom) atom).getLabel();
+                if (label.equals("R1")) r1Counts++;
+                if (label.equals("R2")) r2Counts++;
+            }
+        }
+        return r1Counts == 1 && r2Counts == 1;
+    }
+
+    @Deprecated
     private IAtomContainer loadStructure(String name) {
         try {
             MDLV2000Reader reader =
@@ -62,6 +101,26 @@ public class PKMonomer {
             AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
             return mol;
         } catch (CDKException e) {
+            throw new RuntimeException("Could not read molecule for "+cladeName,e);
+        } catch (NullPointerException e) {
+            return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
+        }
+    }
+
+    /**
+     * Loads the mol file from an external path.
+     *
+     * @param name
+     * @return
+     */
+    private IAtomContainer loadExternalStructure(String name) {
+        try {
+            MDLV2000Reader reader =
+                    new MDLV2000Reader(new FileReader(name));
+            IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
+            AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
+            return mol;
+        } catch (IOException|CDKException e) {
             throw new RuntimeException("Could not read molecule for "+cladeName,e);
         } catch (NullPointerException e) {
             return SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);

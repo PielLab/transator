@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotation;
+import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotationFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
@@ -8,6 +10,8 @@ import uk.ac.ebi.cheminformatics.pks.generator.PostProcessorFactory;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
 /**
+ *
+ *
  * Created with IntelliJ IDEA.
  * User: pmoreno
  * Date: 4/7/13
@@ -20,14 +24,19 @@ public class DomainSeqFeature extends AbstractSeqFeature implements SequenceFeat
 
     public DomainSeqFeature(FeatureFileLineParser parser) {
         super(parser.getStart(),parser.getStop(),parser.getName());
-        this.monomer = new PKMonomer(parser.getName());
-        this.postProcessor = PostProcessorFactory.getPostProcessor(parser.getName());
+        String clade = parser.getName();
+        setUpMonomer(clade);
+    }
+
+    private void setUpMonomer(String clade) {
+        CladeAnnotation annotation = CladeAnnotationFactory.getInstance();
+        this.monomer = new PKMonomer(clade, annotation);
+        this.postProcessor = PostProcessorFactory.getPostProcessor(clade, annotation);
     }
 
     public DomainSeqFeature(Integer start, Integer stop, String name, String evalue) {
         super(start,stop,name);
-        this.monomer = new PKMonomer(name);
-        this.postProcessor = PostProcessorFactory.getPostProcessor(name);
+        setUpMonomer(name);
     }
 
     @Override
