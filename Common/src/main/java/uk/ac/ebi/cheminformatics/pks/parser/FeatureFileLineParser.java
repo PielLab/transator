@@ -123,4 +123,16 @@ public class FeatureFileLineParser {
     }
 
 
+    public Boolean getVerificationPass() {
+        if(verification_pass.equals("True"))
+            return Boolean.TRUE;
+        else if(verification_pass.equals("False"))
+            return Boolean.FALSE;
+        else
+            return null;
+    }
+
+    public boolean isaKSClade() {
+        return !ranking.equals("N/A") && !stackNumber.equals("N/A");
+    }
 }
