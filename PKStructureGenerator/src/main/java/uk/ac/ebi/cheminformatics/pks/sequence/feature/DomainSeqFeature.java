@@ -24,19 +24,10 @@ public class DomainSeqFeature extends AbstractSeqFeature implements SequenceFeat
 
     public DomainSeqFeature(FeatureFileLineParser parser) {
         super(parser.getStart(),parser.getStop(),parser.getName());
-        String clade = parser.getName();
-        setUpMonomer(clade);
-    }
-
-    private void setUpMonomer(String clade) {
-        CladeAnnotation annotation = CladeAnnotationFactory.getInstance();
-        this.monomer = new PKMonomer(clade, annotation);
-        this.postProcessor = PostProcessorFactory.getPostProcessor(clade, annotation);
     }
 
     public DomainSeqFeature(Integer start, Integer stop, String name, String evalue) {
         super(start,stop,name);
-        setUpMonomer(name);
     }
 
     @Override
