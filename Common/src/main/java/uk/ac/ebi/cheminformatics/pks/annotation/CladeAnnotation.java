@@ -4,6 +4,7 @@ import runner.RunnerPreferenceField;
 import uk.ac.ebi.cheminformatics.pks.PKSPreferences;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -23,6 +24,17 @@ public class CladeAnnotation {
     private Map<String, List<String>> clade2verficationDomains;
     private Map<String, List<String>> clade2domainsTerminationRule;
     private Map<String, Boolean> cladeIsVerificationMandatory;
+
+    public CladeAnnotation() {
+        clade2description = new HashMap<>();
+        cladeIsNonElongating = new HashMap<>();
+        clade2molFileName = new HashMap<>();
+        clade2descriptionForTool = new HashMap<>();
+        clade2PostProcessors = new HashMap<>();
+        clade2verficationDomains = new HashMap<>();
+        clade2domainsTerminationRule = new HashMap<>();
+        cladeIsVerificationMandatory = new HashMap<>();
+    }
 
     public String getMolFileName(String cladeName) {
         return getPref(RunnerPreferenceField.MonomerMolsPath) + File.separator + clade2molFileName.get(cladeName);
@@ -76,5 +88,9 @@ public class CladeAnnotation {
 
     public List<String> getCladePostProcessors(String clade) {
         return this.clade2PostProcessors.get(clade);
+    }
+
+    public boolean isVerificationMandatory(String clade) {
+        return this.cladeIsVerificationMandatory.get(clade);
     }
 }
