@@ -65,6 +65,8 @@ public class FeatureParser implements Iterator<SequenceFeature>{
                     reader.close();
                     return null;
                 }
+                if(line.startsWith("#"))
+                    continue;
                 lineParser = new FeatureFileLineParser(line);
                 Boolean verificationPassed = lineParser.getVerificationPass();
                 if(lineParser.isaKSClade()) {
