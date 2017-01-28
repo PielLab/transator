@@ -55,6 +55,14 @@
                 <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
             </repository>
         <repository>
+            <id>sonatype</id>
+            <name>sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>ambit-plovdiv</id>
             <name>ambit-plovdiv</name>
             <url>
