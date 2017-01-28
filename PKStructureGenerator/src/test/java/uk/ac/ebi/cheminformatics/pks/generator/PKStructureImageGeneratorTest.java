@@ -45,6 +45,20 @@ public class PKStructureImageGeneratorTest {
     }
 
     @Test
+    public void testGenerateStructureImageBacillaene() throws Exception {
+        StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream("bacillaene.features"));
+        generator.run();
+        PKStructure struct = generator.getStructure();
+
+        PKStructureImageGenerator imageGenerator = new PKStructureImageGenerator();
+        BufferedImage image = imageGenerator.generateStructureImage(struct, new Dimension(900, 900));
+
+        File outputFile = new File("/tmp/pksBacillaeneImage.png");
+        ImageIO.write(image,"png",outputFile);
+
+    }
+
+    @Test
     public void testGenerateStructureImageOnnamideERTest() throws Exception {
         StructureGenerator generator = new StructureGenerator(FeatureParserTest.class.getResourceAsStream("onnamide_ERsubFeatureTest.features"));
         generator.run();

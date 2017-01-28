@@ -14,7 +14,7 @@ public class FeatureParserTest {
     @Test
     public void testGetNext() throws Exception {
         FeatureParser parser = new FeatureParser(
-                FeatureParserTest.class.getResourceAsStream("Cosmidsequence.features"));
+                FeatureParserTest.class.getResourceAsStream("Cosmidsequence_old.features"));
 
         while (parser.hasNext()) {
             SequenceFeature feat = parser.next();
