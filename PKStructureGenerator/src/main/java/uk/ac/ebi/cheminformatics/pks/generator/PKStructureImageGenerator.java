@@ -76,6 +76,7 @@ public class PKStructureImageGenerator {
     }
 
     private IAtomContainer generateCoordinatesForMolecule(IAtomContainer molecule) throws CDKException {
+        molecule.setStereoElements(new ArrayList<IStereoElement>());
         structureGenerator.setMolecule(molecule,false);
         // use false to avoid cloning, this modifies the original molecule.
         structureGenerator.generateCoordinates();
