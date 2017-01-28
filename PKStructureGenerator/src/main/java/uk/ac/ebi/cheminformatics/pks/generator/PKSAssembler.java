@@ -56,7 +56,7 @@ public class PKSAssembler {
             return;
         }
         // From here, we are only looking at KS domains seq features.
-        //LOGGER.info("Adding monomer " + sequenceFeature.getName());
+        LOGGER.info("Adding monomer " + sequenceFeature.getName());
         if(sequenceFeature.getMonomer().getMolecule().getAtomCount()==0) {
             // empty molecule for advancing only
             return;
