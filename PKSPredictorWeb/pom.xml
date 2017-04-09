@@ -31,8 +31,8 @@
       </dependency>
       <dependency>
           <groupId>org.biojava</groupId>
-          <artifactId>biojava3-core</artifactId>
-          <version>3.0.5</version>
+          <artifactId>biojava-core</artifactId>
+          <version>4.2.7</version>
       </dependency>
       <dependency>
           <groupId>com.google.guava</groupId>
