@@ -13,7 +13,7 @@ public class DomainSeqFeature extends AbstractSeqFeature {
 
     private Optional<Double> eValue;
 
-    private Double threshold = Double.parseDouble("1E-3");
+    private Double threshold = Double.parseDouble("1E-4");
 
     private FeatureFileLine featureFileLine;
 
