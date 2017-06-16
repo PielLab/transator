@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesGenerator;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import uk.ac.ebi.cheminformatics.pks.generator.PKStructure;
@@ -13,13 +14,7 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileConcatenator;
 
 import java.io.File;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/8/13
- * Time: 16:46
- * To change this template use File | Settings | File Templates.
- */
+
 public class PKSStructureSmilesDataRes extends ServerResource {
 
     private static final Logger LOGGER = Logger.getLogger(PKSStructureSmilesDataRes.class);
@@ -45,8 +40,7 @@ public class PKSStructureSmilesDataRes extends ServerResource {
 
 
         try {
-//            return new StringRepresentation(sg.create(mol));
-            return null;
+            return new StringRepresentation(sg.create(mol));
         } catch (Exception e) {
             e.printStackTrace();
         }
