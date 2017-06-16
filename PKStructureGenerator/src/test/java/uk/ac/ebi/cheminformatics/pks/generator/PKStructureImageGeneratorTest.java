@@ -1,7 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import org.junit.Test;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureParserTest;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,17 +10,11 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/8/13
- * Time: 13:53
- * To change this template use File | Settings | File Templates.
- */
+
 public class PKStructureImageGeneratorTest {
 
     private Path getFeaturesFile(String name) throws URISyntaxException {
-        return Paths.get(FeatureParserTest.class.getResource(name).toURI());
+        return Paths.get(PKStructureImageGeneratorTest.class.getResource(name).toURI());
     }
 
 

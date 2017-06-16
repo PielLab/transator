@@ -3,7 +3,6 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.openscience.cdk.io.MDLV2000Writer;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureParserTest;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,13 +11,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.file.Paths;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 31/7/13
- * Time: 22:31
- * To change this template use File | Settings | File Templates.
- */
 public class StructureGeneratorTest {
 
     private static final Logger LOGGER = Logger.getLogger(PKStructure.class);
@@ -65,7 +57,7 @@ public class StructureGeneratorTest {
     }
 
     private void runGenerator(String features, String molFileOut) throws Exception {
-        StructureGenerator generator = new StructureGenerator(Paths.get(FeatureParserTest.class.getResource(features).toURI()));
+        StructureGenerator generator = new StructureGenerator(Paths.get(StructureGeneratorTest.class.getResource(features).toURI()));
 
         generator.run();
 

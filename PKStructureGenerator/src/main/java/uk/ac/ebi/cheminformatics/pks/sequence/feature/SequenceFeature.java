@@ -3,16 +3,10 @@ package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 import java.util.Collection;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:31
- * To change this template use File | Settings | File Templates.
- */
 public interface SequenceFeature {
 
     /**
@@ -22,7 +16,7 @@ public interface SequenceFeature {
      *
      * @return PKMonomer with structure associated to this sequence feature.
      */
-    public PKMonomer getMonomer();
+    PKMonomer getMonomer();
 
     /**
      * The name of the sequence feature, which in the case of the clade would
@@ -30,7 +24,7 @@ public interface SequenceFeature {
      *
      * @return the name of the sequence feature.
      */
-    public String getName();
+    String getName();
 
     /**
      * Whether the is a post processor assigned to this sequence feature.
@@ -64,9 +58,8 @@ public interface SequenceFeature {
 
     /**
      * If true, the seq has enough evidence (for example from a low e-score) to justify its inclusion in the final structure
-     *
-     * @return
      */
     boolean isSignificant();
 
+    FeatureFileLine getOriginatingFeatureFileLine();
 }

@@ -3,27 +3,35 @@ package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 4/7/13
- * Time: 11:09
- * To change this template use File | Settings | File Templates.
- */
+import java.util.Optional;
+
 public class DomainSeqFeature extends AbstractSeqFeature {
 
     PostProcessor postProcessor;
 
-    private String evalue;
+    private Optional<Double> eValue;
 
-    public DomainSeqFeature(FeatureFileLineParser parser) {
-        super(parser.getStart(), parser.getStop(), parser.getName());
-        evalue = parser.getEvalue();
+    private Double threshold = Double.parseDouble("1E-3");
+
+    private FeatureFileLine featureFileLine;
+
+    public DomainSeqFeature(FeatureFileLine featureFileLine) {
+        super(featureFileLine.getStart(), featureFileLine.getStop(), featureFileLine.getName());
+        this.eValue = parseEValue(featureFileLine.getEvalue());
+        this.featureFileLine = featureFileLine;
     }
 
-    public DomainSeqFeature(Integer start, Integer stop, String name, String evalue) {
+    private Optional<Double> parseEValue(String string) {
+        try {
+            return Optional.of(Double.parseDouble(string));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public DomainSeqFeature(Integer start, Integer stop, String name, String label) {
         super(start, stop, name);
     }
 
@@ -43,7 +51,12 @@ public class DomainSeqFeature extends AbstractSeqFeature {
     }
 
     public boolean isSignificant() {
-        return Double.parseDouble(this.evalue) < Double.parseDouble("1E-3");
+        return eValue.map(value -> value < threshold).orElse(false);
+    }
+
+    @Override
+    public FeatureFileLine getOriginatingFeatureFileLine() {
+        return featureFileLine;
     }
 
 }

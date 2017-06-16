@@ -2,10 +2,10 @@ package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
 import uk.ac.ebi.cheminformatics.pks.monomer.ERMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 public class ERDomainSeqFeature extends DomainSeqFeature {
-    public ERDomainSeqFeature(FeatureFileLineParser parser) {
+    public ERDomainSeqFeature(FeatureFileLine parser) {
         super(parser);
     }
 

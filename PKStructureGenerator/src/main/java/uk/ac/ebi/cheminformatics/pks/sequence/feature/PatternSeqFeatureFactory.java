@@ -1,6 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +10,7 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
  * To change this template use File | Settings | File Templates.
  */
 public class PatternSeqFeatureFactory {
-    public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        return new ProteinPatternSeqFeature(parser.getStart(),parser.getStop(),parser.getName(),parser.getEvalue());
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine featureFileLine) {
+        return new ProteinPatternSeqFeature(featureFileLine);
     }
 }

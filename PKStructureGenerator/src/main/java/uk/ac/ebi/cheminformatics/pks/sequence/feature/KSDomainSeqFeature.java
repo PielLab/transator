@@ -4,7 +4,7 @@ import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotation;
 import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotationFactory;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessorFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 import static java.lang.Integer.parseInt;
 
@@ -21,7 +21,7 @@ public class KSDomainSeqFeature extends DomainSeqFeature {
         return stackNumber;
     }
 
-    public KSDomainSeqFeature(FeatureFileLineParser parser) {
+    public KSDomainSeqFeature(FeatureFileLine parser) {
         super(parser);
         String clade = parser.getName();
         ranking = parseInt(parser.getRanking());

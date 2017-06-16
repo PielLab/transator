@@ -1,6 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,8 +12,8 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 public class SequenceFeatureFactory {
 
 
-    public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        if(parser.getType().equalsIgnoreCase("domain")) {
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser) {
+        if (parser.getType().equalsIgnoreCase("domain")) {
             DomainSeqFeature nseqFeat;
             switch (parser.getSubtype()) {
                 case "ER":
@@ -39,7 +39,7 @@ public class SequenceFeatureFactory {
                     break;
             }
             return nseqFeat;
-        } else if(parser.getType().equalsIgnoreCase("pattern")) {
+        } else if (parser.getType().equalsIgnoreCase("pattern")) {
             return PatternSeqFeatureFactory.makeSequenceFeature(parser);
         }
         return null;

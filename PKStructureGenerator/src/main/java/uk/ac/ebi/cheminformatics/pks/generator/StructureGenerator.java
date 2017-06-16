@@ -1,73 +1,40 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import org.apache.log4j.Logger;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
-import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
-import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
+import static uk.ac.ebi.cheminformatics.pks.parser.FeatureParser.parse;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:23
- * To change this template use File | Settings | File Templates.
- */
 @SuppressWarnings("Convert2MethodRef")
 public class StructureGenerator {
 
     private static final Logger LOGGER = Logger.getLogger(StructureGenerator.class);
-
 
     private PKStructure structure;
 
     private final List<SequenceFeature> sequenceFeatures;
 
     public StructureGenerator(Path featuresFile) {
-        sequenceFeatures = readFeaturesFromFile(featuresFile);
-    }
-
-    private List<SequenceFeature> readFeaturesFromFile(Path featuresFile) {
-        try (Stream<String> stream = Files.lines(featuresFile)) {
-            return stream
-                    .filter(line -> !line.startsWith("#"))
-                    .map(FeatureFileLineParser::new)
-                    .map(SequenceFeatureFactory::makeSequenceFeature)
-                    .collect(toList());
-        } catch (IOException e) {
-            LOGGER.error("Problems reading in features file ", e);
-            throw new RuntimeException(e);
-        }
+        sequenceFeatures = parse(featuresFile);
     }
 
     public void run() {
 
         PKSAssembler assembler = new PKSAssembler();
 
-        Stream<SequenceFeature> filteredSequences = sequenceFeatures.stream()
-                // we pick the KS which are highest in their stack. Other Seq domains pass through
-                .filter(seq -> ifKsOnlyHighest(seq))
-                // remove HMMER annotated features with non-negative e-values
-                .filter(seq -> seq.isSignificant());
-
-        List<SequenceFeature> result = filteredSequences.collect(Collectors.toList());
+        List<SequenceFeature> filteredSequences = FeatureSelection.byScore(this.sequenceFeatures);
 
         // TODO: this is just for debugging purposes, remove it eventually
-        result.forEach(seq -> {
-            System.out.println(seq.getName());
+        filteredSequences.forEach(seq -> {
+            LOGGER.info(seq.getName());
         });
 
-        result.forEach(feature -> {
+        filteredSequences.forEach(feature -> {
             assembler.addMonomer(feature);
         });
 
@@ -76,10 +43,6 @@ public class StructureGenerator {
         assembler.postProcess();
 
         this.structure = assembler.getStructure();
-    }
-
-    private boolean ifKsOnlyHighest(SequenceFeature seq) {
-        return !(seq instanceof KSDomainSeqFeature) || ((KSDomainSeqFeature) seq).getRanking() == 1;
     }
 
 

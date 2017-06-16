@@ -2,10 +2,10 @@ package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.OMTMonomerProcessor;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 public class OMTDomainSeqFeature extends DomainSeqFeature {
-    public OMTDomainSeqFeature(FeatureFileLineParser parser) {
+    public OMTDomainSeqFeature(FeatureFileLine parser) {
         super(parser);
     }
 

@@ -1,17 +1,19 @@
 package prediction;
 
-import com.google.common.base.Splitter;
 import prediction.json.*;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,7 +53,7 @@ public class PredictionResultParser {
 
     private void parseGBK(String path, String seqID) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(path+seqID+".gbk"));
+            BufferedReader reader = new BufferedReader(new FileReader(path + seqID + ".gbk"));
             String line = reader.readLine();
             reader.close();
             String[] tokens = line.split("\\s+");
@@ -67,36 +69,29 @@ public class PredictionResultParser {
     }
 
     private List<FeaturesArray> getFeaturesArrays(String path, String seqID) {
-        // from the .features we obtain the coordinates of the different clades and patterns, with their names and legends.
-        List<FeaturesArray> features = new LinkedList<FeaturesArray>();
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(path+seqID+".features"));
-            String line = reader.readLine();
-            while( line!=null ) {
-                FeaturesArray feature = getFeatureFromLine(line);
-                features.add(feature);
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return features;
+        Path featuresFile = Paths.get(path + seqID + ".features");
+
+        List<SequenceFeature> features = FeatureParser.parse(featuresFile);
+
+        List<SequenceFeature> filteredFeatures = FeatureSelection.byScore(features);
+
+        return filteredFeatures.stream()
+                .map(feature -> toFeaturesArray(feature.getOriginatingFeatureFileLine()))
+                .collect(toList());
     }
 
-    private FeaturesArray getFeatureFromLine(String line) {
-        FeatureFileLineParser lineParser = new FeatureFileLineParser(line);
-        Integer start = lineParser.getStart();
-        Integer stop = lineParser.getStop();
-        String evalue = lineParser.getEvalue();
-        String score = lineParser.getScore();
-        String ranking = lineParser.getRanking();
-        String stackNumber = lineParser.getStackNumber();
-        String type = lineParser.getType();
-        String subtype = lineParser.getSubtype();
-        String name = lineParser.getName();
-        String label = lineParser.getLabel();
+    private FeaturesArray toFeaturesArray(FeatureFileLine line) {
+        Integer start = line.getStart();
+        Integer stop = line.getStop();
+        String evalue = line.getEvalue();
+        String score = line.getScore();
+        String ranking = line.getRanking();
+        String stackNumber = line.getStackNumber();
+        String type = line.getType();
+        String subtype = line.getSubtype();
+        String name = line.getName();
+        String label = line.getLabel();
 
         FeaturesArray feature = new FeaturesArray();
 
@@ -110,12 +105,12 @@ public class PredictionResultParser {
         // NRPS domains don't have a ranking
         boolean isClade = subtype.equals("KS");
         String evidence = "HMMER";
-        if(subtype.equals("NRPS2")) {
+        if (subtype.equals("NRPS2")) {
             label = "Amino acid";
             evidence = "NRPS2 Predictor";
         }
-        if(type.equalsIgnoreCase("domain")) {
-            if(isClade) {
+        if (type.equalsIgnoreCase("domain")) {
+            if (isClade) {
                 Integer rankingInt = Integer.parseInt(ranking);
                 feature.setY(initialFeatureY + rankingInt * featureHeight);
                 feature.setStroke(getHexaColorFromRank(rankingInt));
@@ -128,12 +123,12 @@ public class PredictionResultParser {
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
-            if(isClade) {
-                feature.setFeatureId((name+"_"+stackNumber).replaceAll(" ","_"));
+            if (isClade) {
+                feature.setFeatureId((name + "_" + stackNumber).replaceAll(" ", "_"));
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             } else {
-                feature.setFeatureId(name+"_"+start);
+                feature.setFeatureId(name + "_" + start);
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             }
@@ -144,11 +139,11 @@ public class PredictionResultParser {
             feature.setEvidenceCode(name);
             feature.setEvidenceText(evidence);
 
-        } else if(type.equalsIgnoreCase("pattern")) {
+        } else if (type.equalsIgnoreCase("pattern")) {
             // for pattern
             feature.setCx(calculateXPixel(start));
             feature.setCy(initialPatternY);
-            feature.setFeatureId((name+"_"+start).replaceAll(" ","_"));
+            feature.setFeatureId((name + "_" + start).replaceAll(" ", "_"));
             feature.setFeatureLabel(name);
             feature.setFeatureTypeLabel("");
             feature.setType("diamond");
@@ -167,7 +162,7 @@ public class PredictionResultParser {
     }
 
     private String getHexaColorFromRank(Integer rankingInt) {
-        Integer red = 200 - (5 - rankingInt)*40;
+        Integer red = 200 - (5 - rankingInt) * 40;
         Integer green = 216;
         Integer black = 188;
         String hex = String.format("#%02x%02x%02x", red, green, black);
@@ -187,32 +182,32 @@ public class PredictionResultParser {
         String hexColour;
         switch (subtype) {
             case "PS":
-                hexColour="#1b9e77";
+                hexColour = "#1b9e77";
                 break;
             case "DH":
-                hexColour="#d95f02";
+                hexColour = "#d95f02";
                 break;
             case "ACP":
-                hexColour="#7570b3";
+                hexColour = "#7570b3";
                 break;
             case "AH":
-                hexColour="#e7298a";
+                hexColour = "#e7298a";
                 break;
             case "AT_AH":
-                hexColour="#66a61e";
+                hexColour = "#66a61e";
                 break;
             case "AT":
-                hexColour="#e6ab02";
+                hexColour = "#e6ab02";
                 break;
             case "KR":
-                hexColour="#a6761d";
+                hexColour = "#a6761d";
                 break;
             default:
-                hexColour="#666666";
+                hexColour = "#666666";
                 break;
         }
 
-        return(hexColour);
+        return (hexColour);
     }
 
     private Integer calculateXPixel(Integer startInAA) {
@@ -220,7 +215,7 @@ public class PredictionResultParser {
     }
 
     private float getPixelsPerAA() {
-        return ((seqXStopPixels - seqXStartPixels)*1f) / (sequenceLenghtAA*1f);
+        return ((seqXStopPixels - seqXStartPixels) * 1f) / (sequenceLenghtAA * 1f);
     }
 
     public PredictionContainer getPredictionContainer() {
