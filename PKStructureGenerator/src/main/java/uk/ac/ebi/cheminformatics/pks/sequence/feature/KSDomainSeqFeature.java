@@ -8,14 +8,7 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
 import static java.lang.Integer.parseInt;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 19/4/15
- * Time: 22:13
- * To change this template use File | Settings | File Templates.
- */
-public class KSDomainSeqFeature extends DomainSeqFeature implements SequenceFeature {
+public class KSDomainSeqFeature extends DomainSeqFeature {
 
     private final int ranking;
     private final int stackNumber;

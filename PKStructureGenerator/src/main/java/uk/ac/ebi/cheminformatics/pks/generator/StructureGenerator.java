@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -53,18 +54,32 @@ public class StructureGenerator {
 
         PKSAssembler assembler = new PKSAssembler();
 
-        // we pick the KS which are highest in their stack
-        sequenceFeatures.stream()
-                .filter(seq -> !(seq instanceof KSDomainSeqFeature) || ((KSDomainSeqFeature) seq).getRanking() == 1)
-                .forEach(feature -> {
-                    assembler.addMonomer(feature);
-                });
+        Stream<SequenceFeature> filteredSequences = sequenceFeatures.stream()
+                // we pick the KS which are highest in their stack. Other Seq domains pass through
+                .filter(seq -> ifKsOnlyHighest(seq))
+                // remove HMMER annotated features with non-negative e-values
+                .filter(seq -> seq.isSignificant());
+
+        List<SequenceFeature> result = filteredSequences.collect(Collectors.toList());
+
+        // TODO: this is just for debugging purposes, remove it eventually
+        result.forEach(seq -> {
+            System.out.println(seq.getName());
+        });
+
+        result.forEach(feature -> {
+            assembler.addMonomer(feature);
+        });
 
         SequenceFeature finalizer = new DomainSeqFeature(0, 0, "finalExtension", "0");
         assembler.addMonomer(finalizer);
         assembler.postProcess();
 
         this.structure = assembler.getStructure();
+    }
+
+    private boolean ifKsOnlyHighest(SequenceFeature seq) {
+        return !(seq instanceof KSDomainSeqFeature) || ((KSDomainSeqFeature) seq).getRanking() == 1;
     }
 
 

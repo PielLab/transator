@@ -4,14 +4,7 @@ import uk.ac.ebi.cheminformatics.pks.monomer.KRMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 20/4/15
- * Time: 18:16
- * To change this template use File | Settings | File Templates.
- */
-public class KRDomainSeqFeature extends DomainSeqFeature implements SequenceFeature{
+public class KRDomainSeqFeature extends DomainSeqFeature {
     public KRDomainSeqFeature(FeatureFileLineParser parser) {
         super(parser);
     }

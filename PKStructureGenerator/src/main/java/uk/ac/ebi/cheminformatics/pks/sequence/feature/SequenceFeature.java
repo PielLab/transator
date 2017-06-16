@@ -1,8 +1,8 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
-import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 
 import java.util.Collection;
 
@@ -41,6 +41,7 @@ public interface SequenceFeature {
 
     /**
      * Obtains the post processor (if any) associated to this clade.
+     *
      * @return
      */
     PostProcessor getPostProcessor();
@@ -59,5 +60,13 @@ public interface SequenceFeature {
      *
      * @return the monomer processor for this sequence feature.
      */
-    public MonomerProcessor getMonomerProcessor();
+    MonomerProcessor getMonomerProcessor();
+
+    /**
+     * If true, the seq has enough evidence (for example from a low e-score) to justify its inclusion in the final structure
+     *
+     * @return
+     */
+    boolean isSignificant();
+
 }

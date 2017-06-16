@@ -4,14 +4,7 @@ import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.OMTMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 20/4/15
- * Time: 18:15
- * To change this template use File | Settings | File Templates.
- */
-public class OMTDomainSeqFeature extends DomainSeqFeature implements SequenceFeature{
+public class OMTDomainSeqFeature extends DomainSeqFeature {
     public OMTDomainSeqFeature(FeatureFileLineParser parser) {
         super(parser);
     }

@@ -1,9 +1,9 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
-import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,9 +12,9 @@ import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
  * Time: 09:16
  * To change this template use File | Settings | File Templates.
  */
-public class ProteinPatternSeqFeature extends AbstractSeqFeature implements SequenceFeature {
+public class ProteinPatternSeqFeature extends AbstractSeqFeature {
     public ProteinPatternSeqFeature(Integer start, Integer stop, String name, String evalue) {
-        super(start,stop,name);
+        super(start, stop, name);
         this.monomer = new PKMonomer("");
         // this protein pattern should include flags that tell the following KS what to do regarding its sequence.
     }
@@ -32,5 +32,10 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature implements Sequ
     @Override
     public MonomerProcessor getMonomerProcessor() {
         return new NoActionMonomerProcessor();
+    }
+
+    @Override
+    public boolean isSignificant() {
+        return true;
     }
 }

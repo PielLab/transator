@@ -7,7 +7,7 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
 /**
  * Sequence feature for NRPS annotations.
  */
-public class NRPSDomSeqFeature extends DomainSeqFeature implements SequenceFeature{
+public class NRPSDomSeqFeature extends DomainSeqFeature {
 
     String aminoAcid;
 
@@ -19,5 +19,11 @@ public class NRPSDomSeqFeature extends DomainSeqFeature implements SequenceFeatu
     @Override
     public MonomerProcessor getMonomerProcessor() {
         return new NRPSMonomerProcessor(aminoAcid);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSignificant() {
+        // TODO: read about the score, and what makes it significant
+        return true;
     }
 }
