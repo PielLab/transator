@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import com.google.common.collect.Range;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
@@ -61,5 +62,10 @@ public interface SequenceFeature {
      */
     boolean isSignificant();
 
+    Range<Integer> getRange();
+
+    /**
+     * Ugly hack to keep the current JSON serialization untouched
+     */
     FeatureFileLine getOriginatingFeatureFileLine();
 }

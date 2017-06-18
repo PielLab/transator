@@ -74,7 +74,7 @@ public class PredictionResultParser {
 
         List<SequenceFeature> features = FeatureParser.parse(featuresFile);
 
-        List<SequenceFeature> filteredFeatures = FeatureSelection.byScore(features);
+        List<SequenceFeature> filteredFeatures = FeatureSelection.keepSignificant(features);
 
         return filteredFeatures.stream()
                 .map(feature -> toFeaturesArray(feature.getOriginatingFeatureFileLine()))

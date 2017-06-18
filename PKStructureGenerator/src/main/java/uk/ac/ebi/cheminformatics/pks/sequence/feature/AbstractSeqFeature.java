@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import com.google.common.collect.Range;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 
 import java.util.Collection;
@@ -39,5 +40,10 @@ public abstract class AbstractSeqFeature implements SequenceFeature {
     public void setSubFeatures(Collection<SequenceFeature> subfeatures) {
         this.subFeatures.clear();
         this.subFeatures.addAll(subfeatures);
+    }
+
+    @Override
+    public Range<Integer> getRange() {
+        return Range.closed(start, stop);
     }
 }

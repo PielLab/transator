@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import com.google.common.collect.Range;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
@@ -7,6 +8,7 @@ import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static uk.ac.ebi.cheminformatics.pks.parser.FeatureParser.parse;
 
@@ -27,14 +29,23 @@ public class StructureGenerator {
 
         PKSAssembler assembler = new PKSAssembler();
 
-        List<SequenceFeature> filteredSequences = FeatureSelection.byScore(this.sequenceFeatures);
+        List<SequenceFeature> sequenceFeatures = FeatureSelection.keepSignificant(this.sequenceFeatures);
 
-        // TODO: this is just for debugging purposes, remove it eventually
-        filteredSequences.forEach(seq -> {
-            LOGGER.info(seq.getName());
-        });
+        List<List<SequenceFeature>> clustered = FeatureSelection.clusterByAlignment(sequenceFeatures, 20);
 
-        filteredSequences.forEach(feature -> {
+        String clustering = clustered.stream().map(group ->
+                group.stream()
+                        .map(sequenceFeature -> {
+                            String name = sequenceFeature.getName();
+                            Range<Integer> range = sequenceFeature.getRange();
+                            return String.format("%s(%d..%d)", name, range.lowerEndpoint(), range.upperEndpoint());
+                        })
+                        .collect(Collectors.joining("\n")))
+                .collect(Collectors.joining("\n\n"));
+
+        System.out.println(clustering);
+
+        sequenceFeatures.forEach(feature -> {
             assembler.addMonomer(feature);
         });
 
@@ -44,7 +55,6 @@ public class StructureGenerator {
 
         this.structure = assembler.getStructure();
     }
-
 
     public PKStructure getStructure() {
         return this.structure;
