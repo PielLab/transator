@@ -18,7 +18,7 @@ public class NRPSDomSeqFeature extends DomainSeqFeature {
 
     @Override
     public MonomerProcessor getMonomerProcessor() {
-        return new NRPSMonomerProcessor(aminoAcid);    //To change body of overridden methods use File | Settings | File Templates.
+        return new NRPSMonomerProcessor(aminoAcid);
     }
 
     @Override
