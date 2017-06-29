@@ -3,7 +3,6 @@ package prediction;
 import prediction.json.*;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.io.BufferedReader;
@@ -74,9 +73,8 @@ public class PredictionResultParser {
 
         List<SequenceFeature> features = FeatureParser.parse(featuresFile);
 
-        List<SequenceFeature> filteredFeatures = FeatureSelection.keepSignificant(features);
-
-        return filteredFeatures.stream()
+        return features.stream()
+                .filter(feature -> feature.isSignificant())
                 .map(feature -> toFeaturesArray(feature.getOriginatingFeatureFileLine()))
                 .collect(toList());
     }

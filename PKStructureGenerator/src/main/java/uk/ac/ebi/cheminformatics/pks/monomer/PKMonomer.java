@@ -34,6 +34,7 @@ public class PKMonomer {
     private IAtom posConnectionAtom;
 
     private String cladeName;
+    private String molFilename;
 
     public boolean isNonElongating() {
         return isNonElongating;
@@ -48,6 +49,7 @@ public class PKMonomer {
      * @deprecated
      */
     @Deprecated
+    // TODO: can we remove this function?
     public PKMonomer(String name) {
         cladeName = name;
         this.monomerMol = loadStructure(name);
@@ -72,10 +74,12 @@ public class PKMonomer {
         if (clade_id.equals("Clade_32")) {
             this.monomerMol = null;
         } else {
-            this.monomerMol = loadExternalStructure(annot.getMolFileName(cladeName));
+            String molFileName = annot.getMolFileName(cladeName);
+            this.monomerMol = loadExternalStructure(molFileName);
             if (verifyMolIntegrity()) {
                 setConnectionPoints();
             }
+            this.molFilename = molFileName;
         }
         this.isNonElongating = annot.isNonElongating(cladeName);
     }
@@ -182,6 +186,10 @@ public class PKMonomer {
         return preConnectionBond;
     }
 
+    public String getMolFilename() {
+        return molFilename;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -208,4 +216,6 @@ public class PKMonomer {
         result = 31 * result + (cladeName != null ? cladeName.hashCode() : 0);
         return result;
     }
+
+
 }

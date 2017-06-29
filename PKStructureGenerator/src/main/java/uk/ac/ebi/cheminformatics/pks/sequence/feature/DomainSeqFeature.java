@@ -11,7 +11,7 @@ public class DomainSeqFeature extends AbstractSeqFeature {
 
     PostProcessor postProcessor;
 
-    private Optional<Double> eValue;
+    protected Optional<Double> eValue;
 
     private Double threshold = Double.parseDouble("1E-10");
 

@@ -54,6 +54,9 @@ public class PKSAssembler {
             return;
         }
         // From here, we are only looking at KS domains seq features.
+        if (sequenceFeature.getMonomer().isNonElongating()) {
+            return;
+        }
         LOGGER.info("Adding monomer " + sequenceFeature.getName());
         if (sequenceFeature.getMonomer().getMolecule().getAtomCount() == 0) {
             // empty molecule for advancing only
@@ -91,9 +94,9 @@ public class PKSAssembler {
             // For extending clades (where no monomer should be added)
             // we need to remove the previous monomer and enact the equivalent
             // to the transformation provided.
-            if (sequenceFeature.getMonomer().isNonElongating()) {
-                structure.removeLastMonomer();
-            }
+//            if (sequenceFeature.getMonomer().isNonElongating()) {
+//                structure.removeLastMonomer();
+//            }
 
             IAtom connectionAtomInChain = structure.getConnectionAtom();
             IBond connectioBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
