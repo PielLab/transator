@@ -79,7 +79,8 @@ public class FeatureFileLine {
     private final Integer stop;
     private final String evalue;
     private final String score;
-    private final String ranking;
+    // TODO: these should not be read in here anymore
+    private String ranking;
     private final String stackNumber;
     private final String type;
     private final String subtype;
@@ -117,5 +118,9 @@ public class FeatureFileLine {
             return cladeNameMatcher.group(1);
         }
         return name;
+    }
+
+    public void setRanking(long ranking) {
+        this.ranking = Long.toString(ranking);
     }
 }

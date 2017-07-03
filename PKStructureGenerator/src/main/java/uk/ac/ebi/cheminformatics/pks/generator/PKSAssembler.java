@@ -94,12 +94,13 @@ public class PKSAssembler {
             // For extending clades (where no monomer should be added)
             // we need to remove the previous monomer and enact the equivalent
             // to the transformation provided.
+            // TODO: why is this like that?
 //            if (sequenceFeature.getMonomer().isNonElongating()) {
 //                structure.removeLastMonomer();
 //            }
 
             IAtom connectionAtomInChain = structure.getConnectionAtom();
-            IBond connectioBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
+            IBond connectionBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
 
             IAtomContainer structureMol = structure.getMolecule();
 
@@ -107,10 +108,10 @@ public class PKSAssembler {
 
             IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
             if (monomer.getAtomCount() > 0) {
-                int indexToRemove = connectioBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
+                int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
-                monomer.removeAtom(connectioBondInMonomer.getAtom(indexToRemove));
-                connectioBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
+                monomer.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
+                connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
 
                 structure.add(sequenceFeature.getMonomer());
 
@@ -122,7 +123,7 @@ public class PKSAssembler {
                         boolean changed = false;
                         for (int i = 0; i < bonds.length; i++) {
                             if (bonds[i].equals(bondRemovedFromChain)) {
-                                bonds[i] = connectioBondInMonomer;
+                                bonds[i] = connectionBondInMonomer;
                                 changed = true;
                             }
                         }

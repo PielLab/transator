@@ -14,13 +14,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 31/7/13
- * Time: 10:41
- * To change this template use File | Settings | File Templates.
- */
 public class PKSAssemblerTest {
     @Test
     public void testAddMonomer() throws Exception {

@@ -5,6 +5,12 @@ import uk.ac.ebi.cheminformatics.pks.generator.DistanceMetricSequenceFeatures;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.util.List;
+import java.util.stream.Stream;
+
+import static com.google.common.collect.Streams.mapWithIndex;
+import static java.util.Comparator.comparingDouble;
+import static java.util.stream.Collectors.toList;
+import static uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory.makeSequenceFeature;
 
 public final class FeatureSelection {
 
@@ -13,12 +19,27 @@ public final class FeatureSelection {
         return null;
     }
 
-    public static List<List<SequenceFeature>> clusterByAlignment(List<SequenceFeature> sequenceFeatures, int maxDistance) {
-        try {
+    public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> features, int cascadeHeight) {
+        return bestMatchCascade(features, cascadeHeight, 5, 20);
+    }
 
-            // Apparently, this is the same hierarchical clustering SLM
-            // I could use hierarchical clustering, but this code was easiest to use.
-            int minCluster = 2;
+    public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> features, int cascadeHeight, int minCluster, int maxDistance) {
+
+        List<List<SequenceFeature>> clusteredByPosition = FeatureSelection.clusterByAlignment(features.collect(toList()), minCluster, maxDistance);
+
+        return clusteredByPosition.stream().flatMap(group -> {
+
+            Stream<SequenceFeature> cascade = group.stream()
+                    .sorted(comparingDouble((SequenceFeature feature) -> feature.getEValue().orElseThrow(() -> new IllegalStateException("EValue is required for clustering"))))
+                    .limit(cascadeHeight);
+
+            return mapWithIndex(cascade,
+                    (seq, index) -> makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1));
+        });
+    }
+
+    private static List<List<SequenceFeature>> clusterByAlignment(List<SequenceFeature> sequenceFeatures, int minCluster, int maxDistance) {
+        try {
 
             DBSCANClusterer<SequenceFeature> clusterer = new DBSCANClusterer<>(sequenceFeatures, minCluster, maxDistance, new DistanceMetricSequenceFeatures());
 

@@ -19,13 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/8/13
- * Time: 16:46
- * To change this template use File | Settings | File Templates.
- */
+
 public class PKSStructureImageDataRes extends ServerResource {
 
     private static final Logger LOGGER = Logger.getLogger(PKSStructureImageDataRes.class);

@@ -11,7 +11,9 @@ public class DomainSeqFeature extends AbstractSeqFeature {
 
     PostProcessor postProcessor;
 
-    protected Optional<Double> eValue;
+    protected Optional<Double> EValue;
+
+    private int ranking = 0;
 
     private Double threshold = Double.parseDouble("1E-10");
 
@@ -19,8 +21,15 @@ public class DomainSeqFeature extends AbstractSeqFeature {
 
     public DomainSeqFeature(FeatureFileLine featureFileLine) {
         super(featureFileLine.getStart(), featureFileLine.getStop(), featureFileLine.getName());
-        this.eValue = parseEValue(featureFileLine.getEvalue());
+        this.EValue = parseEValue(featureFileLine.getEvalue());
         this.featureFileLine = featureFileLine;
+    }
+
+    public DomainSeqFeature(FeatureFileLine featureFileLine, int ranking) {
+        super(featureFileLine.getStart(), featureFileLine.getStop(), featureFileLine.getName());
+        this.EValue = parseEValue(featureFileLine.getEvalue());
+        this.featureFileLine = featureFileLine;
+        this.ranking = ranking;
     }
 
     private Optional<Double> parseEValue(String string) {
@@ -51,7 +60,49 @@ public class DomainSeqFeature extends AbstractSeqFeature {
     }
 
     public boolean isSignificant() {
-        return eValue.map(value -> value < threshold).orElse(false);
+        return EValue.map(value -> value < threshold).orElse(false);
+    }
+
+    @Override
+    public Optional<Double> getScore() {
+        return Optional.of(Double.parseDouble(this.featureFileLine.getScore()));
+    }
+
+    @Override
+    public Optional<Double> getEValue() {
+        return EValue;
+    }
+
+    @Override
+    public Optional<Integer> getRanking() {
+        return this.ranking == 0 ? Optional.empty() : Optional.of(this.ranking);
+    }
+
+
+    @Override
+    public String getType() {
+        return this.featureFileLine.getType();
+    }
+
+    // TODO: remove verification passes
+    @Override
+    public Optional<Boolean> getVerificationPass() {
+
+        if (this.featureFileLine.getVerificationPass().equals("N/A")) {
+            return Optional.empty();
+        }
+
+        return Optional.of(this.featureFileLine.getVerificationPass().equals("True"));
+    }
+
+    @Override
+    public String getSubtype() {
+        return this.featureFileLine.getSubtype();
+    }
+
+    @Override
+    public String getLabel() {
+        return this.featureFileLine.getLabel();
     }
 
     @Override

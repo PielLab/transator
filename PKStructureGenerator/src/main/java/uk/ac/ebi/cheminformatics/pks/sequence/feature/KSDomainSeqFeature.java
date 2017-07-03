@@ -7,15 +7,14 @@ import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 public class KSDomainSeqFeature extends DomainSeqFeature {
-
-    public KSDomainSeqFeature(FeatureFileLine parser) {
-        super(parser);
-        String clade = parser.getName();
-        setUpMonomer(clade);
+    
+    public KSDomainSeqFeature(FeatureFileLine featureFileLine, int ranking) {
+        super(featureFileLine, ranking);
+        setUpMonomer(featureFileLine.getName());
     }
 
     public Double getEvalue() {
-        return this.eValue.orElseThrow(() -> new IllegalStateException("KSDomainSeqFeature requires an evalue"));
+        return this.EValue.orElseThrow(() -> new IllegalStateException("KSDomainSeqFeature requires an evalue"));
     }
 
     private void setUpMonomer(String clade) {

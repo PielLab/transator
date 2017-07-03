@@ -7,6 +7,7 @@ import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface SequenceFeature {
 
@@ -64,8 +65,23 @@ public interface SequenceFeature {
 
     Range<Integer> getRange();
 
+    Optional<Double> getScore();
+
+    Optional<Double> getEValue();
+
+    Optional<Integer> getRanking();
+
+    String getType();
+
+    Optional<Boolean> getVerificationPass();
+
+    String getSubtype();
+
+    String getLabel();
+
     /**
-     * Ugly hack to keep the current JSON serialization untouched
+     * Ugly hack to allow easy copying of SequenceFeatures
+     * TODO: replace with normal constructor having all required fields
      */
     FeatureFileLine getOriginatingFeatureFileLine();
 }

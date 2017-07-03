@@ -1,8 +1,10 @@
 package prediction;
 
+import com.google.common.collect.Streams;
 import prediction.json.*;
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.io.BufferedReader;
@@ -11,16 +13,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/7/13
- * Time: 17:36
- * To change this template use File | Settings | File Templates.
- */
 public class PredictionResultParser {
     private PredictionContainer predictionContainer;
     private Integer initialFeatureY = 60;
@@ -59,10 +56,10 @@ public class PredictionResultParser {
             try {
                 sequenceLenghtAA = Integer.parseInt(tokens[2]);
             } catch (NumberFormatException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }
@@ -73,19 +70,30 @@ public class PredictionResultParser {
 
         List<SequenceFeature> features = FeatureParser.parse(featuresFile);
 
-        return features.stream()
-                .filter(feature -> feature.isSignificant())
-                .map(feature -> toFeaturesArray(feature.getOriginatingFeatureFileLine()))
+        List<SequenceFeature> significantFeatures = features.stream()
+                // apply a cut-off to filter out false positives
+                .filter(SequenceFeature::isSignificant)
+                .collect(toList());
+
+        Stream<SequenceFeature> nonKs = significantFeatures.stream().filter(seq -> !(seq instanceof KSDomainSeqFeature));
+
+        Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
+
+        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, 5);
+
+        Stream<SequenceFeature> selectedFeatures = Streams.concat(nonKs, bestKs)
+                .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()));
+
+        return selectedFeatures
+                .map(feature -> toFeaturesArray(feature))
                 .collect(toList());
     }
 
-    private FeaturesArray toFeaturesArray(FeatureFileLine line) {
-        Integer start = line.getStart();
-        Integer stop = line.getStop();
-        String evalue = line.getEvalue();
-        String score = line.getScore();
-        String ranking = line.getRanking();
-        String stackNumber = line.getStackNumber();
+    private FeaturesArray toFeaturesArray(SequenceFeature line) {
+        Integer start = line.getRange().lowerEndpoint();
+        Integer stop = line.getRange().upperEndpoint();
+        String evalue = line.getEValue().map(Object::toString).orElse("");
+        String score = line.getScore().map(Object::toString).orElse("");
         String type = line.getType();
         String subtype = line.getSubtype();
         String name = line.getName();
@@ -109,10 +117,10 @@ public class PredictionResultParser {
         }
         if (type.equalsIgnoreCase("domain")) {
             if (isClade) {
-                Integer rankingInt = Integer.parseInt(ranking);
-                feature.setY(initialFeatureY + rankingInt * featureHeight);
-                feature.setStroke(getHexaColorFromRank(rankingInt));
-                feature.setFill(getHexaColorFromRank(rankingInt));
+                Integer ranking = line.getRanking().get();
+                feature.setY(initialFeatureY + ranking * featureHeight);
+                feature.setStroke(getHexaColorFromRank(ranking));
+                feature.setFill(getHexaColorFromRank(ranking));
             } else {
                 feature.setY(initialFeatureY + featureHeight);
                 feature.setStroke(getHexaColorFromSubtype(subtype));
@@ -122,7 +130,7 @@ public class PredictionResultParser {
             feature.setType("rect");
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
             if (isClade) {
-                feature.setFeatureId((name + "_" + stackNumber).replaceAll(" ", "_"));
+                feature.setFeatureId((name).replaceAll(" ", "_"));
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             } else {
