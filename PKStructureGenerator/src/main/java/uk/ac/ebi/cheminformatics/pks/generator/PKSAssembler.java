@@ -144,6 +144,7 @@ public class PKSAssembler {
 
                 // adjust implicit hydrogens
                 IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
+                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionAtomInChain);
                 hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), posConnectionAtomMonomer);
             }
 
