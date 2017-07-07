@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.smiles.SmilesGenerator;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import uk.ac.ebi.cheminformatics.pks.generator.PKStructure;
@@ -39,7 +40,7 @@ public class PKSStructureSmilesDataRes extends ServerResource {
 
 
         try {
-            return null;
+            return new StringRepresentation(sg.create(mol));
         } catch (Exception e) {
             e.printStackTrace();
         }
