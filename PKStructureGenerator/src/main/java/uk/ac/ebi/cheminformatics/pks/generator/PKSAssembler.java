@@ -115,6 +115,7 @@ public class PKSAssembler {
 
                 structure.add(sequenceFeature.getMonomer());
 
+                // TODO: I'm not sure what this code does. Commenting it for Bacillaene returns the same result
                 List<IStereoElement> replacementList = new LinkedList<>();
                 boolean anyChange = false;
                 for (IStereoElement element : structure.getMolecule().stereoElements()) {
