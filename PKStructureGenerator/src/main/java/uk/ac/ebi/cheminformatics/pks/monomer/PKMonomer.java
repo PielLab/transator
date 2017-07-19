@@ -18,13 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 4/7/13
- * Time: 11:09
- * To change this template use File | Settings | File Templates.
- */
 public class PKMonomer {
 
     private static final Logger LOGGER = Logger.getLogger(PKMonomer.class);
@@ -87,7 +80,7 @@ public class PKMonomer {
     /**
      * Checks that the loaded molecule has only one R1 and only one R2.
      *
-     * @return true if only 1 R1 and 1 R2 pseudo atoms are present.
+     * @return true if only 1 or 0 R1 and 1 R2 pseudo atoms are present.
      */
     private Boolean verifyMolIntegrity() {
         int r1Counts = 0, r2Counts = 0;
@@ -99,7 +92,7 @@ public class PKMonomer {
                 if (label.equals("R2")) r2Counts++;
             }
         }
-        return r1Counts == 1 && r2Counts == 1;
+        return (r1Counts == 1 || r1Counts == 0) && r2Counts == 1;
     }
 
     @Deprecated
@@ -153,7 +146,7 @@ public class PKMonomer {
                     if (posConnectionAtom == null) {
                         posConnectionAtom = monomerMol.getConnectedAtomsCount(atom) > 0 ? monomerMol.getConnectedAtomsList(atom).get(0) : null;
                     } else {
-                        throw new RuntimeException("Molecule for  " + cladeName + " has more than one R1 atom");
+                        throw new RuntimeException("Molecule for  " + cladeName + " has more than one R2 atom");
                     }
                 }
             }
