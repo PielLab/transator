@@ -79,16 +79,6 @@ public class PKSAssembler {
                 hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), atomToCorrect);
             }
             runVerifiersForFeature(sequenceFeature, "initial part");
-        } else if (structure.getMonomerCount() == 1 && sequenceFeature.getMonomer().isNonElongating()) {
-            /*
-               if the chain only has one monomer currently and the new sequence feature
-               represents a non-elongating clade, then we simply remove what it is there and
-               add the monomer of the non-elongating clade (which represents the transformation
-               done to the previously existing monomer).
-             */
-            structure.getMolecule().removeAllElements();
-            structure.add(sequenceFeature.getMonomer());
-            runVerifiersForFeature(sequenceFeature, "extender on pos 2 case.");
         } else {
             IAtom connectionAtomInChain = structure.getConnectionAtom();
             IBond connectionBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
