@@ -3,7 +3,6 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.*;
-import org.openscience.cdk.stereo.DoubleBondStereochemistry;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
@@ -91,63 +90,28 @@ public class PKSAssembler {
             structure.add(sequenceFeature.getMonomer());
             runVerifiersForFeature(sequenceFeature, "extender on pos 2 case.");
         } else {
-            // For extending clades (where no monomer should be added)
-            // we need to remove the previous monomer and enact the equivalent
-            // to the transformation provided.
-            // TODO: why is this like that?
-//            if (sequenceFeature.getMonomer().isNonElongating()) {
-//                structure.removeLastMonomer();
-//            }
-
             IAtom connectionAtomInChain = structure.getConnectionAtom();
             IBond connectionBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
 
-            IAtomContainer structureMol = structure.getMolecule();
+            IAtomContainer structureMolecule = structure.getMolecule();
 
-            IBond bondRemovedFromChain = removeGenericConnection(connectionAtomInChain, structureMol);
+            removeGenericConnection(connectionAtomInChain, structureMolecule);
 
             IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
-            if (monomer.getAtomCount() > 0) {
-                int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
+            int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
+            // TODO: we cannot remove R1 from a pyran/furan ring as we get problems with verification.
+            if (monomer.getConnectedAtomsCount(connectionBondInMonomer.getAtom(indexToRemove)) == 1) {
                 monomer.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
-                connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
-
-                structure.add(sequenceFeature.getMonomer());
-
-                // TODO: I'm not sure what this code does. Commenting it for Bacillaene returns the same result
-                List<IStereoElement> replacementList = new LinkedList<>();
-                boolean anyChange = false;
-                for (IStereoElement element : structure.getMolecule().stereoElements()) {
-                    if (element instanceof IDoubleBondStereochemistry) {
-                        IBond[] bonds = ((IDoubleBondStereochemistry) element).getBonds();
-                        boolean changed = false;
-                        for (int i = 0; i < bonds.length; i++) {
-                            if (bonds[i].equals(bondRemovedFromChain)) {
-                                bonds[i] = connectionBondInMonomer;
-                                changed = true;
-                            }
-                        }
-                        if (changed) {
-                            anyChange = true;
-                            IDoubleBondStereochemistry replacement = new DoubleBondStereochemistry(((IDoubleBondStereochemistry) element).getStereoBond(),
-                                    bonds, ((IDoubleBondStereochemistry) element).getStereo());
-                            replacementList.add(replacement);
-                        } else {
-                            replacementList.add(element);
-                        }
-                    }
-                }
-                if (anyChange) {
-                    // if there are changes in the stereo bonds, then we replace the stereo elements with the replacement set
-                    structure.getMolecule().setStereoElements(replacementList);
-                }
-
-                // adjust implicit hydrogens
-                IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
-                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionAtomInChain);
-                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), posConnectionAtomMonomer);
             }
+
+            connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
+
+            structure.add(sequenceFeature.getMonomer());
+
+            // adjust implicit hydrogen atoms
+            hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(0));
+            hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(1));
 
             // here we do post processing specific to the particular clade just added
             if (sequenceFeature.hasPostProcessor()) {
@@ -158,10 +122,6 @@ public class PKSAssembler {
 
             runVerifiersForFeature(sequenceFeature, "after normal insertion");
         }
-    }
-
-    private void runVerifiersForFeature(SequenceFeature feature) {
-        runVerifiersForFeature(feature, "");
     }
 
     private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
@@ -181,7 +141,7 @@ public class PKSAssembler {
         for (SequenceFeature feat : subFeaturesForNextKS) {
             MonomerProcessor processor = feat.getMonomerProcessor();
             processor.modify(monomer);
-            runVerifiersForFeature(feat, "after processing sub-features.");
+//            runVerifiersForFeature(feat, "after processing sub-features.");
         }
         subFeaturesForNextKS.clear();
     }
@@ -210,7 +170,7 @@ public class PKSAssembler {
         for (SequenceFeature toPP : this.toBePostProcessed) {
             PostProcessor proc = toPP.getPostProcessor();
             proc.process(structure, toPP.getMonomer());
-            runVerifiersForFeature(toPP, "after post-processing");
+//            runVerifiersForFeature(toPP, "after post-processing");
         }
     }
 
