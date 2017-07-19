@@ -141,7 +141,7 @@ public class PKSAssembler {
         for (SequenceFeature feat : subFeaturesForNextKS) {
             MonomerProcessor processor = feat.getMonomerProcessor();
             processor.modify(monomer);
-//            runVerifiersForFeature(feat, "after processing sub-features.");
+            runVerifiersForFeature(feat, "after processing sub-features.");
         }
         subFeaturesForNextKS.clear();
     }
@@ -170,7 +170,7 @@ public class PKSAssembler {
         for (SequenceFeature toPP : this.toBePostProcessed) {
             PostProcessor proc = toPP.getPostProcessor();
             proc.process(structure, toPP.getMonomer());
-//            runVerifiersForFeature(toPP, "after post-processing");
+            runVerifiersForFeature(toPP, "after post-processing");
         }
     }
 
