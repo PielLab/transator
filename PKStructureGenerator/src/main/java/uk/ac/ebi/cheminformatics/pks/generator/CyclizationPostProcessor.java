@@ -14,7 +14,6 @@ public class CyclizationPostProcessor implements PostProcessor {
 
     @Override
     public void process(PKStructure structure, PKMonomer monomer) {
-        //Connect C atom connected to R6 to C atom connected to R1 two modules upstream. R6 goes away.
         Integer currentIndex = structure.getMonomerIndex(monomer);
         PKMonomer upstream2 = structure.getMonomer(currentIndex - 2);
         // We need to check whether upstream2 monomer has a C=O that can attack
