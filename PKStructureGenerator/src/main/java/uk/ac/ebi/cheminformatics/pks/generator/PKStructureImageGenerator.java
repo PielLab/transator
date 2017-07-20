@@ -4,40 +4,33 @@ import org.openscience.cdk.aromaticity.Aromaticity;
 import org.openscience.cdk.aromaticity.ElectronDonation;
 import org.openscience.cdk.exception.CDKException;
 import org.openscience.cdk.graph.Cycles;
-import org.openscience.cdk.interfaces.*;
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.layout.StructureDiagramGenerator;
 import org.openscience.cdk.renderer.AtomContainerRenderer;
 import org.openscience.cdk.renderer.IRenderer;
 import org.openscience.cdk.renderer.RendererModel;
 import org.openscience.cdk.renderer.SymbolVisibility;
 import org.openscience.cdk.renderer.font.AWTFontManager;
-import org.openscience.cdk.renderer.generators.*;
+import org.openscience.cdk.renderer.generators.BasicSceneGenerator;
+import org.openscience.cdk.renderer.generators.IGenerator;
 import org.openscience.cdk.renderer.generators.standard.StandardGenerator;
 import org.openscience.cdk.renderer.visitor.AWTDrawVisitor;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
-import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import org.openscience.cdk.tools.CDKHydrogenAdder;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class receives a poliketyde structure to produce an image of it.
- *
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/8/13
- * Time: 11:37
- * To change this template use File | Settings | File Templates.
- */
 public class PKStructureImageGenerator {
 
     private IRenderer chemicalMoleculeRenderer;
     private StructureDiagramGenerator structureGenerator;
     private final Aromaticity daylight =
-            new Aromaticity(ElectronDonation.daylight(), Cycles.or(Cycles.all(),Cycles.all(6)));
+            new Aromaticity(ElectronDonation.daylight(), Cycles.or(Cycles.all(), Cycles.all(6)));
 
     public PKStructureImageGenerator() {
         this.structureGenerator = new StructureDiagramGenerator();
@@ -76,8 +69,8 @@ public class PKStructureImageGenerator {
     }
 
     private IAtomContainer generateCoordinatesForMolecule(IAtomContainer molecule) throws CDKException {
-        molecule.setStereoElements(new ArrayList<IStereoElement>());
-        structureGenerator.setMolecule(molecule,false);
+        molecule.setStereoElements(new ArrayList<>());
+        structureGenerator.setMolecule(molecule, false);
         // use false to avoid cloning, this modifies the original molecule.
         structureGenerator.generateCoordinates();
         return structureGenerator.getMolecule();
