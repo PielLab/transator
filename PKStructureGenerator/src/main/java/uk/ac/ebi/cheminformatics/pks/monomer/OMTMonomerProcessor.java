@@ -14,7 +14,7 @@ import java.util.Collection;
  * a methyl group added to the the -OH present in the first carbon of the monomer.
  *
  * TODO What happens if there is no -OH present? Currently, we will just skip it.
- * TODO What if there is a =O instead of an -OH? I presumme that the same effect holds.
+ * TODO What if there is a =O instead of an -OH? I presume that the same effect holds.
  */
 public class OMTMonomerProcessor implements MonomerProcessor {
     @Override
