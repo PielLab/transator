@@ -18,10 +18,10 @@ public class CyclizationPostProcessor implements PostProcessor {
         PKMonomer upstream2 = structure.getMonomer(currentIndex - 2);
         // We need to check whether upstream2 monomer has a C=O that can attack
         // the current clade 3 C=C bond.
-        IBond upstream2C_bond_O = getCBondToOxygen(upstream2, structure);
+        IBond upstream2C_bond_O = getCBondToOxygen(upstream2);
         if (upstream2C_bond_O == null) {
             attemptToAddCOBondOnUpstream2C(upstream2, structure);
-            upstream2C_bond_O = getCBondToOxygen(upstream2, structure);
+            upstream2C_bond_O = getCBondToOxygen(upstream2);
         }
         IBond currentC_dbond_C = getCDoubleBondC(monomer, structure);
         IAtom cInCurrentMonomerToAttack = monomer.getPosConnectionAtom();
@@ -71,7 +71,7 @@ public class CyclizationPostProcessor implements PostProcessor {
         }
     }
 
-    private IBond getCBondToOxygen(PKMonomer monomer, PKStructure structure) {
+    private IBond getCBondToOxygen(PKMonomer monomer) {
         IBond bond = getS1BondToS2(monomer, "C", "O", IBond.Order.SINGLE);
         if (bond == null)
             bond = getS1BondToS2(monomer, "C", "O", IBond.Order.DOUBLE);
