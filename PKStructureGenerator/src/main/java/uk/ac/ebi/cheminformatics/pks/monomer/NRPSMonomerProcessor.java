@@ -32,7 +32,7 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
             IAtom c_conn_K_monomer = null;
 
             IAtom K_aa = null;
-            IAtom L_aa = null;
+            IAtom P_aa = null;
             IAtom atom_conn_K_aa = null;
 
             for (IAtom atom_monomer : monomer.getMolecule().atoms()) {
@@ -48,8 +48,8 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
                 if (atom_aa.getSymbol().equals("K")) {
                     K_aa = atom_aa;
                     atom_conn_K_aa = aaMol.getConnectedAtomsList(atom_aa).get(0);
-                } else if (atom_aa instanceof IPseudoAtom && ((IPseudoAtom) atom_aa).getLabel().equals("L")) {
-                    L_aa = atom_aa;
+                } else if (atom_aa instanceof IPseudoAtom && ((IPseudoAtom) atom_aa).getLabel().equals("P")) {
+                    P_aa = atom_aa;
                 }
             }
 
@@ -67,13 +67,13 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
                 monomer.getMolecule().add(aaMol);
                 monomer.getMolecule().removeAtom(K_monomer);
 
-                //If L is present in the aminoacid, join it with N of the monomer.
-                if (L_aa != null && N_monomer != null) {
-                    IBond L_bond = monomer.getMolecule().getConnectedBondsList(L_aa).get(0);
-                    IAtom atom_conn_L = monomer.getMolecule().getConnectedAtomsList(L_aa).get(0);
+                //If P is present in the amino acid, join it with N of the monomer.
+                if (P_aa != null && N_monomer != null) {
+                    IBond L_bond = monomer.getMolecule().getConnectedBondsList(P_aa).get(0);
+                    IAtom atom_conn_L = monomer.getMolecule().getConnectedAtomsList(P_aa).get(0);
                     L_bond.setAtom(N_monomer, 0);
                     L_bond.setAtom(atom_conn_L, 1);
-                    monomer.getMolecule().removeAtom(L_aa);
+                    monomer.getMolecule().removeAtom(P_aa);
                 }
             }
 

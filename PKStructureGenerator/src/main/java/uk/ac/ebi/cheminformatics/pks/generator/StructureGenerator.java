@@ -46,7 +46,8 @@ public class StructureGenerator {
 
         Stream<SequenceFeature> nonKsDomains = nonKsAsList.stream().filter(seq -> seq instanceof DomainSeqFeature);
 
-        Stream<SequenceFeature> bestNonKsDomains = FeatureSelection.bestMatchCascade(nonKsDomains, 1, 2, 20);
+        // thee parameter minCluster of 1 ensures that we get all domains, which do not overlap, back again
+        Stream<SequenceFeature> bestNonKsDomains = FeatureSelection.bestMatchCascade(nonKsDomains, 1, 1, 20);
 
         Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
 
