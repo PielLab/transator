@@ -180,10 +180,6 @@ public class DBSCANClusterer<V> {
             throw new DBSCANClusteringException("DBSCAN: Maximum distance of input values cannot be negative. Current value: " + epsilon);
         }
 
-        if (minimumNumberOfClusterMembers < 2) {
-            throw new DBSCANClusteringException("DBSCAN: Clusters with less than 2 members don't make sense. Current value: " + minimumNumberOfClusterMembers);
-        }
-
         List<List<V>> resultList = new ArrayList<>();
 
         visitedPoints.clear();

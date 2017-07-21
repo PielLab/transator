@@ -40,11 +40,19 @@ public class StructureGenerator {
         // TODO: this code is currently duplicated
         Stream<SequenceFeature> nonKs = significantFeatures.stream().filter(seq -> !(seq instanceof KSDomainSeqFeature));
 
+        List<SequenceFeature> nonKsAsList = nonKs.collect(toList());
+
+        Stream<SequenceFeature> nonDomains = nonKsAsList.stream().filter(seq -> !(seq instanceof DomainSeqFeature));
+
+        Stream<SequenceFeature> nonKsDomains = nonKsAsList.stream().filter(seq -> seq instanceof DomainSeqFeature);
+
+        Stream<SequenceFeature> bestNonKsDomains = FeatureSelection.bestMatchCascade(nonKsDomains, 1, 2, 20);
+
         Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
 
         Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, 1);
 
-        List<SequenceFeature> selectedSequenceFeatures = Streams.concat(nonKs, bestKs)
+        List<SequenceFeature> selectedSequenceFeatures = Streams.concat(bestNonKsDomains, bestKs, nonDomains)
                 .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()))
                 .collect(toList());
 

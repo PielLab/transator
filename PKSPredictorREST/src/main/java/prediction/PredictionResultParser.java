@@ -4,6 +4,7 @@ import com.google.common.collect.Streams;
 import prediction.json.*;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
@@ -31,6 +32,8 @@ public class PredictionResultParser {
     private Integer canvasSizePixels = 700;
 
     private String sequenceID;
+
+    private static final int CASCADE_HEIGHT = 5;
 
     public PredictionResultParser(String path, String seqID) {
         sequenceID = seqID;
@@ -77,11 +80,22 @@ public class PredictionResultParser {
 
         Stream<SequenceFeature> nonKs = significantFeatures.stream().filter(seq -> !(seq instanceof KSDomainSeqFeature));
 
+        // TODO: this sub-feature clustering does not work yet for non-ks domains
+        // TODO: this code is duplicated
+        List<SequenceFeature> nonKsAsList = nonKs.collect(toList());
+
+        Stream<SequenceFeature> nonDomains = nonKsAsList.stream().filter(seq -> !(seq instanceof DomainSeqFeature));
+
+        Stream<SequenceFeature> nonKsDomains = nonKsAsList.stream().filter(seq -> seq instanceof DomainSeqFeature)
+                .filter(k -> !k.getSubtype().equals("General KS"));
+
+        Stream<SequenceFeature> bestNonKsDomains = FeatureSelection.bestMatchCascade(nonKsDomains, CASCADE_HEIGHT, 1, 20);
+
         Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
 
-        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, 5);
+        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, CASCADE_HEIGHT);
 
-        Stream<SequenceFeature> selectedFeatures = Streams.concat(nonKs, bestKs)
+        Stream<SequenceFeature> selectedFeatures = Streams.concat(nonDomains, bestNonKsDomains, bestKs)
                 .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()));
 
         return selectedFeatures
@@ -105,27 +119,30 @@ public class PredictionResultParser {
         feature.setTypeCategory(type);
         feature.setFeatureEnd(stop);
 
-        // Currently domain includes both Clades and NRPS2 results
-        // we should be able to tell the difference.
-        // TODO Currently we are doing this through the fact that
-        // NRPS domains don't have a ranking
         boolean isClade = subtype.equals("KS");
+
         String evidence = "HMMER";
         if (subtype.equals("NRPS2")) {
             label = "Amino acid";
             evidence = "NRPS2 Predictor";
         }
+
         if (type.equalsIgnoreCase("domain")) {
-            if (isClade) {
+
+            if (line.getRanking().isPresent()) {
                 Integer ranking = line.getRanking().get();
                 feature.setY(initialFeatureY + ranking * featureHeight);
-                feature.setStroke(getHexaColorFromRank(ranking));
-                feature.setFill(getHexaColorFromRank(ranking));
+                double opacity = 1 - ((double) ranking / (double) CASCADE_HEIGHT);
+
+                feature.setFillOpacity(opacity);
             } else {
                 feature.setY(initialFeatureY + featureHeight);
-                feature.setStroke(getHexaColorFromSubtype(subtype));
-                feature.setFill(getHexaColorFromSubtype(subtype));
+                feature.setFillOpacity(0.5);
             }
+
+            feature.setStroke(getHexaColorFromSubtype(subtype));
+            feature.setFill(getHexaColorFromSubtype(subtype));
+
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
@@ -162,17 +179,8 @@ public class PredictionResultParser {
             feature.setEvidenceCode("");
             feature.setEvidenceText("EMBOSS fuzzpro");
         }
-        feature.setFillOpacity(0.7);
 
         return feature;
-    }
-
-    private String getHexaColorFromRank(Integer rankingInt) {
-        Integer red = 200 - (5 - rankingInt) * 40;
-        Integer green = 216;
-        Integer black = 188;
-        String hex = String.format("#%02x%02x%02x", red, green, black);
-        return hex;
     }
 
     /**
@@ -184,9 +192,11 @@ public class PredictionResultParser {
      * @return
      */
     private String getHexaColorFromSubtype(String subtype) {
-        //http://colorbrewer2.org/?type=qualitative&scheme=Dark2&n=8
         String hexColour;
         switch (subtype) {
+            case "KS":
+                hexColour = "#1b789e";
+                break;
             case "PS":
                 hexColour = "#1b9e77";
                 break;
