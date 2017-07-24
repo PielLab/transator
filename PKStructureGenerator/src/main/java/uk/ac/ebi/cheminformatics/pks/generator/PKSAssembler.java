@@ -31,7 +31,7 @@ public class PKSAssembler {
 
     public PKSAssembler() {
         this.structure = new PKStructure();
-        this.toBePostProcessed = new LinkedList<SequenceFeature>();
+        this.toBePostProcessed = new LinkedList<>();
         this.subFeaturesForNextKS = new LinkedList<>();
         this.verifiers = new LinkedList<>();
         this.verifiers.addAll(
