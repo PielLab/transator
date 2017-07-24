@@ -87,10 +87,7 @@ public class PKSAssembler {
             IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
             int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
-            // TODO: we cannot remove R1 from a pyran/furan ring as we get problems with verification.
-            if (monomer.getConnectedAtomsCount(connectionBondInMonomer.getAtom(indexToRemove)) == 1) {
-                monomer.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
-            }
+            monomer.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
 
             connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
 
