@@ -5,6 +5,7 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
+import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import uk.ac.ebi.cheminformatics.pks.io.AminoAcidStructLoader;
 import uk.ac.ebi.cheminformatics.pks.io.StructureLoader;
 
@@ -76,6 +77,8 @@ public class NRPSMonomerProcessor implements MonomerProcessor {
                     monomer.getMolecule().removeAtom(P_aa);
                 }
             }
+            // removes explicit hydrogen atoms
+            AtomContainerManipulator.suppressHydrogens(monomer.getMolecule());
 
         } catch (Exception e) {
             LOGGER.error("Issues when processing monomer:", e);
