@@ -62,10 +62,7 @@ public class PKSAssembler {
             return;
         }
 
-        // TODO: something in the sub-feature processing of Cade_28 is broken
-//        if (!sequenceFeature.getName().equals("Clade_28")) {
         processSubFeatures(sequenceFeature.getMonomer());
-//        }
 
         if (structure.getMonomerCount() == 0) {
             // Starting nascent polyketide
