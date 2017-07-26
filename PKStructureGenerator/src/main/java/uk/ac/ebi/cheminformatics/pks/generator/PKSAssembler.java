@@ -114,6 +114,36 @@ public class PKSAssembler {
         hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(1));
     }
 
+    /**
+     * Removes the generic atom connected to the connectionAtomInChain, and the bond connecting them. Number of
+     * hydrogens connected to the connectionAtomInChain is not modified. The order of the bond removed is obtained.
+     *
+     * @param connectionAtomInChain
+     * @param structureMol
+     * @return order of the bond removed.
+     */
+    private IBond removeGenericConnection(IAtom connectionAtomInChain, IAtomContainer structureMol) {
+        IAtom toRemoveA = null;
+        for (IBond connected : structureMol.getConnectedBondsList(connectionAtomInChain)) {
+            for (IAtom atomCon : connected.atoms()) {
+                if (atomCon.equals(connectionAtomInChain))
+                    continue;
+                if (atomCon instanceof IPseudoAtom && ((IPseudoAtom) atomCon).getLabel().equals("R2")) {
+                    toRemoveA = atomCon;
+                    break;
+                }
+            }
+        }
+        IBond bondToRemove = null;
+        if (toRemoveA != null) {
+            //order = structureMol.getBond(connectionAtomInChain,toRemoveA).getOrder().ordinal();
+            bondToRemove = structureMol.getBond(connectionAtomInChain, toRemoveA);
+            structureMol.removeBond(bondToRemove);
+            structureMol.removeAtom(toRemoveA);
+        }
+        return bondToRemove;
+    }
+
     private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
         for (Verifier verifier : verifiers) {
             if (verifier.verify(structure)) {
@@ -164,36 +194,6 @@ public class PKSAssembler {
         }
     }
 
-
-    /**
-     * Removes the generic atom connected to the connectionAtomInChain, and the bond connecting them. Number of
-     * hydrogens connected to the connectionAtomInChain is not modified. The order of the bond removed is obtained.
-     *
-     * @param connectionAtomInChain
-     * @param structureMol
-     * @return order of the bond removed.
-     */
-    private IBond removeGenericConnection(IAtom connectionAtomInChain, IAtomContainer structureMol) {
-        IAtom toRemoveA = null;
-        for (IBond connected : structureMol.getConnectedBondsList(connectionAtomInChain)) {
-            for (IAtom atomCon : connected.atoms()) {
-                if (atomCon.equals(connectionAtomInChain))
-                    continue;
-                if (atomCon instanceof IPseudoAtom && ((IPseudoAtom) atomCon).getLabel().equals("R2")) {
-                    toRemoveA = atomCon;
-                    break;
-                }
-            }
-        }
-        IBond bondToRemove = null;
-        if (toRemoveA != null) {
-            //order = structureMol.getBond(connectionAtomInChain,toRemoveA).getOrder().ordinal();
-            bondToRemove = structureMol.getBond(connectionAtomInChain, toRemoveA);
-            structureMol.removeBond(bondToRemove);
-            structureMol.removeAtom(toRemoveA);
-        }
-        return bondToRemove;
-    }
 
     public PKStructure getStructure() {
         return structure;
