@@ -66,19 +66,11 @@ public class PKSAssembler {
         processSubFeatures(sequenceFeature.getMonomer());
 
         if (structure.getMonomerCount() == 0) {
-            // Starting nascent polyketide
+
             structure.add(sequenceFeature.getMonomer());
-            IAtom posConnectionAtomMonomer = sequenceFeature.getMonomer().getPosConnectionAtom();
-            IAtom preConnectionAtomMonomer = sequenceFeature.getMonomer().getPreConnectionAtom();
-            for (IAtom atomToCorrect : Arrays.asList(posConnectionAtomMonomer, preConnectionAtomMonomer)) {
-                // on the starter, some monomers might not have the pre connection atom
-                if (atomToCorrect == null)
-                    continue;
-                hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), atomToCorrect);
-            }
+
             runVerifiersForFeature(sequenceFeature, "initial part");
         } else {
-
             addMonomerToStructure(sequenceFeature.getMonomer());
 
             // here we do post processing specific to the particular clade just added
