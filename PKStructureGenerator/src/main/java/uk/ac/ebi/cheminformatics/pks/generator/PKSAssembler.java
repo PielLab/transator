@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.*;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.FinalSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 import uk.ac.ebi.cheminformatics.pks.verifier.*;
@@ -48,7 +49,7 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        if (!(sequenceFeature instanceof KSDomainSeqFeature)) {
+        if (!((sequenceFeature instanceof KSDomainSeqFeature) || (sequenceFeature instanceof FinalSeqFeature))) {
             this.subFeaturesForNextKS.add(sequenceFeature);
             return;
         }

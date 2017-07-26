@@ -3,6 +3,7 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 import com.google.common.collect.Streams;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.FinalSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
@@ -58,8 +59,7 @@ public class StructureGenerator {
             assembler.addMonomer(feature);
         });
 
-        SequenceFeature finalizer = new DomainSeqFeature(0, 0, "finalExtension", "0");
-        assembler.addMonomer(finalizer);
+        assembler.addMonomer(new FinalSeqFeature());
         assembler.postProcess();
 
         this.structure = assembler.getStructure();

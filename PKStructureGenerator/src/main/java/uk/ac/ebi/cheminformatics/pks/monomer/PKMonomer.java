@@ -78,9 +78,9 @@ public class PKMonomer {
     }
 
     /**
-     * Checks that the loaded molecule has only one R1 and only one R2.
+     * Checks that the loaded molecule has at most one R1 and at most one R2.
      *
-     * @return true if only 1 or 0 R1 and 1 R2 pseudo atoms are present.
+     * @return true if only 0 or 1 R1 and 0 or 1 R2 pseudo atoms are present.
      */
     private Boolean verifyMolIntegrity() {
         int r1Counts = 0, r2Counts = 0;
@@ -92,7 +92,7 @@ public class PKMonomer {
                 if (label.equals("R2")) r2Counts++;
             }
         }
-        return (r1Counts == 1 || r1Counts == 0) && r2Counts == 1;
+        return (r1Counts == 0 || r1Counts == 1) && (r2Counts == 0 || r2Counts == 1);
     }
 
     @Deprecated
