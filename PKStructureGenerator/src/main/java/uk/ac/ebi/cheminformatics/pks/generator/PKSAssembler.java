@@ -42,6 +42,7 @@ public class PKSAssembler {
         this.hydrogenCountBalancer = new CarbonHydrogenCountBalancer();
     }
 
+
     /**
      * Given a sequenceFeature, it adds the next monomer to the PKS structure. The monomer is obtained from the sequence
      * feature. According to the sub-features found upstream, modifications can be exerted on the monomer.
@@ -49,7 +50,7 @@ public class PKSAssembler {
      * @param sequenceFeature
      */
     public void addMonomer(SequenceFeature sequenceFeature) {
-        if (!((sequenceFeature instanceof KSDomainSeqFeature) || (sequenceFeature instanceof FinalSeqFeature))) {
+        if (!((sequenceFeature instanceof KSDomainSeqFeature))) {
             this.subFeaturesForNextKS.add(sequenceFeature);
             return;
         }
@@ -66,12 +67,9 @@ public class PKSAssembler {
         processSubFeatures(sequenceFeature.getMonomer());
 
         if (structure.getMonomerCount() == 0) {
-
             structure.add(sequenceFeature.getMonomer());
-
-            runVerifiersForFeature(sequenceFeature, "initial part");
         } else {
-            addMonomerToStructure(sequenceFeature.getMonomer());
+            growByMonomer(sequenceFeature.getMonomer());
 
             // here we do post processing specific to the particular clade just added
             if (sequenceFeature.hasPostProcessor()) {
@@ -79,12 +77,12 @@ public class PKSAssembler {
             }
 
             checkForBadlyFormattedStereo(sequenceFeature);
-
-            runVerifiersForFeature(sequenceFeature, "after normal insertion");
         }
+
+        runVerifiersForFeature(sequenceFeature);
     }
 
-    private void addMonomerToStructure(PKMonomer monomer) {
+    private void growByMonomer(PKMonomer monomer) {
         IAtom connectionAtomInChain = structure.getConnectionAtom();
         IBond connectionBondInMonomer = monomer.getConnectionBond();
 
@@ -134,6 +132,10 @@ public class PKSAssembler {
             structureMol.removeAtom(toRemoveA);
         }
         return bondToRemove;
+    }
+
+    private void runVerifiersForFeature(SequenceFeature feature) {
+        runVerifiersForFeature(feature, "");
     }
 
     private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
@@ -186,6 +188,9 @@ public class PKSAssembler {
         }
     }
 
+    public void addFinalExtension() {
+        growByMonomer(new FinalSeqFeature().getMonomer());
+    }
 
     public PKStructure getStructure() {
         return structure;
