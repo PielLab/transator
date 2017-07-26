@@ -1,7 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
 import com.google.common.collect.Streams;
-import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
@@ -17,8 +16,6 @@ import static uk.ac.ebi.cheminformatics.pks.parser.FeatureParser.parse;
 
 @SuppressWarnings("Convert2MethodRef")
 public class StructureGenerator {
-
-    private static final Logger LOGGER = Logger.getLogger(StructureGenerator.class);
 
     private PKStructure structure;
 
