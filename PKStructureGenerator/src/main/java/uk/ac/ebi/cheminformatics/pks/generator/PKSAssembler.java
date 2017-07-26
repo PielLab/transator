@@ -78,25 +78,8 @@ public class PKSAssembler {
             }
             runVerifiersForFeature(sequenceFeature, "initial part");
         } else {
-            IAtom connectionAtomInChain = structure.getConnectionAtom();
-            IBond connectionBondInMonomer = sequenceFeature.getMonomer().getConnectionBond();
 
-            IAtomContainer structureMolecule = structure.getMolecule();
-
-            removeGenericConnection(connectionAtomInChain, structureMolecule);
-
-            IAtomContainer monomer = sequenceFeature.getMonomer().getMolecule();
-            int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
-
-            monomer.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
-
-            connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
-
-            structure.add(sequenceFeature.getMonomer());
-
-            // adjust implicit hydrogen atoms
-            hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(0));
-            hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(1));
+            addMonomerToStructure(sequenceFeature.getMonomer());
 
             // here we do post processing specific to the particular clade just added
             if (sequenceFeature.hasPostProcessor()) {
@@ -107,6 +90,28 @@ public class PKSAssembler {
 
             runVerifiersForFeature(sequenceFeature, "after normal insertion");
         }
+    }
+
+    private void addMonomerToStructure(PKMonomer monomer) {
+        IAtom connectionAtomInChain = structure.getConnectionAtom();
+        IBond connectionBondInMonomer = monomer.getConnectionBond();
+
+        IAtomContainer structureMolecule = structure.getMolecule();
+
+        removeGenericConnection(connectionAtomInChain, structureMolecule);
+
+        IAtomContainer monomerMolecule = monomer.getMolecule();
+        int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
+
+        monomerMolecule.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
+
+        connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
+
+        structure.add(monomer);
+
+        // adjust implicit hydrogen atoms
+        hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(0));
+        hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(1));
     }
 
     private void runVerifiersForFeature(SequenceFeature feature, String additionalMessage) {
