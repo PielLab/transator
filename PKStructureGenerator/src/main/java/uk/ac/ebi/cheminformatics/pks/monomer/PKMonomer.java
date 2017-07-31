@@ -28,14 +28,19 @@ public class PKMonomer {
 
     private String cladeName;
     private String molFilename;
+    private boolean isTerminationBoundary = false;
+    private boolean isNonElongating = false;
+
+    private IAtomContainer monomerMol;
 
     public boolean isNonElongating() {
         return isNonElongating;
     }
 
-    private boolean isNonElongating = false;
 
-    private IAtomContainer monomerMol;
+    public boolean isTerminationBoundary() {
+        return isTerminationBoundary;
+    }
 
     /**
      * @param name
@@ -75,6 +80,7 @@ public class PKMonomer {
             this.molFilename = molFileName;
         }
         this.isNonElongating = annot.isNonElongating(cladeName);
+        this.isTerminationBoundary = annot.isTerminationBoundary(cladeName);
     }
 
     /**
@@ -209,6 +215,5 @@ public class PKMonomer {
         result = 31 * result + (cladeName != null ? cladeName.hashCode() : 0);
         return result;
     }
-
 
 }
