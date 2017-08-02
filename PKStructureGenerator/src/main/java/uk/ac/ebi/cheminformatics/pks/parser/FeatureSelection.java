@@ -1,6 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.parser;
 
 import clustering.DBSCANClusterer;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.generator.DistanceMetricSequenceFeatures;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
@@ -14,6 +15,8 @@ import static java.util.stream.Collectors.toList;
 import static uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory.makeSequenceFeature;
 
 public final class FeatureSelection {
+
+    private static final Logger LOGGER = Logger.getLogger(FeatureSelection.class);
 
 
     public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> features, int cascadeHeight) {
@@ -36,7 +39,7 @@ public final class FeatureSelection {
                     .map(seq -> seq.getName() + " " + seq.getLabel() + " " + seq.getRange() + " " + seq.getEValue().orElse(0.0))
                     .collect(Collectors.joining("\n"));
 
-            System.out.println(debugGroup + "\n");
+            LOGGER.info(debugGroup + "\n");
 
             return mapWithIndex(cascade,
                     (seq, index) -> makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1));
