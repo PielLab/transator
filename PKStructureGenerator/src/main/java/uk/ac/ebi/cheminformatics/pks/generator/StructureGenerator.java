@@ -54,6 +54,7 @@ public class StructureGenerator {
                 .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()))
                 .collect(toList());
 
+        // TODO: filter out all with name "AllTransKs"
         selectedSequenceFeatures.forEach(feature -> {
             assembler.addMonomer(feature);
         });
