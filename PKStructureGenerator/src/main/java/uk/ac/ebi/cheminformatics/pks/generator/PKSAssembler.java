@@ -4,15 +4,17 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.*;
-import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotationFactory;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.FinalSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.TerminationBoundarySeqFeature;
 import uk.ac.ebi.cheminformatics.pks.verifier.*;
 
 import java.util.*;
+
+import static com.google.common.collect.ImmutableSet.of;
 
 /**
  * Handles the assembly of the polyketide molecule, through the subsequent processing of the sequence features read.
@@ -29,8 +31,39 @@ public class PKSAssembler {
     private List<SequenceFeature> subFeaturesForNextKS;
 
     // this is required for the termination rules
-    private static final Set<String> terminationRelevantDomains = ImmutableSet.of(
+    private static final Set<String> terminationRelevantDomains = of(
             "KR", "DH", "ER", "MT", "OMT", "CR", "Oxy", "B");
+
+    private static Map<Set<String>, String> terminationRules = new HashMap<>();
+
+    static {
+        ImmutableSet<String> betaHydroxy = of("KR");
+        ImmutableSet<String> alphaBetaDoubleBonds = of("KR", "DH");
+        ImmutableSet<String> reduced = of("KR", "DH", "ER");
+        ImmutableSet<String> alphaMethylBetaHydroxy = of("KR", "MT");
+        ImmutableSet<String> alphaMethylAlphaBetaDoubleBond = of("KR", "MT", "DH");
+        ImmutableSet<String> betaMethoxy = of("KR", "OMT");
+        ImmutableSet<String> alphaMethyl = of("KR", "MT", "DH", "ER");
+        ImmutableSet<String> exomethylene = of("CR", "CR");
+        ImmutableSet<String> pyranFuranRing = of("KR", "DH", "PS");
+        ImmutableSet<String> rearrangement = of("Oxy");
+        ImmutableSet<String> vinolgousChainBranching = of("B");
+
+        // TODO: clade_names to mol files? directly molfiles would be nice too...
+        // TODO: where to read this from?
+        terminationRules.put(betaHydroxy, "Clade_78");
+        terminationRules.put(alphaBetaDoubleBonds, "Clade_65");
+        terminationRules.put(reduced, "Clade_25");
+        terminationRules.put(alphaMethylBetaHydroxy, "Clade_74");
+        terminationRules.put(alphaMethylAlphaBetaDoubleBond, "Clade_83");
+        terminationRules.put(betaMethoxy, "Clade_103");
+        terminationRules.put(alphaMethyl, "Clade_52");
+        terminationRules.put(exomethylene, "Clade_14");
+        // TODO: post-processor needs to be added to this
+        terminationRules.put(pyranFuranRing, "Clade_26");
+        terminationRules.put(rearrangement, "Clade_35");
+        terminationRules.put(vinolgousChainBranching, "Clade_12");
+    }
 
     private Set<String> domainTypesSinceLastElongatingKs = new HashSet<>();
 
@@ -65,7 +98,6 @@ public class PKSAssembler {
 
         if (!((sequenceFeature instanceof KSDomainSeqFeature))) {
             this.subFeaturesForNextKS.add(sequenceFeature);
-            // TODO: which domains to add here, and what type to have here?
             if (isTerminationRelevant(sequenceFeature)) {
                 this.domainTypesSinceLastElongatingKs.add(sequenceFeature.getSubtype());
             }
@@ -87,18 +119,10 @@ public class PKSAssembler {
         if (structure.getMonomerCount() == 0) {
             structure.add(sequenceFeature.getMonomer());
         } else {
-
             if (sequenceFeature.getMonomer().isTerminationBoundary()) {
                 terminateAtBoundary();
             }
-
-            growByMonomer(sequenceFeature.getMonomer());
-
-            // here we do post processing specific to the particular clade just added
-            if (sequenceFeature.hasPostProcessor()) {
-                toBePostProcessed.add(sequenceFeature);
-            }
-
+            growByFeature(sequenceFeature);
             checkForBadlyFormattedStereo(sequenceFeature);
         }
 
@@ -110,38 +134,18 @@ public class PKSAssembler {
     }
 
     private void terminateAtBoundary() {
-        growByMonomer(findBoundaryMonomer());
+        growByFeature(findBoundarySeqFeature());
         this.domainTypesSinceLastElongatingKs.clear();
     }
 
-    private boolean isTerminationRelevant(SequenceFeature sequenceFeature) {
-        return terminationRelevantDomains.contains(sequenceFeature.getSubtype());
-    }
+    private void growByFeature(SequenceFeature sequenceFeature) {
 
-    private static Map<Set<String>, String> terminationRules = new HashMap<>();
+        growByMonomer(sequenceFeature.getMonomer());
 
-    static {
-        // TODO: add the other domain combinations
-        ImmutableSet<String> betaHydroxy = ImmutableSet.of("KR");
-        ImmutableSet<String> alphaBetaDoubleBonds = ImmutableSet.of("KR", "DH");
-        ImmutableSet<String> reduced = ImmutableSet.of("KR", "DH", "ER");
-        ImmutableSet<String> alphaMethylAlphaBetaDoubleBond = ImmutableSet.of("KR", "MT", "DH");
-
-        // TODO: clade_names to mol files? directly molfiles would be nice too...
-        // TODO: where to read this from?
-        terminationRules.put(betaHydroxy, "Clade_78");
-        terminationRules.put(alphaBetaDoubleBonds, "Clade_65");
-        terminationRules.put(reduced, "Clade_25");
-        terminationRules.put(alphaMethylAlphaBetaDoubleBond, "Clade_83");
-    }
-
-    private PKMonomer findBoundaryMonomer() {
-        if (domainTypesSinceLastElongatingKs.size() == 0) {
-            //  beta-keto
-            return new PKMonomer("Clade_45", CladeAnnotationFactory.getInstance());
+        // here we do post processing specific to the particular clade just added
+        if (sequenceFeature.hasPostProcessor()) {
+            toBePostProcessed.add(sequenceFeature);
         }
-        String cladeName = terminationRules.get(domainTypesSinceLastElongatingKs);
-        return new PKMonomer(cladeName, CladeAnnotationFactory.getInstance());
     }
 
     private void growByMonomer(PKMonomer monomer) {
@@ -165,6 +169,20 @@ public class PKSAssembler {
         hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(0));
         hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(1));
     }
+
+    private boolean isTerminationRelevant(SequenceFeature sequenceFeature) {
+        return terminationRelevantDomains.contains(sequenceFeature.getSubtype());
+    }
+
+    private SequenceFeature findBoundarySeqFeature() {
+        if (domainTypesSinceLastElongatingKs.size() == 0) {
+            //  beta-keto
+            return new TerminationBoundarySeqFeature("Clade_45");
+        }
+        String cladeName = terminationRules.get(domainTypesSinceLastElongatingKs);
+        return new TerminationBoundarySeqFeature(cladeName);
+    }
+
 
     /**
      * Removes the generic atom connected to the connectionAtomInChain, and the bond connecting them. Number of
