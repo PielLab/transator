@@ -1,5 +1,6 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
@@ -43,6 +44,8 @@ public class PKSAssembler {
         ImmutableSet<String> alphaMethylBetaHydroxy = of("KR", "MT");
         ImmutableSet<String> alphaMethylAlphaBetaDoubleBond = of("KR", "MT", "DH");
         ImmutableSet<String> betaMethoxy = of("KR", "OMT");
+        // TODO: which clade do we need to assign to this?
+//        ImmutableSet<String> betaOMethylAlphaMethyl = of("OMT", "MT");
         ImmutableSet<String> alphaMethyl = of("KR", "MT", "DH", "ER");
         ImmutableSet<String> exomethylene = of("CR", "CR");
         ImmutableSet<String> pyranFuranRing = of("KR", "DH", "PS");
@@ -180,6 +183,12 @@ public class PKSAssembler {
             return new TerminationBoundarySeqFeature("Clade_45");
         }
         String cladeName = terminationRules.get(domainTypesSinceLastElongatingKs);
+
+        if (cladeName == null) {
+            String domainTypes = Joiner.on(", ").join(domainTypesSinceLastElongatingKs);
+            throw new IllegalStateException("Cannot find termination rule for: " + domainTypes);
+        }
+
         return new TerminationBoundarySeqFeature(cladeName);
     }
 
