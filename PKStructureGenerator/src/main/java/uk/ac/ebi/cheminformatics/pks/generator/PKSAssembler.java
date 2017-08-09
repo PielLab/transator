@@ -162,7 +162,8 @@ public class PKSAssembler {
         IAtomContainer monomerMolecule = monomer.getMolecule();
         int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
-        monomerMolecule.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
+        // TODO: check why this is called "unsafe"
+        monomerMolecule.removeAtomOnly(connectionBondInMonomer.getAtom(indexToRemove));
 
         connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
 
