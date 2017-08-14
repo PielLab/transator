@@ -6,6 +6,7 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IBond;
 import org.openscience.cdk.interfaces.IPseudoAtom;
+import org.openscience.cdk.io.DefaultChemObjectReader;
 import org.openscience.cdk.io.MDLV2000Reader;
 import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
@@ -104,7 +105,7 @@ public class PKMonomer {
     @Deprecated
     private IAtomContainer loadStructure(String name) {
         try {
-            MDLV2000Reader reader =
+            DefaultChemObjectReader reader =
                     new MDLV2000Reader(PKMonomer.class.getResourceAsStream("/uk/ac/ebi/cheminformatics/structures/" + name + ".mol"));
             IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
             AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
@@ -124,7 +125,7 @@ public class PKMonomer {
      */
     private IAtomContainer loadExternalStructure(String name) {
         try {
-            MDLV2000Reader reader =
+            DefaultChemObjectReader reader =
                     new MDLV2000Reader(new FileReader(name));
             IAtomContainer mol = reader.read(SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class));
             AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(mol);
