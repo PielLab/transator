@@ -5,7 +5,7 @@
     <parent>
         <artifactId>PKSPredictor</artifactId>
         <groupId>uk.ac.ebi.cheminformatics</groupId>
-        <version>1.1</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>14.0</version>
+            <version>21.0</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>

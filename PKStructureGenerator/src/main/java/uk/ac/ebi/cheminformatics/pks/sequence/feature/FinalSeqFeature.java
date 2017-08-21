@@ -1,5 +1,7 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
+import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotation;
+import uk.ac.ebi.cheminformatics.pks.annotation.CladeAnnotationFactory;
 import uk.ac.ebi.cheminformatics.pks.generator.PostProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.NoActionMonomerProcessor;
@@ -8,18 +10,12 @@ import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
 import java.util.Optional;
 
-import static java.lang.Double.parseDouble;
+public final class FinalSeqFeature extends DomainSeqFeature {
 
-
-public class ProteinPatternSeqFeature extends AbstractSeqFeature {
-
-
-    private final FeatureFileLine featureFileLine;
-
-    public ProteinPatternSeqFeature(FeatureFileLine featureFileLine) {
-        super(featureFileLine.getStart(), featureFileLine.getStop(), featureFileLine.getName());
-        this.monomer = new PKMonomer("");
-        this.featureFileLine = featureFileLine;
+    public FinalSeqFeature() {
+        super(0, 0, "final", "final");
+        CladeAnnotation annotation = CladeAnnotationFactory.getInstance();
+        this.monomer = new PKMonomer("final", annotation);
     }
 
     @Override
@@ -44,11 +40,7 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature {
 
     @Override
     public Optional<Double> getScore() {
-        try {
-            return Optional.of(parseDouble(this.featureFileLine.getScore()));
-        } catch (NumberFormatException formatException) {
-            return Optional.empty();
-        }
+        return Optional.empty();
     }
 
     @Override
@@ -63,32 +55,26 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature {
 
     @Override
     public String getType() {
-        return this.featureFileLine.getType();
+        return "Finalizer";
     }
 
     @Override
     public Optional<Boolean> getVerificationPass() {
-
-        if (this.featureFileLine.getVerificationPass().equals("N/A")) {
-            return Optional.empty();
-        }
-
-        return Optional.of(this.featureFileLine.getVerificationPass().equals("True"));
+        return Optional.empty();
     }
 
     @Override
     public String getSubtype() {
-        return this.featureFileLine.getSubtype();
+        return "Finalizer";
     }
 
     @Override
     public String getLabel() {
-        return this.featureFileLine.getLabel();
+        return "Finalizer";
     }
 
     @Override
     public FeatureFileLine getOriginatingFeatureFileLine() {
-        return this.featureFileLine;
+        return null;
     }
-
 }

@@ -1,19 +1,14 @@
 package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
-import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLineParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 4/7/13
- * Time: 10:20
- * To change this template use File | Settings | File Templates.
- */
 public class SequenceFeatureFactory {
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser) {
+        return makeSequenceFeature(parser, 0);
+    }
 
-
-    public static SequenceFeature makeSequenceFeature(FeatureFileLineParser parser) {
-        if(parser.getType().equalsIgnoreCase("domain")) {
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser, int ranking) {
+        if (parser.getType().equalsIgnoreCase("domain")) {
             DomainSeqFeature nseqFeat;
             switch (parser.getSubtype()) {
                 case "ER":
@@ -26,7 +21,7 @@ public class SequenceFeatureFactory {
                     nseqFeat = new KRDomainSeqFeature(parser);
                     break;
                 case "KS":
-                    nseqFeat = new KSDomainSeqFeature(parser);
+                    nseqFeat = new KSDomainSeqFeature(parser, ranking);
                     break;
                 case "OMT":
                     nseqFeat = new OMTDomainSeqFeature(parser);
@@ -35,11 +30,11 @@ public class SequenceFeatureFactory {
                     nseqFeat = new NRPSDomSeqFeature(parser);
                     break;
                 default:
-                    nseqFeat = new DomainSeqFeature(parser);
+                    nseqFeat = new DomainSeqFeature(parser, ranking);
                     break;
             }
             return nseqFeat;
-        } else if(parser.getType().equalsIgnoreCase("pattern")) {
+        } else if (parser.getType().equalsIgnoreCase("pattern")) {
             return PatternSeqFeatureFactory.makeSequenceFeature(parser);
         }
         return null;

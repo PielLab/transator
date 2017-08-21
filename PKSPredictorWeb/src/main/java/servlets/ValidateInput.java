@@ -1,6 +1,5 @@
 package servlets;
 
-import com.google.common.io.Files;
 import encrypt.Encrypter;
 import io.TempDirMaker;
 import org.apache.commons.fileupload.FileItem;
@@ -16,9 +15,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;

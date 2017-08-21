@@ -1,11 +1,11 @@
 package validator;
 
 import com.google.common.io.Files;
-import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.io.FastaReaderHelper;
-import org.biojava3.core.sequence.io.FastaWriterHelper;
-import org.biojava3.core.sequence.io.GenericFastaHeaderFormat;
+import org.biojava.nbio.core.sequence.ProteinSequence;
+import org.biojava.nbio.core.sequence.compound.AminoAcidCompound;
+import org.biojava.nbio.core.sequence.io.FastaReaderHelper;
+import org.biojava.nbio.core.sequence.io.FastaWriterHelper;
+import org.biojava.nbio.core.sequence.io.GenericFastaHeaderFormat;
 
 import java.io.*;
 import java.nio.charset.Charset;

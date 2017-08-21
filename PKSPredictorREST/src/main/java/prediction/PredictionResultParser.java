@@ -1,24 +1,24 @@
 package prediction;
 
-import com.google.common.base.Splitter;
+import com.google.common.collect.Streams;
 import prediction.json.*;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureParser;
+import uk.ac.ebi.cheminformatics.pks.parser.FeatureSelection;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.DomainSeqFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.KSDomainSeqFeature;
+import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/7/13
- * Time: 17:36
- * To change this template use File | Settings | File Templates.
- */
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.toList;
+
 public class PredictionResultParser {
     private PredictionContainer predictionContainer;
     private Integer initialFeatureY = 60;
@@ -32,6 +32,8 @@ public class PredictionResultParser {
     private Integer canvasSizePixels = 700;
 
     private String sequenceID;
+
+    private static final int CASCADE_HEIGHT = 5;
 
     public PredictionResultParser(String path, String seqID) {
         sequenceID = seqID;
@@ -50,52 +52,66 @@ public class PredictionResultParser {
 
     private void parseGBK(String path, String seqID) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(path+seqID+".gbk"));
+            BufferedReader reader = new BufferedReader(new FileReader(path + seqID + ".gbk"));
             String line = reader.readLine();
             reader.close();
             String[] tokens = line.split("\\s+");
             try {
                 sequenceLenghtAA = Integer.parseInt(tokens[2]);
             } catch (NumberFormatException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }
 
     private List<FeaturesArray> getFeaturesArrays(String path, String seqID) {
-        // from the .features we obtain the coordinates of the different clades and patterns, with their names and legends.
-        List<FeaturesArray> features = new LinkedList<FeaturesArray>();
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(path+seqID+".features"));
-            String line = reader.readLine();
-            while( line!=null ) {
-                FeaturesArray feature = getFeatureFromLine(line);
-                features.add(feature);
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        return features;
+        Path featuresFile = Paths.get(path + seqID + ".features");
+
+        List<SequenceFeature> features = FeatureParser.parse(featuresFile);
+
+        List<SequenceFeature> significantFeatures = features.stream()
+                // apply a cut-off to filter out false positives
+                .filter(SequenceFeature::isSignificant)
+                .collect(toList());
+
+        Stream<SequenceFeature> nonKs = significantFeatures.stream().filter(seq -> !(seq instanceof KSDomainSeqFeature));
+
+        // TODO: this sub-feature clustering does not work yet for non-ks domains
+        // TODO: this code is duplicated
+        List<SequenceFeature> nonKsAsList = nonKs.collect(toList());
+
+        Stream<SequenceFeature> nonDomains = nonKsAsList.stream().filter(seq -> !(seq instanceof DomainSeqFeature));
+
+        Stream<SequenceFeature> nonKsDomains = nonKsAsList.stream().filter(seq -> seq instanceof DomainSeqFeature)
+                .filter(k -> !k.getSubtype().equals("General KS"));
+
+        Stream<SequenceFeature> bestNonKsDomains = FeatureSelection.bestMatchCascade(nonKsDomains, CASCADE_HEIGHT, 1, 20);
+
+        Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
+
+        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, CASCADE_HEIGHT);
+
+        Stream<SequenceFeature> selectedFeatures = Streams.concat(nonDomains, bestNonKsDomains, bestKs)
+                .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()));
+
+        return selectedFeatures
+                .map(feature -> toFeaturesArray(feature))
+                .collect(toList());
     }
 
-    private FeaturesArray getFeatureFromLine(String line) {
-        Iterator<String> tokens = Splitter.on("\t").split(line).iterator();
-        Integer start = Integer.parseInt(tokens.next());
-        Integer stop = Integer.parseInt(tokens.next());
-        String evalue = tokens.next();
-        String score = tokens.next();
-        String ranking = tokens.next();
-        String stackNumber = tokens.next();
-        String type = tokens.next();
-        String subtype = tokens.next();
-        String name = tokens.next();
-        String label = tokens.next();
+    private FeaturesArray toFeaturesArray(SequenceFeature line) {
+        Integer start = line.getRange().lowerEndpoint();
+        Integer stop = line.getRange().upperEndpoint();
+        String evalue = line.getEValue().map(Object::toString).orElse("");
+        String score = line.getScore().map(Object::toString).orElse("");
+        String type = line.getType();
+        String subtype = line.getSubtype();
+        String name = line.getName();
+        String label = line.getLabel();
 
         FeaturesArray feature = new FeaturesArray();
 
@@ -103,36 +119,39 @@ public class PredictionResultParser {
         feature.setTypeCategory(type);
         feature.setFeatureEnd(stop);
 
-        // Currently domain includes both Clades and NRPS2 results
-        // we should be able to tell the difference.
-        // TODO Currently we are doing this through the fact that
-        // NRPS domains don't have a ranking
         boolean isClade = subtype.equals("KS");
+
         String evidence = "HMMER";
-        if(subtype.equals("NRPS2")) {
+        if (subtype.equals("NRPS2")) {
             label = "Amino acid";
             evidence = "NRPS2 Predictor";
         }
-        if(type.equalsIgnoreCase("domain")) {
-            if(isClade) {
-                Integer rankingInt = Integer.parseInt(ranking);
-                feature.setY(initialFeatureY + rankingInt * featureHeight);
-                feature.setStroke(getHexaColorFromRank(rankingInt));
-                feature.setFill(getHexaColorFromRank(rankingInt));
+
+        if (type.equalsIgnoreCase("domain")) {
+
+            if (line.getRanking().isPresent()) {
+                Integer ranking = line.getRanking().get();
+                feature.setY(initialFeatureY + ranking * featureHeight);
+                double opacity = 1 - ((double) ranking / (double) CASCADE_HEIGHT);
+
+                feature.setFillOpacity(opacity);
             } else {
                 feature.setY(initialFeatureY + featureHeight);
-                feature.setStroke(getHexaColorFromSubtype(subtype));
-                feature.setFill(getHexaColorFromSubtype(subtype));
+                feature.setFillOpacity(0.5);
             }
+
+            feature.setStroke(getHexaColorFromSubtype(subtype));
+            feature.setFill(getHexaColorFromSubtype(subtype));
+
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
             feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
-            if(isClade) {
-                feature.setFeatureId((name+"_"+stackNumber).replaceAll(" ","_"));
+            if (isClade) {
+                feature.setFeatureId((name).replaceAll(" ", "_"));
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             } else {
-                feature.setFeatureId(name+"_"+start);
+                feature.setFeatureId(name + "_" + start);
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             }
@@ -143,11 +162,11 @@ public class PredictionResultParser {
             feature.setEvidenceCode(name);
             feature.setEvidenceText(evidence);
 
-        } else if(type.equalsIgnoreCase("pattern")) {
+        } else if (type.equalsIgnoreCase("pattern")) {
             // for pattern
             feature.setCx(calculateXPixel(start));
             feature.setCy(initialPatternY);
-            feature.setFeatureId((name+"_"+start).replaceAll(" ","_"));
+            feature.setFeatureId((name + "_" + start).replaceAll(" ", "_"));
             feature.setFeatureLabel(name);
             feature.setFeatureTypeLabel("");
             feature.setType("diamond");
@@ -160,17 +179,8 @@ public class PredictionResultParser {
             feature.setEvidenceCode("");
             feature.setEvidenceText("EMBOSS fuzzpro");
         }
-        feature.setFillOpacity(0.7);
 
         return feature;
-    }
-
-    private String getHexaColorFromRank(Integer rankingInt) {
-        Integer red = 200 - (5 - rankingInt)*40;
-        Integer green = 216;
-        Integer black = 188;
-        String hex = String.format("#%02x%02x%02x", red, green, black);
-        return hex;
     }
 
     /**
@@ -182,36 +192,38 @@ public class PredictionResultParser {
      * @return
      */
     private String getHexaColorFromSubtype(String subtype) {
-        //http://colorbrewer2.org/?type=qualitative&scheme=Dark2&n=8
         String hexColour;
         switch (subtype) {
+            case "KS":
+                hexColour = "#1b789e";
+                break;
             case "PS":
-                hexColour="#1b9e77";
+                hexColour = "#1b9e77";
                 break;
             case "DH":
-                hexColour="#d95f02";
+                hexColour = "#d95f02";
                 break;
             case "ACP":
-                hexColour="#7570b3";
+                hexColour = "#7570b3";
                 break;
             case "AH":
-                hexColour="#e7298a";
+                hexColour = "#e7298a";
                 break;
             case "AT_AH":
-                hexColour="#66a61e";
+                hexColour = "#66a61e";
                 break;
             case "AT":
-                hexColour="#e6ab02";
+                hexColour = "#e6ab02";
                 break;
             case "KR":
-                hexColour="#a6761d";
+                hexColour = "#a6761d";
                 break;
             default:
-                hexColour="#666666";
+                hexColour = "#666666";
                 break;
         }
 
-        return(hexColour);
+        return (hexColour);
     }
 
     private Integer calculateXPixel(Integer startInAA) {
@@ -219,7 +231,7 @@ public class PredictionResultParser {
     }
 
     private float getPixelsPerAA() {
-        return ((seqXStopPixels - seqXStartPixels)*1f) / (sequenceLenghtAA*1f);
+        return ((seqXStopPixels - seqXStartPixels) * 1f) / (sequenceLenghtAA * 1f);
     }
 
     public PredictionContainer getPredictionContainer() {

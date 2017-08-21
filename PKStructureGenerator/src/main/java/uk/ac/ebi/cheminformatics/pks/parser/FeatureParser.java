@@ -1,73 +1,34 @@
 package uk.ac.ebi.cheminformatics.pks.parser;
 
+import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFactory;
 
-import java.io.*;
-import java.util.Iterator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Parses the .feature file produced by the Python implementation that marks domains and patterns.
- *
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:30
- * To change this template use File | Settings | File Templates.
- */
-public class FeatureParser implements Iterator<SequenceFeature>{
+ **/
+public final class FeatureParser {
 
-    private SequenceFeature nextSf;
-    private BufferedReader reader;
+    private static final Logger LOGGER = Logger.getLogger(FeatureParser.class);
 
-    public FeatureParser(InputStream input) {
-       reader = new BufferedReader(new InputStreamReader(input));
-       nextSf = getNext();
-    }
-
-    public FeatureParser(String path) {
-        try {
-        reader = new BufferedReader(new FileReader(path));
-        nextSf = getNext();
+    public static List<SequenceFeature> parse(Path featuresFile) {
+        try (Stream<String> stream = Files.lines(featuresFile)) {
+            return stream
+                    .filter(line -> !line.startsWith("#"))
+                    .map(FeatureFileLine::new)
+                    .map(SequenceFeatureFactory::makeSequenceFeature)
+                    .collect(toList());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot open .features file "+path,e);
-        }
-    }
-
-    @Override
-    public boolean hasNext() {
-        return nextSf!=null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public SequenceFeature next() {
-        SequenceFeature toRet = nextSf;
-        nextSf = getNext();
-        return toRet;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void remove() {
-        nextSf = getNext();
-    }
-
-    public SequenceFeature getNext() {
-        try {
-            String line = reader.readLine();
-            if(line==null)
-                return null;
-            FeatureFileLineParser parser = new FeatureFileLineParser(line);
-            while(!(parser.getRanking().equals("1") || parser.getRanking().equals("N/A"))) {
-                line = reader.readLine();
-                if(line==null) {
-                    reader.close();
-                    return null;
-                }
-                parser = new FeatureFileLineParser(line);
-            }
-            return SequenceFeatureFactory.makeSequenceFeature(parser);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not read features : ",e);
+            LOGGER.error("Problems reading in features file ", e);
+            throw new RuntimeException(e);
         }
     }
 }

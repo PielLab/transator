@@ -11,12 +11,6 @@ import java.util.List;
 
 /**
  * Represents a growing PK chain.
- *
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 3/7/13
- * Time: 21:29
- * To change this template use File | Settings | File Templates.
  */
 public class PKStructure {
 
@@ -25,7 +19,7 @@ public class PKStructure {
     private List<PKMonomer> monomers;
 
     public PKStructure() {
-        this.monomers = new ArrayList<PKMonomer>();
+        this.monomers = new ArrayList<>();
         this.chain = SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
     }
 
@@ -77,23 +71,22 @@ public class PKStructure {
      * the non-extending clades, where the previous added monomer is changed for the one of the
      * non-extending clade (simulating a modification of the polyketide) instead of simply adding
      * the new one (and not removing the previous one).
-     * 
      */
     public void removeLastMonomer() {
-        if(getMonomerCount()>0) {
+        if (getMonomerCount() > 0) {
             // first we get the pointer to the last monomer
-            PKMonomer previous = getMonomer(getMonomerCount()-1);
+            PKMonomer previous = getMonomer(getMonomerCount() - 1);
             IBond connectionBondPrev = previous.getConnectionBond();
-            IAtom toKeepPrev2Previous=null;
+            IAtom toKeepPrev2Previous = null;
             for (IAtom atom : connectionBondPrev.atoms()) {
                 // if the atom in the connection bond doesn't belong to the current
                 // monomer, then it belong to the previous one to it, and as such
                 // is the one that we want to keep.
-                if(!previous.getMolecule().contains(atom)) {
+                if (!previous.getMolecule().contains(atom)) {
                     toKeepPrev2Previous = atom;
                 }
             }
-            if(toKeepPrev2Previous!=null) {
+            if (toKeepPrev2Previous != null) {
                 chain.remove(previous.getMolecule());
                 chain.removeBond(connectionBondPrev);
                 //monomers.remove(previous); Check whether toKeepPrev2Previous is in chain
@@ -101,16 +94,16 @@ public class PKStructure {
 
 
                 //if the chain has 2 or more monomers
-                if(getMonomerCount()-2>=0) {
-                    PKMonomer toStay = getMonomer(getMonomerCount()-2);
+                if (getMonomerCount() - 2 >= 0) {
+                    PKMonomer toStay = getMonomer(getMonomerCount() - 2);
                     //This atom should be already on the chain, no need to add it again.
                     //chain.addAtom(toStay.getPosConnectionAtom());
                     // Now we need to add again the R2 group to the
-                    for(IBond bondInToStay : toStay.getMolecule().getConnectedBondsList(toStay.getPosConnectionAtom())) {
-                        if(!chain.contains(bondInToStay)) {
+                    for (IBond bondInToStay : toStay.getMolecule().getConnectedBondsList(toStay.getPosConnectionAtom())) {
+                        if (!chain.contains(bondInToStay)) {
                             chain.addBond(bondInToStay);
-                            for(IAtom inBond : bondInToStay.atoms()) {
-                                if(!chain.contains(inBond))
+                            for (IAtom inBond : bondInToStay.atoms()) {
+                                if (!chain.contains(inBond))
                                     chain.addAtom(inBond);
                             }
                         }
