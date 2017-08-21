@@ -2,9 +2,11 @@ package uk.ac.ebi.cheminformatics.pks.generator;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
-import org.openscience.cdk.interfaces.*;
+import org.openscience.cdk.interfaces.IAtom;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IBond;
+import org.openscience.cdk.interfaces.IPseudoAtom;
 import uk.ac.ebi.cheminformatics.pks.monomer.MonomerProcessor;
 import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.FinalSeqFeature;
@@ -126,7 +128,6 @@ public class PKSAssembler {
                 terminateAtBoundary();
             }
             growByFeature(sequenceFeature);
-            checkForBadlyFormattedStereo(sequenceFeature);
         }
 
         runVerifiersForFeature(sequenceFeature);
@@ -250,26 +251,6 @@ public class PKSAssembler {
         subFeaturesForNextKS.clear();
     }
 
-    private void checkForBadlyFormattedStereo(SequenceFeature feature) {
-        IAtomContainer mol = structure.getMolecule();
-        List<IStereoElement> stereoElementsToDel = new LinkedList<>();
-        for (IStereoElement element : mol.stereoElements()) {
-            if (element instanceof IDoubleBondStereochemistry) {
-                for (IBond bondInStereo : ((IDoubleBondStereochemistry) element).getBonds()) {
-                    if (!structure.getMolecule().contains(bondInStereo)) {
-                        LOGGER.info("Bond in stereo definition is not part of the molecule, after: " + feature.getName());
-                        stereoElementsToDel.add(element);
-                    }
-                }
-            }
-        }
-        if (!stereoElementsToDel.isEmpty()) {
-            List<IStereoElement> existingElements = Lists.newArrayList(mol.stereoElements());
-            existingElements.removeAll(stereoElementsToDel);
-            mol.setStereoElements(existingElements);
-        }
-    }
-
     public void postProcess() {
         for (SequenceFeature toPP : this.toBePostProcessed) {
             PostProcessor proc = toPP.getPostProcessor();
@@ -284,6 +265,7 @@ public class PKSAssembler {
         terminateAtBoundary();
 
         growByMonomer(new FinalSeqFeature().getMonomer());
+
     }
 
     public PKStructure getStructure() {
