@@ -3,7 +3,6 @@ package prediction;
 import encrypt.Encrypter;
 import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.IAtomContainer;
-import org.openscience.cdk.smiles.SmiFlavor;
 import org.openscience.cdk.smiles.SmilesGenerator;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
@@ -37,7 +36,7 @@ public class PKSStructureSmilesDataRes extends ServerResource {
         System.out.println("PK structure generated");
 
         IAtomContainer mol = struct.getMolecule();
-        SmilesGenerator sg = new SmilesGenerator(SmiFlavor.Generic);
+        SmilesGenerator sg = SmilesGenerator.generic();
 
 
         try {
