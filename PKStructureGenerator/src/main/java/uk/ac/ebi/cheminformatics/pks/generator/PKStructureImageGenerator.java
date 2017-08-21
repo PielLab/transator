@@ -52,9 +52,6 @@ public class PKStructureImageGenerator {
     public BufferedImage generateStructureImage(PKStructure pkMolecule, Dimension dimension) throws CDKException {
         calculateProperties(pkMolecule.getMolecule());
         IAtomContainer moleculeWithCoordinates = generateCoordinatesForMolecule(pkMolecule.getMolecule());
-        SimpleMoleculeRotator rotator = new SimpleMoleculeRotator();
-        rotator.rotateMolecule(moleculeWithCoordinates);
-
         BufferedImage image = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_ARGB);
         Rectangle2D bounds = new Rectangle2D.Double(0, 0,
                 image.getWidth(),
@@ -76,30 +73,9 @@ public class PKStructureImageGenerator {
         return structureGenerator.getMolecule();
     }
 
-    private void assignColors(PKStructure pkMolecule) {
-
-//        if (moleculeWithCoordinates.getProperty(SPECIFIC_BONDS) != null) {
-//            Map<IChemObject, Color> bondColorMap = new HashMap<IChemObject, Color>();
-//            Map<Integer, Color> bondIndexColourMap = (Map<Integer, Color>) moleculeWithCoordinates.getProperty(SPECIFIC_BONDS);
-//            for (Map.Entry entry : bondIndexColourMap.entrySet()) {
-//                Integer index = (Integer) entry.getKey();
-//                Color color = (Color) entry.getValue();
-//                bondColorMap.put(moleculeWithCoordinates.getBond(index.intValue()), color);
-//            }
-//            RendererModel renderer2DModel = chemicalMoleculeRenderer.getRenderer2DModel();
-//            renderer2DModel.set(RendererModel.ColorHash.class, bondColorMap);
-//            return;
-//        }
-//        if (moleculeWithCoordinates.getProperty(COLOR_ALL_BONDS) != null) {
-//            RendererModel renderer2DModel = chemicalMoleculeRenderer.getRenderer2DModel();
-//            renderer2DModel.set(BasicBondGenerator.DefaultBondColor.class, (Color) moleculeWithCoordinates.getProperty(COLOR_ALL_BONDS));
-//        }
-    }
-
     private void calculateProperties(IAtomContainer molecule) throws CDKException {
         AtomContainerManipulator.percieveAtomTypesAndConfigureAtoms(molecule);
         CDKHydrogenAdder.getInstance(SilentChemObjectBuilder.getInstance()).addImplicitHydrogens(molecule);
-        //AtomContainerManipulator.convertImplicitToExplicitHydrogens(molecule);
         daylight.apply(molecule);
     }
 
