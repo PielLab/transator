@@ -46,8 +46,7 @@ public class PKSAssembler {
         ImmutableSet<String> alphaMethylBetaHydroxy = of("KR", "MT");
         ImmutableSet<String> alphaMethylAlphaBetaDoubleBond = of("KR", "MT", "DH");
         ImmutableSet<String> betaMethoxy = of("KR", "OMT");
-        // TODO: which clade do we need to assign to this?
-//        ImmutableSet<String> betaOMethylAlphaMethyl = of("OMT", "MT");
+        ImmutableSet<String> betaOMethylAlphaMethyl = of("OMT", "MT");
         ImmutableSet<String> alphaMethyl = of("KR", "MT", "DH", "ER");
         ImmutableSet<String> exomethylene = of("CR", "CR");
         ImmutableSet<String> pyranFuranRing = of("KR", "DH", "PS");
@@ -66,6 +65,7 @@ public class PKSAssembler {
         terminationRules.put(exomethylene, "Clade_14");
         // TODO: post-processor needs to be added to this
         terminationRules.put(pyranFuranRing, "Clade_26");
+        terminationRules.put(betaOMethylAlphaMethyl, "Clade_143");
         terminationRules.put(rearrangement, "Clade_35");
         terminationRules.put(vinolgousChainBranching, "Clade_12");
     }
