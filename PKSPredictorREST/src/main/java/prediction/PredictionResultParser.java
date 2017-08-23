@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparingInt;
@@ -145,13 +146,12 @@ public class PredictionResultParser {
 
             feature.setX(calculateXPixel(start));
             feature.setType("rect");
-            feature.setFeatureLabel("E-value : " + evalue + " Score : " + score);
+            feature.setFeatureLabel("E-value: " + evalue + " Score: " + score);
+            feature.setFeatureId(name + UUID.randomUUID());
             if (isClade) {
-                feature.setFeatureId((name).replaceAll(" ", "_"));
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             } else {
-                feature.setFeatureId(name + "_" + start);
                 feature.setFeatureTypeLabel(label);
                 feature.setTypeLabel(label);
             }
