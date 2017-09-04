@@ -29,16 +29,17 @@ public class PKSPredictionDataResource extends ServerResource {
 
         File finished = new File(path + File.separator + seqID + ".finished");
         Long start = System.currentTimeMillis();
+        // TODO: busy waiting might be the source of occasional 100% CPU when something goes wrong in the python part of the program
         while (true) {
             if (finished.exists())
                 break;
             else if (System.currentTimeMillis() - start > this.timeout) {
-                // null representation thrown.
+                throw new RuntimeException("Timeout occurred");
             } else {
                 try {
                     Thread.sleep(3000); // sleep 3 seconds and try again.
                 } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
             }
         }
