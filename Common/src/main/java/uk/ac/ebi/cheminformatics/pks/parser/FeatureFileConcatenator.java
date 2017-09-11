@@ -8,13 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pmoreno
- * Date: 1/8/13
- * Time: 17:13
- * To change this template use File | Settings | File Templates.
- */
+
 public class FeatureFileConcatenator {
 
     private static final Logger LOGGER = Logger.getLogger(FeatureFileConcatenator.class);
