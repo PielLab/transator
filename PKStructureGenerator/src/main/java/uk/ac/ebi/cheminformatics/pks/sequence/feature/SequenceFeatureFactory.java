@@ -11,6 +11,24 @@ public class SequenceFeatureFactory {
         if (parser.getType().equalsIgnoreCase("domain")) {
             DomainSeqFeature nseqFeat;
             switch (parser.getSubtype()) {
+                case "AL":
+                    nseqFeat = new ALDomainSeqFeature(parser);
+                    break;
+                case "B":
+                    nseqFeat = new BRDomainSeqFeature(parser);
+                    break;
+                case "C":
+                    nseqFeat = new CDomainSeqFeature(parser);
+                    break;
+                case "Cyc":
+                    nseqFeat = new CycDomainSeqFeature(parser);
+                    break;
+                case "DH":
+                    nseqFeat = new DHDomainSeqFeature(parser);
+                    break;
+                case "PS":
+                    nseqFeat = new PSDomainSeqFeature(parser);
+                    break;
                 case "ER":
                     nseqFeat = new ERDomainSeqFeature(parser);
                     break;

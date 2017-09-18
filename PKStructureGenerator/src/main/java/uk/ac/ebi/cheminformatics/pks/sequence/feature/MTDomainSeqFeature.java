@@ -10,9 +10,12 @@ public class MTDomainSeqFeature extends DomainSeqFeature {
     }
 
     @Override
+    protected Double getThreshold() {
+        return Double.parseDouble("2.80E-56");
+    }
+
+    @Override
     public MonomerProcessor getMonomerProcessor() {
-        // TODO: For which clades do we still need this processor?
-        // return new MTMonomerProcessor()
         return new NoActionMonomerProcessor();
     }
 }

@@ -15,7 +15,9 @@ public class DomainSeqFeature extends AbstractSeqFeature {
 
     private int ranking = 0;
 
-    private Double threshold = Double.parseDouble("1E-10");
+    protected Double getThreshold() {
+        return Double.parseDouble("1E-10");
+    }
 
     private FeatureFileLine featureFileLine;
 
@@ -60,7 +62,7 @@ public class DomainSeqFeature extends AbstractSeqFeature {
     }
 
     public boolean isSignificant() {
-        return EValue.map(value -> value < threshold).orElse(false);
+        return EValue.map(value -> value < getThreshold()).orElse(false);
     }
 
     @Override
