@@ -104,6 +104,7 @@ public class PKSAssembler {
         if (!((sequenceFeature instanceof KSDomainSeqFeature))) {
             this.subFeaturesForNextKS.add(sequenceFeature);
             if (isTerminationRelevant(sequenceFeature)) {
+                // TODO: we should only consider up until the TE domain
                 this.domainTypesSinceLastElongatingKs.add(sequenceFeature.getSubtype());
             }
             return;
@@ -163,7 +164,7 @@ public class PKSAssembler {
         IAtomContainer monomerMolecule = monomer.getMolecule();
         int indexToRemove = connectionBondInMonomer.getAtom(0) instanceof IPseudoAtom ? 0 : 1;
 
-        monomerMolecule.removeAtom(connectionBondInMonomer.getAtom(indexToRemove));
+        monomerMolecule.removeAtomOnly(connectionBondInMonomer.getAtom(indexToRemove));
 
         connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
 
