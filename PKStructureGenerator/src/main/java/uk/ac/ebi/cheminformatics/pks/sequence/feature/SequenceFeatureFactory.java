@@ -2,12 +2,14 @@ package uk.ac.ebi.cheminformatics.pks.sequence.feature;
 
 import uk.ac.ebi.cheminformatics.pks.parser.FeatureFileLine;
 
+import java.util.Optional;
+
 public class SequenceFeatureFactory {
     public static SequenceFeature makeSequenceFeature(FeatureFileLine parser) {
-        return makeSequenceFeature(parser, 0);
+        return makeSequenceFeature(parser, 0, Optional.empty());
     }
 
-    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser, int ranking) {
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser, int ranking, Optional<Double> confidentiality) {
         if (parser.getType().equalsIgnoreCase("domain")) {
             DomainSeqFeature nseqFeat;
             switch (parser.getSubtype()) {
@@ -39,7 +41,7 @@ public class SequenceFeatureFactory {
                     nseqFeat = new KRDomainSeqFeature(parser);
                     break;
                 case "KS":
-                    nseqFeat = new KSDomainSeqFeature(parser, ranking);
+                    nseqFeat = new KSDomainSeqFeature(parser, ranking, confidentiality);
                     break;
                 case "OMT":
                     nseqFeat = new OMTDomainSeqFeature(parser);
@@ -48,7 +50,7 @@ public class SequenceFeatureFactory {
                     nseqFeat = new NRPSDomSeqFeature(parser);
                     break;
                 default:
-                    nseqFeat = new DomainSeqFeature(parser, ranking);
+                    nseqFeat = new DomainSeqFeature(parser, ranking, confidentiality);
                     break;
             }
             return nseqFeat;

@@ -62,6 +62,11 @@ public class ProteinPatternSeqFeature extends AbstractSeqFeature {
     }
 
     @Override
+    public Optional<Double> getConfidentiality() {
+        return Optional.empty();
+    }
+
+    @Override
     public String getType() {
         return this.featureFileLine.getType();
     }

@@ -18,8 +18,14 @@ public class PKStructure {
     private IAtom connectionAtom;
     private List<PKMonomer> monomers;
 
+    private List<PKMonomer> lowConfidentialityMonomers;
+
+    private final static double CONFIDENTIALITY_THRESHOLD = 1E-20;
+
     public PKStructure() {
         this.monomers = new ArrayList<>();
+        this.lowConfidentialityMonomers = new ArrayList<>();
+
         this.chain = SilentChemObjectBuilder.getInstance().newInstance(IAtomContainer.class);
     }
 
@@ -37,12 +43,17 @@ public class PKStructure {
      * Adds the monomer to PKStructure. The necessary steps of deleting generic atoms and linking underlying molecules
      * are handled by the {@link PKSAssembler} class.
      *
-     * @param monomer to be added.
+     * @param monomer         to be added.
+     * @param confidentiality
      */
-    protected void add(PKMonomer monomer) {
+    protected void add(PKMonomer monomer, double confidentiality) {
         this.connectionAtom = monomer.getPosConnectionAtom();
         monomers.add(monomer);
         this.chain.add(monomer.getMolecule());
+
+        if (confidentiality > CONFIDENTIALITY_THRESHOLD) {
+            lowConfidentialityMonomers.add(monomer);
+        }
     }
 
     /**
@@ -64,6 +75,14 @@ public class PKStructure {
 
     public PKMonomer getMonomer(int i) {
         return monomers.get(i);
+    }
+
+    public List<PKMonomer> getMonomers() {
+        return monomers;
+    }
+
+    public List<PKMonomer> getLowConfidentialityMonomers() {
+        return lowConfidentialityMonomers;
     }
 
     /**

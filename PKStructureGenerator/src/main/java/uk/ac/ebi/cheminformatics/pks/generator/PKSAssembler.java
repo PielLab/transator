@@ -123,7 +123,8 @@ public class PKSAssembler {
         processSubFeatures(sequenceFeature.getMonomer());
 
         if (structure.getMonomerCount() == 0) {
-            structure.add(sequenceFeature.getMonomer());
+            // TODO: why 1d?
+            structure.add(sequenceFeature.getMonomer(), sequenceFeature.getConfidentiality().orElse(1d));
         } else {
             if (sequenceFeature.getMonomer().isTerminationBoundary()) {
                 terminateAtBoundary();
@@ -145,7 +146,7 @@ public class PKSAssembler {
 
     private void growByFeature(SequenceFeature sequenceFeature) {
 
-        growByMonomer(sequenceFeature.getMonomer());
+        growByMonomer(sequenceFeature.getMonomer(), sequenceFeature.getConfidentiality().orElse(1d));
 
         // here we do post processing specific to the particular clade just added
         if (sequenceFeature.hasPostProcessor()) {
@@ -153,7 +154,7 @@ public class PKSAssembler {
         }
     }
 
-    private void growByMonomer(PKMonomer monomer) {
+    private void growByMonomer(PKMonomer monomer, double confidentiality) {
         IAtom connectionAtomInChain = structure.getConnectionAtom();
         IBond connectionBondInMonomer = monomer.getConnectionBond();
 
@@ -168,7 +169,7 @@ public class PKSAssembler {
 
         connectionBondInMonomer.setAtom(connectionAtomInChain, indexToRemove);
 
-        structure.add(monomer);
+        structure.add(monomer, confidentiality);
 
         // adjust implicit hydrogen atoms
         hydrogenCountBalancer.balanceImplicitHydrogens(structure.getMolecule(), connectionBondInMonomer.getAtom(0));
@@ -264,7 +265,8 @@ public class PKSAssembler {
         // TODO: there is an edge case, when there is also a "NRPS" boundary at the end
         terminateAtBoundary();
 
-        growByMonomer(new FinalSeqFeature().getMonomer());
+        // TODO: how can we determine confidentiality here?
+        growByMonomer(new FinalSeqFeature().getMonomer(), 1d);
 
     }
 

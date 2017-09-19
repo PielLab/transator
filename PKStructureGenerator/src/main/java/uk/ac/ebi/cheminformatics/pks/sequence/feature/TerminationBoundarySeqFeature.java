@@ -86,6 +86,11 @@ public class TerminationBoundarySeqFeature implements SequenceFeature {
     }
 
     @Override
+    public Optional<Double> getConfidentiality() {
+        return Optional.empty();
+    }
+
+    @Override
     public String getType() {
         throw new UnsupportedOperationException();
     }

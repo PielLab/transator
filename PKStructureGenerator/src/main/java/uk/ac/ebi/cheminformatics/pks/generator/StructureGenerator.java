@@ -48,7 +48,9 @@ public class StructureGenerator {
 
         Stream<SequenceFeature> ks = significantFeatures.stream().filter(KSDomainSeqFeature.class::isInstance);
 
-        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, 1);
+        // in order for us to calculate the confidentiality we need to cascade at least 2 ks sequences
+        Stream<SequenceFeature> bestKs = FeatureSelection.bestMatchCascade(ks, 2)
+                .filter(kss -> kss.getRanking().isPresent() && kss.getRanking().get() == 1);
 
         List<SequenceFeature> selectedSequenceFeatures = Streams.concat(bestNonKsDomains, bestKs, nonDomains)
                 .sorted(comparingInt(feature -> feature.getRange().lowerEndpoint()))

@@ -5,7 +5,10 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.generator.DistanceMetricSequenceFeatures;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,7 +20,6 @@ import static uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeatureFact
 public final class FeatureSelection {
 
     private static final Logger LOGGER = Logger.getLogger(FeatureSelection.class);
-
 
     public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> features, int cascadeHeight) {
         return bestMatchCascade(features, cascadeHeight, 5, 20);
@@ -41,9 +43,38 @@ public final class FeatureSelection {
 
             LOGGER.info(debugGroup + "\n");
 
-            return mapWithIndex(cascade,
-                    (seq, index) -> makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1));
+            List<SequenceFeature> collectedCascade = cascade.collect(toList());
+
+            Map<Integer, Optional<Double>> indexToConfidentiality = getConfidentialityMapPerIndex(collectedCascade);
+
+            return mapWithIndex(collectedCascade.stream(),
+                    (seq, index) -> {
+                        Optional<Double> confidentialityLookup = indexToConfidentiality.getOrDefault((int) index, Optional.empty());
+                        return makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1, confidentialityLookup);
+                    });
         });
+    }
+
+    private static Map<Integer, Optional<Double>> getConfidentialityMapPerIndex(List<SequenceFeature> collect) {
+
+        Map<Integer, Optional<Double>> ratios = new HashMap<>();
+
+        if (2 > collect.size()) {
+            return ratios;
+        }
+
+        for (int i = 0; i < collect.size() - 1; i++) {
+            SequenceFeature current = collect.get(i);
+            SequenceFeature next = collect.get(i + 1);
+
+            Optional<Double> confidence =
+                    next.getEValue().flatMap(nextEValue ->
+                            current.getEValue().flatMap(currentEValue ->
+                                    Optional.of(currentEValue / nextEValue)));
+            ratios.put(i, confidence);
+        }
+
+        return ratios;
     }
 
     private static List<List<SequenceFeature>> clusterByAlignment(List<SequenceFeature> sequenceFeatures, int minCluster, int maxDistance) {

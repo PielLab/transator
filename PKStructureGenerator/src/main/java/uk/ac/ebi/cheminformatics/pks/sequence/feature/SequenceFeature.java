@@ -71,6 +71,8 @@ public interface SequenceFeature {
 
     Optional<Integer> getRanking();
 
+    Optional<Double> getConfidentiality();
+
     String getType();
 
     Optional<Boolean> getVerificationPass();

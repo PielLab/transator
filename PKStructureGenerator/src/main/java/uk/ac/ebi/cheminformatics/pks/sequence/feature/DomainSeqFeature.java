@@ -14,6 +14,7 @@ public class DomainSeqFeature extends AbstractSeqFeature {
     protected Optional<Double> EValue;
 
     private int ranking = 0;
+    private Optional<Double> confidentiality = Optional.empty();
 
     protected Double getThreshold() {
         return Double.parseDouble("1E-10");
@@ -27,11 +28,12 @@ public class DomainSeqFeature extends AbstractSeqFeature {
         this.featureFileLine = featureFileLine;
     }
 
-    public DomainSeqFeature(FeatureFileLine featureFileLine, int ranking) {
+    public DomainSeqFeature(FeatureFileLine featureFileLine, int ranking, Optional<Double> confidentiality) {
         super(featureFileLine.getStart(), featureFileLine.getStop(), featureFileLine.getName());
         this.EValue = parseEValue(featureFileLine.getEvalue());
         this.featureFileLine = featureFileLine;
         this.ranking = ranking;
+        this.confidentiality = confidentiality;
     }
 
     private Optional<Double> parseEValue(String string) {
@@ -78,6 +80,11 @@ public class DomainSeqFeature extends AbstractSeqFeature {
     @Override
     public Optional<Integer> getRanking() {
         return this.ranking == 0 ? Optional.empty() : Optional.of(this.ranking);
+    }
+
+    @Override
+    public Optional<Double> getConfidentiality() {
+        return this.confidentiality;
     }
 
 
