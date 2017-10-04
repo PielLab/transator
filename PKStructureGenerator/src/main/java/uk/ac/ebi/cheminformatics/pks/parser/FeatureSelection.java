@@ -25,9 +25,15 @@ public final class FeatureSelection {
         return bestMatchCascade(features, cascadeHeight, 5, 20);
     }
 
-    public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> features, int cascadeHeight, int minCluster, int maxDistance) {
+    public static Stream<SequenceFeature> bestMatchCascade(Stream<SequenceFeature> featureStream, int cascadeHeight, int minCluster, int maxDistance) {
 
-        List<List<SequenceFeature>> clusteredByPosition = FeatureSelection.clusterByAlignment(features.collect(toList()), minCluster, maxDistance);
+        List<SequenceFeature> features = featureStream.collect(toList());
+
+        if (features.isEmpty()) {
+            return Stream.empty();
+        }
+
+        List<List<SequenceFeature>> clusteredByPosition = FeatureSelection.clusterByAlignment(features, minCluster, maxDistance);
 
         return clusteredByPosition.stream().flatMap(group -> {
 
