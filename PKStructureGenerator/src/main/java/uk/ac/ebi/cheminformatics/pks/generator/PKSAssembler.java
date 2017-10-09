@@ -181,6 +181,8 @@ public class PKSAssembler {
     }
 
     private SequenceFeature findBoundarySeqFeature() {
+
+        // TODO: we need to somehow figure out if the last KS was non-elongating. In that case, do not add the beta-keto
         if (domainTypesSinceLastElongatingKs.size() == 0) {
             //  beta-keto
             return new TerminationBoundarySeqFeature("Clade_45");
