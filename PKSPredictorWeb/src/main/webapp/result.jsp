@@ -93,7 +93,7 @@
                 $j.getJSON("rest/pkspredictor/query?path=" + $j(this).attr("path") + "&seqId=" + $j(this).attr("seqId"),
                     function (data) {
                         var json = data;
-                        divObj.find("#waitingImg").hide()
+                        divObj.find("#waitingImg").hide();
                         var myPainter = new Biojs.FeatureViewer({
                             target: divObj.attr("id"),
                             json: json,

@@ -16,14 +16,12 @@ public class PKSPredictionDataResource extends ServerResource {
 
     @Get("json")
     public Representation represent() {
-        //String encryptedPath = (String)getRequestAttributes().get("encPath");
         String encryptedPath = getQuery().getValues("path");
         Encrypter encrypter = new Encrypter();
         System.out.println("Encrypted : " + encryptedPath);
         String path = encrypter.decrypt(encryptedPath);
         if (!path.endsWith(File.separator))
             path += File.separator;
-        //String seqID = (String)getRequestAttributes().get("seqID");
         String seqID = getQuery().getValues("seqId");
         System.out.println("Started represent: " + encryptedPath);
 
