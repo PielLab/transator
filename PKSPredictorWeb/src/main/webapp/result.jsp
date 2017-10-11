@@ -89,16 +89,15 @@
 
         var $j = jQuery.noConflict();
         $j(".seqResult").each(function () {
-                //var idDiv = $j(this).attr("id");
                 var divObj = $j(this);
                 $j.getJSON("rest/pkspredictor/query?path=" + $j(this).attr("path") + "&seqId=" + $j(this).attr("seqId"),
                     function (data) {
                         var json = data;
-                        //$j("#"+idDiv).find("#waitingImg").hide()
                         divObj.find("#waitingImg").hide()
                         var myPainter = new Biojs.FeatureViewer({
                             target: divObj.attr("id"),
-                            json: json
+                            json: json,
+                            showPrintButton: false
                         });
                         var viewNum = divObj.attr("viewerNumber");
                         $j("#headerView" + viewNum).html(divObj.attr("seqid"));
@@ -118,8 +117,6 @@
 
 </script>
 
-<%--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>--%>
-<%--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>--%>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
 
