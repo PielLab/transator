@@ -1,17 +1,12 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
 <%@ page import="java.util.List" %>
 <%@ page import="java.net.URLEncoder" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: pmoreno
-  Date: 29/6/13
-  Time: 00:46
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -41,7 +36,7 @@
 
 
     <!-- CSS -->
-    <link rel="stylesheet" href="js/dependencies/jquery/jquery-ui-1.8.2.css" />
+    <link rel="stylesheet" href="js/dependencies/jquery/jquery-ui-1.8.2.css"/>
     <link rel="stylesheet" href="js/dependencies/jquery/jquery.tooltip.css">
     <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_flat_0_aaaaaa_40x100.png">
     <link rel="stylesheet" href="js/dependencies/jquery/images/ui-bg_flat_75_ffffff_40x100.png">
@@ -55,8 +50,8 @@
     <link rel="stylesheet" href="css/main.css">
 
     <script>
-        $(function() {
-            $( "#accordionSequences" ).accordion();
+        $(function () {
+            $("#accordionSequences").accordion();
         });
     </script>
 </head>
@@ -65,7 +60,7 @@
 <h1 class="textCentering">trans-AT Polyketide prediction results</h1>
 
 <p class="textCentering">The annotation of the different <i>trans</i>-AT KS clades on the submitted sequences produces
-the following structure:</p>
+    the following structure:</p>
 <img class="resultingMol" id="pkMol" path="<%= request.getSession().getAttribute("tmp") %>">
 
 <p class="textCentering" id="pkSmiles"></p>
@@ -74,31 +69,31 @@ the following structure:</p>
     The annotation for each sequence submitted can be seen in the sections below.
 </p>
 <div id="accordionSequences">
-<%
-    int viewerNumber=0;
-    for (String identifier : (List<String>)request.getSession().getAttribute("identifers")) {
-%>
-<h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier,"UTF-8")%> - processing..</h3>
-<div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
-     path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>" >
-    <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
-</div>
-<%
-        viewerNumber++;
+    <%
+        int viewerNumber = 0;
+        for (String identifier : (List<String>) request.getSession().getAttribute("identifers")) {
+    %>
+    <h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier, "UTF-8")%> -
+        processing..</h3>
+    <div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
+         path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>">
+        <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
+    </div>
+    <% viewerNumber++;
     } %>
 
 </div>
 
 <script>
 
-    window.onload = function() {
+    window.onload = function () {
 
         var $j = jQuery.noConflict();
-        $j(".seqResult").each(function() {
-            //var idDiv = $j(this).attr("id");
-            var divObj = $j(this);
-            $j.getJSON("rest/pkspredictor/query?path="+$j(this).attr("path")+"&seqId="+$j(this).attr("seqId"),
-                    function(data) {
+        $j(".seqResult").each(function () {
+                //var idDiv = $j(this).attr("id");
+                var divObj = $j(this);
+                $j.getJSON("rest/pkspredictor/query?path=" + $j(this).attr("path") + "&seqId=" + $j(this).attr("seqId"),
+                    function (data) {
                         var json = data;
                         //$j("#"+idDiv).find("#waitingImg").hide()
                         divObj.find("#waitingImg").hide()
@@ -107,18 +102,19 @@ the following structure:</p>
                             json: json
                         });
                         var viewNum = divObj.attr("viewerNumber");
-                        $j("#headerView"+viewNum).html(divObj.attr("seqid"));
+                        $j("#headerView" + viewNum).html(divObj.attr("seqid"));
                     }
-            )}
-            );
+                )
+            }
+        );
 
-        $j('#pkMol').attr('src', 'rest/pkspredictor/structure?path='+$j("#pkMol").attr("path"));
+        $j('#pkMol').attr('src', 'rest/pkspredictor/structure?path=' + $j("#pkMol").attr("path"));
 
-        $j.get('rest/pkspredictor/smiles?path='+$j("#pkMol").attr("path"),
-                function(data, status, response) {
-                    $j('#pkSmiles').text("SMILES: "+response.responseText);
-                });
-        };
+        $j.get('rest/pkspredictor/smiles?path=' + $j("#pkMol").attr("path"),
+            function (data, status, response) {
+                $j('#pkSmiles').text("SMILES: " + response.responseText);
+            });
+    };
 
 
 </script>
