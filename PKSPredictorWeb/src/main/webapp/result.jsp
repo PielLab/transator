@@ -56,7 +56,7 @@
 </head>
 <body>
 
-<h1 class="textCentering">trans-AT Polyketide prediction results</h1>
+<h1 class="textCentering">Trans-AT Polyketide Prediction Results</h1>
 
 <p class="textCentering">The annotation of the different <i>trans</i>-AT KS clades on the submitted sequences produces
     the following structure:</p>
