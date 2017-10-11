@@ -24,7 +24,6 @@
     improve your experience.</p>
 <![endif]-->
 
-<!-- Add your site or application content here -->
 <h1 class="textCentering"><i>trans</i>ATor web application</h1>
 
 <p class="textCentering">
@@ -37,9 +36,8 @@
     <p class="textCentering">Paste your protein sequence(s) or individual KS domains in proper FASTA format:</p>
     <div class="content" style="vertical-align: middle;">
         <div class="textarea textCentering">
-    <textarea rows="10" cols="50" name="sequenceInput" id="sequenceInput" style="color: #9b9b9b; text-align: left"
-              onfocus="clearText(this)" onblur="if(this.value=='') refillText(this);">
-     </textarea>
+            <textarea rows="10" cols="50" name="sequenceInput" id="sequenceInput"
+                      style="color: #9b9b9b; text-align: left"></textarea>
         </div>
         <p class="textCentering">Or alternatively:</p>
         <div class="textarea-instruction textCentering">
@@ -47,8 +45,6 @@
             </p>
         </div>
         <br>
-
-
     </div>
     <div class="textCentering">
         <input type="file" name="fastaFile" value="Choose fasta"/>
@@ -64,7 +60,6 @@
 </p>
 
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
