@@ -67,23 +67,32 @@
 <p class="textCentering">
     The annotation for each sequence submitted can be seen in the sections below.
 </p>
-<div id="accordionSequences">
-    <%
-        int viewerNumber = 0;
-        for (String identifier : (List<String>) request.getSession().getAttribute("identifers")) {
-    %>
-    <h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier, "UTF-8")%> -
-        processing..</h3>
-    <div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
-         path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>">
-        <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
+<divs id="tabs">
+
+    <ul>
+        <li><a href="#accordionSequences">Viewer</a></li>
+        <li><a href="#rawResult">Raw</a></li>
+    </ul>
+
+    <div id="accordionSequences">
+        <%
+            int viewerNumber = 0;
+            for (String identifier : (List<String>) request.getSession().getAttribute("identifers")) {
+        %>
+        <h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier, "UTF-8")%>
+            -
+            processing..</h3>
+        <div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
+             path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>">
+            <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
+        </div>
+        <% viewerNumber++;
+        } %>
     </div>
-    <% viewerNumber++;
-    } %>
 
-</div>
+    <div id="rawResult" class="textCentering"></div>
+</divs>
 
-<div id="rawResult" class="textCentering"/>
 
 <script>
 
@@ -103,6 +112,8 @@
     window.onload = function () {
 
         var $j = jQuery.noConflict();
+
+        $j("#tabs").tabs();
 
         $j(".seqResult").each(function () {
                 var divObj = $j(this);
@@ -144,8 +155,7 @@
             function (data, status, response) {
                 $j('#pkSmiles').text("SMILES: " + response.responseText);
             });
-    }
-    ;
+    };
 
 
 </script>
