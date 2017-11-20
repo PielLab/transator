@@ -9,6 +9,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import runner.PKSPredictor;
 import validator.SequenceValidator;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class ValidateInput extends HttpServlet {
         super();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // Get the fasta file from the request, either from the test area or the file that can be uploaded. Check that the fasta is adequate.
         String seqInput = null;
@@ -77,7 +78,7 @@ public class ValidateInput extends HttpServlet {
             request.getSession().setAttribute("errorExp", validator.getError());
             response.sendRedirect("pages/Error.jsp");
         }
-        
+
         // Provide the fasta file generated to the runner object and execute.
         PKSPredictor predictor = new PKSPredictor(validator.getFastaPath(), validator.getOutputPath());
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -94,7 +95,7 @@ public class ValidateInput extends HttpServlet {
         response.sendRedirect("result.jsp");
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
     }

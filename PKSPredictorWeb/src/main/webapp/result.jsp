@@ -83,11 +83,27 @@
 
 </div>
 
+<div id="rawResult" class="textCentering"/>
+
 <script>
+
+    function groupBy(xs, key) {
+        return xs.reduce(function (rv, x) {
+            let v = key instanceof Function ? key(x) : x[key];
+            let el = rv.find((r) => r && r.key === v);
+            if (el) {
+                el.values.push(x);
+            } else {
+                rv.push({key: v, values: [x]});
+            }
+            return rv;
+        }, []);
+    }
 
     window.onload = function () {
 
         var $j = jQuery.noConflict();
+
         $j(".seqResult").each(function () {
                 var divObj = $j(this);
                 $j.getJSON("rest/pkspredictor/query?path=" + $j(this).attr("path") + "&seqId=" + $j(this).attr("seqId"),
@@ -101,8 +117,24 @@
                         });
                         var viewNum = divObj.attr("viewerNumber");
                         $j("#headerView" + viewNum).html(divObj.attr("seqid"));
+
+                        var features = json['featuresArray'];
+
+                        // TODO: use the presence clusterId to filter out clades
+                        var groupedFeatures = groupBy(features.filter(f => f.evidenceCode.startsWith("Clade")), "clusterId");
+
+                        $j("#rawResult").append("<h1>" + divObj.attr("seqid") + "</h1>");
+
+                        groupedFeatures
+                            .map((group) => "<p>" +
+                                group.values
+                                    .sort((a, b) => a.y > b.y)
+                                    .map(v => v.evidenceCode + " " + v.typeLabel + " (" + v.featureLabel + ")")
+                                    .join('</br>') +
+                                "</p>")
+                            .forEach(code => $j('#rawResult').append(code));
                     }
-                )
+                );
             }
         );
 
@@ -112,7 +144,8 @@
             function (data, status, response) {
                 $j('#pkSmiles').text("SMILES: " + response.responseText);
             });
-    };
+    }
+    ;
 
 
 </script>

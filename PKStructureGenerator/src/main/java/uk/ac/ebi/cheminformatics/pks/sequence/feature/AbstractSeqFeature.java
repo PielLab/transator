@@ -6,6 +6,7 @@ import uk.ac.ebi.cheminformatics.pks.monomer.PKMonomer;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Pattern sequence features stand for small patterns of amino acids in the PKS that signal particular
@@ -45,5 +46,10 @@ public abstract class AbstractSeqFeature implements SequenceFeature {
     @Override
     public Range<Integer> getRange() {
         return Range.closed(start, stop);
+    }
+
+    @Override
+    public Optional<String> getClusterId() {
+        return Optional.empty();
     }
 }

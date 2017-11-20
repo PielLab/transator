@@ -5,10 +5,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.cheminformatics.pks.generator.DistanceMetricSequenceFeatures;
 import uk.ac.ebi.cheminformatics.pks.sequence.feature.SequenceFeature;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,10 +50,12 @@ public final class FeatureSelection {
 
             Map<Integer, Optional<Double>> indexToConfidentiality = getConfidentialityMapPerIndex(collectedCascade);
 
+            String clusterId = UUID.randomUUID().toString();
+
             return mapWithIndex(collectedCascade.stream(),
                     (seq, index) -> {
                         Optional<Double> confidentialityLookup = indexToConfidentiality.getOrDefault((int) index, Optional.empty());
-                        return makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1, confidentialityLookup);
+                        return makeSequenceFeature(seq.getOriginatingFeatureFileLine(), (int) index + 1, confidentialityLookup, Optional.of(clusterId));
                     });
         });
     }

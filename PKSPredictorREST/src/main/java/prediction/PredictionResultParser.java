@@ -122,6 +122,10 @@ public class PredictionResultParser {
 
         boolean isClade = subtype.equals("KS");
 
+        if (isClade) {
+            feature.setClusterId(line.getClusterId().get());
+        }
+
         String evidence = "HMMER";
         if (subtype.equals("NRPS2")) {
             label = "Amino acid";
@@ -148,13 +152,8 @@ public class PredictionResultParser {
             feature.setType("rect");
             feature.setFeatureLabel("E-value: " + evalue + " Score: " + score);
             feature.setFeatureId(name + UUID.randomUUID());
-            if (isClade) {
-                feature.setFeatureTypeLabel(label);
-                feature.setTypeLabel(label);
-            } else {
-                feature.setFeatureTypeLabel(label);
-                feature.setTypeLabel(label);
-            }
+            feature.setFeatureTypeLabel(label);
+            feature.setTypeLabel(label);
             feature.setTypeCode(name);
             feature.setHeight(featureHeight);
             feature.setWidth(calculateXPixel(stop) - calculateXPixel(start));

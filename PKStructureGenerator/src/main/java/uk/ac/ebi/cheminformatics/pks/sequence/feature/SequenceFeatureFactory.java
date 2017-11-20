@@ -6,10 +6,10 @@ import java.util.Optional;
 
 public class SequenceFeatureFactory {
     public static SequenceFeature makeSequenceFeature(FeatureFileLine parser) {
-        return makeSequenceFeature(parser, 0, Optional.empty());
+        return makeSequenceFeature(parser, 0, Optional.empty(), Optional.empty());
     }
 
-    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser, int ranking, Optional<Double> confidentiality) {
+    public static SequenceFeature makeSequenceFeature(FeatureFileLine parser, int ranking, Optional<Double> confidentiality, Optional<String> clusterId) {
         if (parser.getType().equalsIgnoreCase("domain")) {
             DomainSeqFeature nseqFeat;
             switch (parser.getSubtype()) {
@@ -41,7 +41,7 @@ public class SequenceFeatureFactory {
                     nseqFeat = new KRDomainSeqFeature(parser);
                     break;
                 case "KS":
-                    nseqFeat = new KSDomainSeqFeature(parser, ranking, confidentiality);
+                    nseqFeat = new KSDomainSeqFeature(parser, ranking, confidentiality, clusterId);
                     break;
                 case "OMT":
                     nseqFeat = new OMTDomainSeqFeature(parser);

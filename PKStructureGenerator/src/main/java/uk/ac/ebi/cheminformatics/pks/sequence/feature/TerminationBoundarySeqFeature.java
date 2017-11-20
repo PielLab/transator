@@ -111,6 +111,11 @@ public class TerminationBoundarySeqFeature implements SequenceFeature {
     }
 
     @Override
+    public Optional<String> getClusterId() {
+        return Optional.empty();
+    }
+
+    @Override
     public FeatureFileLine getOriginatingFeatureFileLine() {
         throw new UnsupportedOperationException();
     }

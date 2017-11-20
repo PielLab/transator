@@ -81,6 +81,8 @@ public interface SequenceFeature {
 
     String getLabel();
 
+    Optional<String> getClusterId();
+
     /**
      * Ugly hack to allow easy copying of SequenceFeatures
      * TODO: replace with normal constructor having all required fields

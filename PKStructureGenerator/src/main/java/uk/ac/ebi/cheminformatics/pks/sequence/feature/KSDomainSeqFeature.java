@@ -10,9 +10,12 @@ import java.util.Optional;
 
 public class KSDomainSeqFeature extends DomainSeqFeature {
 
-    public KSDomainSeqFeature(FeatureFileLine featureFileLine, int ranking, Optional<Double> confidentiality) {
+    private final Optional<String> clusterId;
+
+    public KSDomainSeqFeature(FeatureFileLine featureFileLine, int ranking, Optional<Double> confidentiality, Optional<String> clusterId) {
         super(featureFileLine, ranking, confidentiality);
         setUpMonomer(featureFileLine.getName());
+        this.clusterId = clusterId;
     }
 
     public Double getEvalue() {
@@ -23,5 +26,9 @@ public class KSDomainSeqFeature extends DomainSeqFeature {
         CladeAnnotation annotation = CladeAnnotationFactory.getInstance();
         this.monomer = new PKMonomer(clade, annotation);
         this.postProcessor = PostProcessorFactory.getPostProcessor(clade, annotation);
+    }
+
+    public Optional<String> getClusterId() {
+        return clusterId;
     }
 }
