@@ -1,6 +1,5 @@
 package uk.ac.ebi.cheminformatics.pks.generator;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import org.apache.log4j.Logger;
 import org.openscience.cdk.interfaces.IAtom;
@@ -140,7 +139,8 @@ public class PKSAssembler {
     }
 
     private void terminateAtBoundary() {
-        growByFeature(findBoundarySeqFeature());
+        Optional<SequenceFeature> boundarySeqFeature = findBoundarySeqFeature();
+        boundarySeqFeature.ifPresent(feature -> growByFeature(feature));
         this.domainTypesSinceLastElongatingKs.clear();
     }
 
@@ -180,21 +180,20 @@ public class PKSAssembler {
         return terminationRelevantDomains.contains(sequenceFeature.getSubtype());
     }
 
-    private SequenceFeature findBoundarySeqFeature() {
+    private Optional<SequenceFeature> findBoundarySeqFeature() {
 
         // TODO: we need to somehow figure out if the last KS was non-elongating. In that case, do not add the beta-keto
         if (domainTypesSinceLastElongatingKs.size() == 0) {
             //  beta-keto
-            return new TerminationBoundarySeqFeature("Clade_45");
+            return Optional.of(new TerminationBoundarySeqFeature("Clade_45"));
         }
         String cladeName = terminationRules.get(domainTypesSinceLastElongatingKs);
 
         if (cladeName == null) {
-            String domainTypes = Joiner.on(", ").join(domainTypesSinceLastElongatingKs);
-            throw new IllegalStateException("Cannot find termination rule for: " + domainTypes);
+            return Optional.empty();
         }
 
-        return new TerminationBoundarySeqFeature(cladeName);
+        return Optional.of(new TerminationBoundarySeqFeature(cladeName));
     }
 
 
