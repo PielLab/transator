@@ -91,7 +91,7 @@
     </div>
 
     <div id="rawResult" class="textCentering">
-        <p>In this section you find for every KS domain a list of five predicted clades ordered by their e-value</p>
+        <p>In this section you find for every KS domain a list of predicted clades ordered by their e-value</p>
     </div>
 </div>
 
@@ -149,7 +149,7 @@
                                 + "<h4>KS" + (index + 1) + "</h4>" +
                                 group.values
                                     .sort((a, b) => a.y > b.y)
-                                    .map(v => v.evidenceCode + " " + v.typeLabel + " (" + v.featureLabel + ")")
+                                    .map((v, index) => "<span class=ks" + index + ">" + v.evidenceCode + " " + v.typeLabel + " (" + v.featureLabel + ")" + "</span>")
                                     .join('</br>') +
                                 "</p>"
                             )
