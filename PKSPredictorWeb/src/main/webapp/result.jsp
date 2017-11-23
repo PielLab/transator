@@ -67,7 +67,7 @@
 <p class="textCentering">
     The annotation for each sequence submitted can be seen in the sections below.
 </p>
-<divs id="tabs">
+<div id="tabs">
 
     <ul>
         <li><a href="#accordionSequences">Viewer</a></li>
@@ -81,7 +81,7 @@
         %>
         <h3 id="headerView<%= viewerNumber%>" class="newHeaderForAccordion"><%= URLEncoder.encode(identifier, "UTF-8")%>
             -
-            processing..</h3>
+            processing...</h3>
         <div class="seqResult" id="featureView<%= viewerNumber%>" viewerNumber="<%= viewerNumber%>"
              path="<%= request.getSession().getAttribute("tmp") %>" seqId="<%= URLEncoder.encode(identifier,"UTF-8")%>">
             <img src="img/ajax-loader.gif" id="waitingImg" class="waitingImage">
@@ -90,8 +90,10 @@
         } %>
     </div>
 
-    <div id="rawResult" class="textCentering"></div>
-</divs>
+    <div id="rawResult" class="textCentering">
+        <p>In this section you find for every KS domain a list of five predicted clades ordered by their e-value</p>
+    </div>
+</div>
 
 
 <script>
@@ -134,15 +136,23 @@
                         // TODO: use the presence clusterId to filter out clades
                         var groupedFeatures = groupBy(features.filter(f => f.evidenceCode.startsWith("Clade")), "clusterId");
 
-                        $j("#rawResult").append("<h1>" + divObj.attr("seqid") + "</h1>");
+                        $j("#rawResult").append("<h3>" + divObj.attr("seqid") + "</h3>");
+
+                        if (groupedFeatures.length === 0) {
+                            $j("#rawResult").append("No Annotation");
+                            return;
+                        }
 
                         groupedFeatures
-                            .map((group) => "<p>" +
+                            .map((group, index) =>
+                                "<p>"
+                                + "<h4>KS" + (index + 1) + "</h4>" +
                                 group.values
                                     .sort((a, b) => a.y > b.y)
                                     .map(v => v.evidenceCode + " " + v.typeLabel + " (" + v.featureLabel + ")")
                                     .join('</br>') +
-                                "</p>")
+                                "</p>"
+                            )
                             .forEach(code => $j('#rawResult').append(code));
                     }
                 );
