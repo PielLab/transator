@@ -133,7 +133,7 @@
 
                         var features = json['featuresArray'];
 
-                        // TODO: use the presence clusterId to filter out clades
+                        // TODO: use the presence of the clusterId to filter out clades
                         var groupedFeatures = groupBy(features.filter(f => f.evidenceCode.startsWith("Clade")), "clusterId");
 
                         $j("#rawResult").append("<h3>" + divObj.attr("seqid") + "</h3>");
