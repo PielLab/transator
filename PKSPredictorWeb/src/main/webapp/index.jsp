@@ -27,9 +27,10 @@
 <h1 class="textCentering"><i>trans</i>ATor web application</h1>
 
 <p class="textCentering">
-    The trans-AT polyketide synthase predictor (transATor) is a genome mining tool that predicts the core structure of a
-    trans-AT PKS derived polyketide based on the protein sequence of the corresponding biosynthetic gene cluster.
-    For more information on transATor see below.
+    The <i>trans</i>-AT polyketide synthase predictor (<i>trans</i>ATor) is a genome mining tool that predicts the core
+    structure of a
+    <i>trans</i>-AT PKS derived polyketide based on the protein sequence of the corresponding biosynthetic gene cluster.
+    For more information on <i>trans</i>ATor see below.
     Use protein sequences in proper fasta format as input.
 </p>
 <form action="ValidateInput" method="post" enctype="multipart/form-data">

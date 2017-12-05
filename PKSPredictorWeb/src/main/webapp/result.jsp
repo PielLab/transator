@@ -56,9 +56,10 @@
 </head>
 <body>
 
-<h1 class="textCentering">Trans-AT Polyketide Prediction Results</h1>
+<h1 class="textCentering"><i>Trans</i>-AT PKS derived polyketide prediction results</h1>
 
-<p class="textCentering">The annotation of the different <i>trans</i>-AT KS clades on the submitted sequences produces
+<p class="textCentering">The annotation of the different <i>trans</i>-AT PKS KS clades on the submitted sequences
+    produces
     the following structure:</p>
 <img class="resultingMol" id="pkMol" path="<%= request.getSession().getAttribute("tmp") %>">
 
