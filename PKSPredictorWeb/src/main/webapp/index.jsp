@@ -417,9 +417,9 @@
 </form>
 
 <p class="textCentering">
-    <a href="https://github.com/pcm32/PKSPredictor/wiki#about-transator">About transATor</a>
-    <a href="https://github.com/pcm32/PKSPredictor/wiki#tutorial">Tutorial</a>
-    <a href="https://github.com/pcm32/PKSPredictor/wiki#faqs">FAQs</a>
+    <a href="https://github.com/PielLab/transator-wiki/wiki">About transATor</a>
+    <a href="https://github.com/PielLab/transator-wiki/wiki/Tutorial">Tutorial</a>
+    <a href="https://github.com/PielLab/transator-wiki/wiki/FAQs">FAQs</a>
 </p>
 
 
