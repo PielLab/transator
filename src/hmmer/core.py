@@ -1,29 +1,34 @@
 import subprocess
+from Clades.core import CladificationAnnotation
 
 
 class HMMERSuite(object):
     
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, path=None):
         self.executableScan = 'hmmscan'
         self.executableBuild = 'hmmbuild'
         self.executablePress = 'hmmpress'
+        if path:
+            self.executableScan = path+"/"+self.executableScan
+            self.executableBuild = path+"/"+self.executableBuild
+            self.executablePress = path+"/"+self.executablePress
+
 
     def runScan(self, query, output, model):
         from subprocess import Popen
-        fileOut=open(output,'w')
-        self.pScan = Popen([self.path+"/"+self.executableScan,model,query],stdout=fileOut)
+        fileOut=open(output, 'w')
+        self.pScan = Popen([self.executableScan, model, query], stdout=fileOut)
         self.pScan.wait()
         fileOut.close()
     
     def runBuild(self, fastaAlign, output, modelName):
         from subprocess import Popen
-        self.pBuild = Popen([self.path+"/"+self.executableBuild,"-n",modelName,"--informat","afa",output,fastaAlign])
+        self.pBuild = Popen([self.executableBuild, "-n", modelName, "--informat", "afa", output, fastaAlign])
         self.pBuild.wait()
         
     def runPress(self,hmmModelCompendium):
         from subprocess import Popen
-        self.pPress = Popen([self.path+"/"+self.executablePress,hmmModelCompendium])
+        self.pPress = Popen([self.executablePress, hmmModelCompendium])
         self.pPress.wait()
     #def getOutput(self):
      #   return self.pScan.stdout
@@ -31,7 +36,7 @@ class HMMERSuite(object):
     
 class HMMERDomainHit(object):
     
-    def __init__(self,valid,score,bias,cevalue,ievalue,hmmStart,hmmStop,hmmBound,qstart,qstop,qBound):
+    def __init__(self,valid,score,bias,cevalue,ievalue,hmmStart,hmmStop,hmmBound,qstart,qstop,qBound, envStart, envStop):
         self.valid = valid
         self.score = float(score)
         self.bias = float(bias)
@@ -43,18 +48,26 @@ class HMMERDomainHit(object):
         self.qstart = int(qstart)
         self.qstop = int(qstop)
         self.qBound = qBound
+        self.envStart = int(envStart)
+        self.envStop = int(envStop)
         
     def getQueryStart(self):
         return self.qstart
     
     def getQueryStop(self):
         return self.qstop
-    
+
+    def getEnvStart(self):
+        return self.envStart
+
+    def getEnvStop(self):
+        return self.envStop
+
     def getIsValid(self):
         if self.valid == "!":
             return True
         return False
-            
+
     def getCEvalue(self):    
         return self.cevalue
     
@@ -183,30 +196,50 @@ class HMMERParse(object):
             alignStart = tokens[10]
             alignStop = tokens[11]
             alignBoundaries = tokens[12]
+            envStart = tokens[13]
+            envStop = tokens[14]
             
             hmmDomainHit = HMMERDomainHit(valid, score, bias, cEvalue, iEvalue, hmmStart, hmmStop, hmmBoundaries, 
-                                          qstart=alignStart, qstop=alignStop, qBound=alignBoundaries)
+                                          qstart=alignStart, qstop=alignStop, qBound=alignBoundaries, envStart=envStart, envStop=envStop)
             return hmmDomainHit
 
 
 class ModelAnnotator(object):
+    """
+    Holds clade descriptions to annotate later SeqFeature records.
+    """
+    # TODO this object should be deprecated and merged into the CladeAnnotation objects.
 
     def __init__(self, pathToModel):
+        """
+        Reads an older annotation file, which only includes Clade name and description.
+        """
         self.pathToModel = pathToModel
-        annotFile = open(pathToModel+".annot","r")
+        annotFile = open(pathToModel+".annot", "r")
         line = annotFile.readline()
-        self.annotMap = {}
+        self.legacy_annot_map = {}
         while len(line) > 0:
             line = line.strip()
             annot = line.rsplit("\t")
             if len(annot) > 1:
-                self.annotMap[annot[0]] = annot[1]
+                self.legacy_annot_map[annot[0]] = annot[1]
             line = annotFile.readline()
 
         annotFile.close()
 
+    def __init__(self, clade_annotation):
+        """
+        A model annotator backed by a clade annotation object.
+        :arg
+        """
+        self.legacy_annot_map = {}
+        for clade_id in clade_annotation.get_all_clade_ids():
+            self.legacy_annot_map[clade_id] = clade_annotation.get_description(clade_id=clade_id)
+
+
+
     def getAnnotationForKey(self, key):
-        return self.annotMap.get(key, None)
+        return self.legacy_annot_map.get(key, None)
 
 
             
