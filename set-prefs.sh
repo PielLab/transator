@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# TODO: replace absolute paths with variables
+java -cp /Users/ayedo/Documents/Privates/Code/transator/PKSPredictor/PKSPredictorRunner/target/PKSPredictorRunner-1.1-SNAPSHOT.jar:/Users/ayedo/Documents/Privates/Code/transator/PKSPredictor/Common/target/Common-1.1-SNAPSHOT.jar exec.PreferenceSetter "PythonPath:;HMMERPath:/usr/local/bin;FuzzProPath:/usr/local/bin;ScriptPath:/Users/ayedo/Documents/Privates/Code/transator/PKSPredictor-Core/src/;HMMERModelPath:/Users/ayedo/Documents/Privates/Code/transator/cladification/ks_hmmer_models/PKSAllPlusClades_ConsSignal100.hmm;UseCluster:;TmpPath:;HMMEROtherModelsPath:/Users/ayedo/Documents/Privates/Code/transator/cladification/other_domains/otherModels;NRPS2Path:/Users/ayedo/Documents/Privates/Code/transator/NRPSPredictor2;MonomerMolsPath:/Users/ayedo/Documents/Privates/Code/transator/cladification/pks_mol_files;AminoAcidsMolsPath:/Users/ayedo/Documents/Privates/Code/transator/cladification/aa_mol_files/"
+
+java -cp /Users/ayedo/Documents/Privates/Code/transator/PKSPredictor/Common/target/Common-1.1-SNAPSHOT.jar encrypt.Encrypter alph4num3r1c

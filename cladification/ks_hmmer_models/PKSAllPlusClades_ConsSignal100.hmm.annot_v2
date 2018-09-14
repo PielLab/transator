@@ -1,0 +1,120 @@
+Clade_ID	CladeDescription	CladeDescriptionForWebTool	MolFileForMonomer	PostProcessor	VerificationDomains	TerminationRule	NonElongating	VerificationDomainIsMandatory	IsTerminationBoundary
+Clade_1	GNAT starter	GNAT starter	Clade_7.mol		GNAT		yes	yes	no
+Clade_2	α-Me shifted double bond or OH	α-Me ß-OH	Clade_48.mol		MT		no	yes	no
+Clade_5	amino acids (oxa/thia)	oxazole rings	Clade_16.mol		Cyc;A		no	yes	yes
+Clade_7	ß D-OH	β-hydroxy	Clade_29.mol				no	no	no
+Clade_8	unusual starter (AMT/Succinate)	unusual starter (AMT/Succinate)	Clade_61.mol				no	no	no
+Clade_9	aromatic starter	aromatic starter	Clade_53.mol				no	no	no
+Clade_10	amino acids (glycine)	glycine	Clade_33.mol		C;A		no	yes	yes
+Clade_11	shifted double bonds	shifted DB	Clade_46.mol				no	no	no
+Clade_12	vinylogous chain branching	vinylogous chain branching	Clade_34.mol		B		no	yes	no
+Clade_13	lactate starter	lactate starter	Clade_44.mol				no	no	no
+Clade_14	exomethyl/exoester	exomethylene	Clade_11.mol		CR;CR		no	yes	no
+Clade_21	α Me reduced/keto/D-OH	α Me reduced/keto/D-OH	Clade_65.mol		MT		no	yes	no
+Clade_23	α-Me	α-methyl/ α-dimethyl 	Clade_55.mol		MT		no	yes	no
+Clade_25	completely reduced	reduced	Clade_6.mol		ER		no	yes	no
+Clade_26	pyran/furan rings	pyran/furan	Clade_6.mol	Cyclization	PS		no	yes	no
+Clade_27	acetyl starter	acetyl starter	Clade_7.mol				yes	no	no
+Clade_28	amino acids	amino acids	Clade_4.mol		C;A		no	yes	yes
+Clade_30	bimodule ß D-OH	β-hydroxy	Clade_29.mol				yes	no	no
+Clade_31	non-elongating (bimodule ß D-OH)	β-hydroxy	Clade_29.mol				yes	no	no
+Clade_32	cis-AT PKS	(apply colinearity rule)					no	no	yes
+Clade_33	various starters	various unusual starters	Clade_2.mol				no	no	no
+Clade_34	methoxycarbonyl starter	methoxycarbonyl starter	Clade_54.mol				no	no	no
+Clade_35	oxidative rearrangement	oxidative rearrangement	rearrangementPKS.mol				no	no	no
+Clade_36	non-elongating (oxazole/thiazole rings)	oxazole rings	Clade_16.mol		Cyc;A		yes	yes	no
+Clade_38	non-elongating (pyran/furan rings)	pyran/furan	Clade_6.mol	Cyclization	PS		yes	yes	no
+Clade_39	amino acids (glycine)	glycine	Clade_58.mol		A		no	yes	yes
+Clade_40	β D-OH or β keto	keto	Clade_37.mol				no	no	no
+Clade_42	shifted double bonds	shifted double bonds	Clade_39.mol				no	no	no
+Clade_43	α D-Me shifted double bonds	α-Me shifted double bond	Clade_47.mol		DH;MT		no	yes	no
+Clade_44	non-elongating (α-Me completely reduced or shifted double bond)	non-elongating (α-Me completely reduced or shifted double bond)	Clade_45.mol		MT		yes	yes	no
+Clade_45	non-elongating (β-keto)	keto	Clade_37.mol				yes	no	no
+Clade_46	non-elongating (hemiacetale)	hemiacetale	Clade_57.mol	Cyclization			yes	no	no
+Clade_47	amino acids (oxazole/thiazole rings)	oxazole rings	Clade_16.mol		Cyc;A		no	yes	yes
+Clade_49	shifted double bonds (some with α-Me)	shifted double bonds	Clade_39.mol				no	no	no
+Clade_51	double bonds (z-configured)	z-double bonds	Clade_18.mol				no	no	no
+Clade_52	α-Me double bond	α-dimethyl 	Clade_22.mol		MT		no	yes	no
+Clade_53	β D-OH	β-hydroxy	Clade_29.mol				no	no	no
+Clade_54	lactate starter	lactate starter	Clade_44.mol				no	no	no
+Clade_55	a Me double bonds (e-configured)	α-dimethyl 	Clade_22.mol		MT		no	yes	no
+Clade_56	a Me double bonds (z-configured)	a Me double bonds (z-configured)	Clade_52.mol		MT		no	no	no
+Clade_57	double bonds (e-configured) (some with a Me)	e-double bonds	Clade_20.mol				no	no	no
+Clade_60	double bonds (z-configured)	z-double bonds	Clade_18.mol				no	no	no
+Clade_61	α L-Me β D-OH	α-Me β-D-OH 	Clade_40.mol		MT		no	yes	no
+Clade_62	β D-OH (some with α L-Me)	β-hydroxy	Clade_29.mol				no	no	no
+Clade_64	non-elongating (double bonds (mostly z-configured))	z-double bonds	Clade_18.mol				yes	no	no
+Clade_65	double bonds	e-double bonds	Clade_20.mol				no	no	no
+Clade_66	ß L-OH	β-hydroxy	Clade_62.mol				no	no	no
+Clade_67	phosphoglycerate-derived straters	phosphoglycerate-derived straters	Clade_50.mol				no	no	no
+Clade_68	α L-OH/Me β D-OH  	α OH β D-OH  	Clade_41.mol				no	no	no
+Clade_70	α OH β D-OH  	α OH β D-OH  	Clade_41.mol				no	no	no
+Clade_72	α L-(di)Me β OH 	α L-(di)Me β OH 	Clade_42.mol		MT		no	yes	no
+Clade_73	exomethylene	exomethylene	Clade_59.mol		CR;CR		no	yes	no
+Clade_74	α Me reduced/keto/D-OH	α Me reduced/keto/D-OH	Clade_65.mol				no	no	no
+Clade_75	non-elongating (β L-OH)	β-hydroxy	Clade_62.mol				yes	no	no
+Clade_76	non-elongating (double bonds)	e-double bonds	Clade_20.mol				yes	no	no
+Clade_77	vinylogous chain branching	vinylogous chain branching	Clade_34.mol		B		no	yes	no
+Clade_78	non-elongating (mostly β OH)	β-hydroxy	Clade_63.mol				yes	no	no
+Clade_79	starters or β OH	β-hydroxy	Clade_63.mol				no	no	no
+Clade_80	non-elongating (β OH)	β-hydroxy	Clade_63.mol				yes	no	no
+Clade_81	non-elongating (β D-OH)	β-hydroxy	Clade_29.mol				yes	no	no
+Clade_82	double bonds (mostly e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_83	non-elongating (mostly α-Me double bonds)	α-Me double bonds	Clade_43.mol				yes	no	no
+Clade_84	non-elongating	N/A	Clade_35.mol				yes	no	no
+Clade_85	non-elongating (bimoldule ß D-OH)	β-hydroxy	Clade_63.mol				yes	no	no
+Clade_86	α-L-Me red or OH	α-Me β-D-OH 	Clade_40.mol		MT		no	yes	no
+Clade_88	non-elongating	N/A	Clade_35.mol				yes	no	no
+Clade_89	α-Me β-OH	α-Me β-D-OH 	Clade_40.mol		MT		no	yes	no
+Clade_90	β-keto or double bonds	double bonds	Clade_20.mol				no	no	no
+Clade_92	non-elongating (α D-OH ß-L-OH)	non-elongating (α D-OH ß-L-OH)	Clade_51.mol				yes	no	no
+Clade_93	non elongating (ß-OH)	β-hydroxy	Clade_63.mol				yes	no	no
+Clade_94	non-elongating (various)	N/A	Clade_35.mol				yes	no	no
+Clade_95	various specificities	N/A	Clade_35.mol				no	no	no
+Clade_96	various specificies (mainly α-Me)	α-methyl/ α-dimethyl 	Clade_55.mol		MT		no	yes	no
+Clade_97	β D-OH 	β-hydroxy	Clade_29.mol				no	no	no
+Clade_98	non-elongating (various)	N/A	Clade_35.mol				yes	no	no
+Clade_99	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_100	mainly double bonds	e-double bonds	Clade_20.mol				no	no	no
+Clade_101	double bonds	e-double bonds	Clade_20.mol				no	no	no
+Clade_102	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_103	ß OMe	β-methoxy 	Clade_25.mol		OMT		no	yes	no
+Clade_104	ß OMe or ß Me double bond 	β-methoxy 	Clade_25.mol		OMT		no	yes	no
+Clade_106	lactate starter	lactate starter	Clade_44.mol				no	no	no
+Clade_107	mainly reduced	reduced	Clade_6.mol		ER		no	yes	no
+Clade_108	shifted double bonds	shifted DB	Clade_46.mol				no	no	no
+Clade_109	completely reduced	reduced	Clade_6.mol		ER		no	yes	no
+Clade_110	ß D-OH or double bonds (e-configured)	ß D-OH or double bonds (e-configured)	Clade_9.mol				no	no	no
+Clade_111	α L-(di)Me β OH 	α L-(di)Me β OH 	Clade_42.mol		MT		no	yes	no
+Clade_112	α L-(di)Me β OH 	α L-(di)Me β OH 	Clade_42.mol		MT		no	yes	no
+Clade_113	double bonds (e-configured) (some with a Me)	double bonds (e-configured) with a Me)	Clade_60.mol		MT		no	no	no
+Clade_114	ß L-OH	β-hydroxy	Clade_62.mol				no	no	no
+Clade_115	β-keto or double bonds	double bonds	Clade_20.mol				no	no	no
+Clade_116	β-keto or double bonds	double bonds	Clade_20.mol				no	no	no
+Clade_118	mainly double bonds	e-double bonds	Clade_20.mol				no	no	no
+Clade_119	non elongating (ß-OH)	β-hydroxy	Clade_63.mol				yes	no	no
+Clade_120	non-elongating (various)	N/A	Clade_35.mol				yes	no	no
+Clade_121	α D-OH β D-OH  	α OH β D-OH  	Clade_41.mol				no	no	no
+Clade_122	double bonds (e-configured) (some with a Me)	double bonds (e-configured) with a Me)	Clade_60.mol		MT		no	no	no
+Clade_123	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_124	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_125	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_126	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_127	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_128	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_129	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_130	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_131	a Me double bonds (z-configured)	a Me double bonds (z-configured)	Clade_52.mol		MT		no	no	no
+Clade_132	a Me double bonds (e-configured)	α-dimethyl 	Clade_22.mol		MT		no	yes	no
+Clade_133	a Me double bonds (e-configured)	α-dimethyl 	Clade_22.mol		MT		no	yes	no
+Clade_134	double bonds (e-configured)	e-double bonds	Clade_20.mol				no	no	no
+Clade_135	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_136	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_137	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_138	α L-Me β OH 	α-Me β-D-OH 	Clade_40.mol				no	no	no
+Clade_139	β OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_140	β D-OH  	β-hydroxy	Clade_29.mol				no	no	no
+Clade_141	a Me double bonds 	α-dimethyl 	Clade_22.mol		MT		no	yes	no
+Clade_142	non-elongating (various)	N/A	Clade_35.mol				yes	no	no
+Clade_143	α Me , β OMe	N/A	Clade_64.mol				yes	no	no
+final	final	N/A	final.mol				no	no	no
