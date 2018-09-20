@@ -1046,8 +1046,7 @@ Biojs.FeatureViewer = Biojs.extend(
                     myself._originalColor = myself._previousClickedColor;
                     myself._originalOpacity = myself._previousClickedOpacity;
                     raphaelObj.attr({stroke: myself._previousClickedColor, fill: myself._previousClickedColor});
-                    //only select
-					this.animate({"fill-opacity": myself._previousClickedOpacity}, 500);
+                    raphaelObj.animate({"fill-opacity": myself._previousClickedOpacity}, 500);
                     featureObj.isSelected = false;
                     myself._raiseEvent(myself, raphaelObj, featureObj, 'onFeatureUnselected');
                 } else { //it is deselected (even counter), will be selected
