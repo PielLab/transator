@@ -72,7 +72,7 @@
 
     <ul>
         <li><a href="#accordionSequences">Viewer</a></li>
-        <li><a href="#rawResult">KS-Annotations</a></li>
+        <li><a href="#rawResult">KS Annotations</a></li>
     </ul>
 
     <div id="accordionSequences">
