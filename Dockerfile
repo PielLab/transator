@@ -1,4 +1,4 @@
-FROM tomcat:7-jre8
+FROM tomcat:9-jre8-slim
 MAINTAINER Pablo Moreno <pmoreno@ebi.ac.uk>
 
 RUN mkdir /python-pks
@@ -13,7 +13,7 @@ ADD ./PKSPredictor /java-code/PKSPredictor/
 ADD ./cladification /cladification/
 ADD ./NRPSPredictor2 /NRPSPredictor2/
 
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
+RUN rm -rf /usr/local/tomcat/webapps/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends git maven libc6-i386 hmmer emboss \
     python-biopython unzip && \
