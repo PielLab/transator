@@ -165,7 +165,7 @@
 
                         myPainter.onFeatureClick(
                             function (obj) {
-                                $j("#dialog-content").text(data.querySequence.slice(obj.featureStart,obj.featureEnd));
+                                $j("#dialog-content").text(data.querySequence.slice(obj.featureStart-1,obj.featureEnd-1));
                                 $j("#dialog-content").css("word-wrap", "break-word");
                                 $j("#dialog").dialog('open');
                             }
